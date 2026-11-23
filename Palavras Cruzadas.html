@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="pt-PT"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Palavras Cruzadas</title>
+<style>
+:root{--bg:#fff;--tx:#2b3350;--ct:#cfe3fa;--cl:#f1f2f5;--cb:#c9cfdb;--bl:#0a84ff;--me:#1a73e8;--ai:#8a8f9c;--ti:#f6dcb4;--tt:#333;--bar:#eef1f6;--res:#fff1b8;--ok:#bfeab8;--cs:min(calc((100vw - 24px)/6),76px,calc((100dvh - 360px)/6));box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121418;--tx:#dfe4f2;--ct:#24344d;--cl:#23262e;--cb:#3a3f4b;--ai:#9aa0ae;--ti:#d2ae74;--bar:#23262e;--res:#4a4220;--ok:#2f5a2c;--me:#6ab0ff}}
+:root[data-theme="dark"]{--bg:#121418;--tx:#dfe4f2;--ct:#24344d;--cl:#23262e;--cb:#3a3f4b;--ai:#9aa0ae;--ti:#d2ae74;--bar:#23262e;--res:#4a4220;--ok:#2f5a2c;--me:#6ab0ff}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;height:100%;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column;align-items:center;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;overflow:hidden}
+h1{font-size:clamp(22px,7vw,32px);margin:8px 12px 6px;text-align:center;line-height:1.1}
+#sc{display:flex;gap:10px;align-items:center;font-weight:600;margin-bottom:8px}
+#sc b{background:var(--bar);padding:3px 14px;border-radius:12px;font-size:22px;min-width:34px;text-align:center}
+#sc b.y{color:var(--bl)}
+#g{display:grid;grid-template-columns:repeat(var(--C),var(--cs));border:2px solid var(--cb)}
+.c{width:var(--cs);height:var(--cs);border:1px solid var(--cb);box-sizing:border-box;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:calc(var(--cs)*.5);background:var(--cl);position:relative}
+.k{background:var(--ct);font-size:calc(var(--cs)*.17);font-weight:600;text-align:center;line-height:1.05;padding:2px;text-transform:uppercase;overflow:hidden}
+.k i{position:absolute;font-style:normal;font-size:calc(var(--cs)*.2);color:var(--ai)}
+.k .r{right:1px;top:50%;transform:translateY(-50%)}.k .b{bottom:-1px;left:50%;transform:translateX(-50%)}
+.s{flex-direction:column;padding:0}.s div{flex:1;width:100%;display:flex;align-items:center;justify-content:center;position:relative;font-size:calc(var(--cs)*.14)}.s div:first-child{border-bottom:1px solid var(--cb)}.s .b{bottom:-3px}
+.pc{font-size:calc(var(--cs)*.55);text-transform:none}
+body.m>:not(#mn){display:none}body:not(.m) #mn{display:none}#mn{width:min(94vw,520px);flex:1;min-height:0;overflow-y:auto;padding-bottom:24px}
+#mn h2{margin:16px 0 8px;font-size:18px}#mn small{color:var(--ai);font-weight:400;font-size:13px}
+.lv{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.lv button{height:46px;border-radius:12px;background:var(--bar);color:var(--tx);font-weight:700;font-size:16px}.lv .w{background:var(--bl);color:#fff}
+#bk{height:36px;width:36px;border-radius:50%;background:var(--bar);color:var(--tx);margin-right:10px;font-size:18px;vertical-align:middle}
+.me{color:var(--me)}.ai{color:var(--ai)}
+.pd{background:var(--ti);color:var(--tt);border-radius:4px;box-shadow:inset 0 0 0 2px var(--bl)}
+.res{background:var(--res)}
+.hint{animation:p .6s 3}@keyframes p{50%{background:var(--ok)}}
+#ms{min-height:20px;margin:8px 12px 0;font-size:14px;text-align:center}
+#rk{display:flex;gap:8px;margin:8px 0}
+.t{width:calc(var(--cs)*.9);height:calc(var(--cs)*.9);border-radius:7px;background:var(--ti);color:var(--tt);box-shadow:0 2px 4px #0004;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:calc(var(--cs)*.5);touch-action:none}
+.t.e{background:none;box-shadow:none}.t.sel{outline:3px solid var(--bl)}
+.gh{position:fixed;transform:translate(-50%,-50%);pointer-events:none;z-index:9;opacity:.9}
+#bar{display:flex;gap:12px;align-items:center;width:min(92vw,520px);margin:4px 0}
+button{font:inherit;border:0;border-radius:30px;height:56px;cursor:pointer}
+#sh,#ht{width:56px;background:var(--bar);color:var(--bl);font-size:24px;position:relative;flex:none}
+#go{flex:1;background:var(--bl);color:#fff;font-weight:700;font-size:20px}
+#go:disabled{background:var(--bar);color:var(--ai)}
+#ht em{position:absolute;top:-6px;right:-4px;background:var(--bl);color:#fff;border-radius:50%;width:22px;height:22px;font:700 13px/22px system-ui}
+#lg{font-size:12px;color:var(--ai);margin:6px 16px;text-align:center}
+#ov{position:fixed;inset:0;background:#000a;display:flex;align-items:center;justify-content:center;z-index:20}
+#ov[hidden]{display:none}
+#ov div{background:var(--bg);padding:24px 28px;border-radius:20px;text-align:center}
+#ov p{font-size:24px;font-weight:700;margin:0 0 16px;white-space:pre-line}
+#nw{background:var(--bl);color:#fff;padding:0 28px;font-weight:700}
+</style></head><body>
+<div id="mn"></div>
+<h1><button id="bk" aria-label="Menu">←</button><span id="tt"></span></h1>
+<div id="sc"><span>Tu</span><b class="y" id="a">0</b>–<b id="b">0</b><span>Oponente</span></div>
+<div id="g"></div>
+<div id="ms"></div>
+<div id="rk"></div>
+<div id="bar"><button id="sh" aria-label="Baralhar letras">⇄</button><button id="go"></button><button id="ht" aria-label="Dica">💡<em id="hn">3</em></button></div>
+<p id="lg">As casas amarelas pertencem a palavras que começaste: o oponente não lhes toca.</p>
+<div id="ov" hidden><div><p id="ot"></p><button id="nw">Continuar</button></div></div>
+<script>
+const $=id=>document.getElementById(id),
+M=(f=()=>null)=>Array.from({length:R},()=>Array.from({length:C},f)),
+shuf=a=>{for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a},
+BK=`SOL|Astro-rei|☀️
+LUA|Satélite da Terra|🌙
+MAR|Água salgada|🌊
+RIO|Curso de água|🏞️
+UVA|Fruto da vinha|🍇
+OVO|Da galinha|🥚
+PAO|Alimento de trigo|🍞
+MAO|Tem cinco dedos|✋
+CAO|Melhor amigo|🐶
+GATO|Felino caseiro|🐱
+RATO|Roedor|🐭
+PATO|Ave de lagoa|🦆
+LOBO|Canídeo que uiva|🐺
+URSO|Gosta de mel|🐻
+VACA|Dá leite|🐄
+PORCO|Suíno|🐷
+CASA|Lar|🏠
+BOLA|Joga-se aos pontapés|⚽
+LIVRO|Tem páginas|📖
+CARRO|Automóvel|🚗
+NAVIO|Barco grande|🚢
+AVIAO|Voa nos céus|✈️
+BARCO|Embarcação|⛵
+FLOR|Tem pétalas|🌸
+ROSA|Flor com espinhos|🌹
+ARVORE|Tem copa|🌳
+MESA|Onde se come
+CHAVE|Abre a porta|🔑
+SAPATO|Calçado|👞
+LUVA|Cobre a mão|🧤
+CHAPEU|Cobre a cabeça|🎩
+OLHO|Órgão da vista|👁️
+NARIZ|Cheira|👃
+BOCA|Tem dentes|👄
+DENTE|Mastiga|🦷
+FOGO|Queima|🔥
+AGUA|Líquido vital|💧
+NEVE|Cai no inverno|❄️
+CHUVA|Cai das nuvens|🌧️
+VENTO|Ar em movimento
+NUVEM|Cobre o céu|☁️
+ESTRELA|Brilha de noite|⭐
+TERRA|Planeta azul|🌍
+PRAIA|Areia e mar|🏖️
+MONTE|Pequeno cume
+SERRA|Cadeia de montes
+LAGO|Água interior
+ILHA|Cercada de água|🏝️
+PONTE|Liga margens|🌉
+TORRE|Edifício alto|🗼
+CAFE|Bebida da manhã|☕
+LEITE|Bebida branca|🥛
+QUEIJO|Derivado do leite|🧀
+MACA|Fruto de Newton|🍎
+PERA|Fruto da pereira|🍐
+LIMAO|Fruto azedo|🍋
+BANANA|Fruto amarelo|🍌
+TOMATE|Fruto de salada|🍅
+CENOURA|Raiz laranja|🥕
+MILHO|Cereal em espiga|🌽
+ARROZ|Cereal em grão|🍚
+BOLO|Doce de festa|🎂
+FESTA|Celebração|🎉
+MUSICA|Arte dos sons|🎵
+CINEMA|Sala de filmes|🎬
+CARTA|Vai no envelope|✉️
+OURO|Metal amarelo|🥇
+FERRO|Metal de ferramenta
+VIDRO|Material transparente
+PEDRA|Rocha pequena
+AREIA|Grãos da praia
+PAPEL|Folha de escrever
+TINTA|Dá cor
+LETRA|Parte da palavra
+NOTA|Sinal musical
+TEMPO|Passa nas horas
+DIA|Tem 24 horas
+NOITE|Sem Sol
+ANO|Doze meses
+MES|Janeiro, por ex.
+HORA|60 minutos
+VERAO|Estação quente
+INVERNO|Estação fria
+OUTONO|Caem as folhas|🍂
+REI|Governa um reino|👑
+RAINHA|Mulher do rei
+ANJO|Ser alado|👼
+FADA|Tem varinha|🧚
+ESCOLA|Onde se aprende|🏫
+ALUNO|Quem estuda
+LISBOA|Capital de Portugal
+PORTO|Cidade do Douro
+BRAGA|Cidade minhota
+FARO|Capital algarvia
+TIGRE|Felino às riscas|🐯
+LEAO|Rei da selva|🦁
+MACACO|Primata|🐒
+COBRA|Réptil sem patas|🐍
+SAPO|Anfíbio saltador|🐸
+PEIXE|Vive na água|🐟
+BALEIA|Maior mamífero|🐋
+POLVO|Tem oito braços|🐙
+ABELHA|Faz mel|🐝
+AMOR|Sentimento|❤️
+PAZ|Sem guerra|☮️
+SONO|Descanso|😴
+RISO|Gargalhada|😂
+CORACAO|Bombeia sangue|❤️`.split('\n').map(x=>{const[w,t,e]=x.split('|');return{w,t,e}}),
+LV=[{n:'Fácil',C:7,R:9,max:6,pic:1,fr:.15,acc:.65,h:5},{n:'Médio',C:8,R:10,max:7,pic:.7,fr:.4,acc:.8,h:3},{n:'Difícil',C:8,R:10,max:7,pic:.3,fr:.7,acc:.9,h:2},{n:'Perito',C:8,R:10,max:7,pic:0,fr:1,acc:.97,h:1}],
+P_=x=>x.split('\n').map(l=>{const[w,t,e]=l.split('|');return{w,t,e}}),
+XW=P_(`AMIZADE|Valor entre amigos
+ESTADO|Nação soberana
+GOVERNO|Poder executivo
+POVO|Conjunto de cidadãos
+LEI|Norma jurídica
+JUIZ|Preside ao julgamento
+PADEIRO|Faz pão
+MEDICO|Trata doentes
+ATOR|Representa em cena
+POETA|Escreve versos
+PINTOR|Artista de telas
+RADIO|Transmite emissões|📻
+COMBOIO|Anda sobre carris|🚆
+ESTRADA|Via de circulação
+CIDADE|Maior que a vila
+ALDEIA|Povoação pequena
+DOURO|Rio do Porto
+TEJO|Rio de Lisboa
+MINHO|Rio do norte
+ALGARVE|Região do sul
+MADEIRA|Ilha do Funchal
+ESPANHA|Vizinha de Portugal
+FRANCA|País de Paris
+ITALIA|País da bota
+BRASIL|País de Brasília
+CAMOES|Autor de Os Lusíadas
+PESSOA|Poeta dos heterónimos
+FADO|Canção de Amália
+FUTEBOL|Desporto de golos
+TENIS|Desporto de raquete|🎾
+NATACAO|Desporto aquático
+CORRIDA|Prova de velocidade
+CAMPEAO|Vencedor
+TROFEU|Prémio desportivo|🏆
+CLIMA|Condições do tempo
+TROVAO|Segue o relâmpago
+COZINHA|Onde se cozinha
+JANELA|Deixa entrar luz
+PORTA|Entrada de casa|🚪
+TELHADO|Cobre a casa
+PAREDE|Divide a sala
+PIANO|Instrumento de teclas|🎹
+VIOLINO|Instrumento de arco|🎻
+TAMBOR|Instrumento de percussão|🥁
+TEATRO|Palco e plateia|🎭
+POEMA|Texto em versos
+ROMANCE|Livro de ficção
+JORNAL|Diário de notícias|📰
+REVISTA|Publicação periódica
+BRUXA|Voa de vassoura|🧙
+GELO|Água congelada|🧊
+SAL|Tempera o mar
+ACUCAR|Adoça o café
+MEL|Doce das abelhas|🍯
+VINHO|Bebida da uva|🍷
+CERVEJA|Bebida de cevada|🍺
+PIZZA|Prato italiano|🍕
+PRATO|Onde se serve|🍽️
+FACA|Corta à mesa
+GARFO|Talher de dentes
+COLHER|Talher da sopa|🥄
+SOPA|Prato quente de colher|🍲`),
+FW=P_(`UM|Artigo indefinido
+UMA|Artigo indefinido
+OS|Artigo definido
+AS|Artigo definido
+DE|Preposição
+EM|Preposição
+AO|A + o
+DO|De + o
+DA|De + a
+NO|Em + o
+NA|Em + a
+POR|Preposição
+COM|Preposição
+SEM|Preposição
+OU|Conjunção
+MAS|Conjunção
+SE|Conjunção
+QUE|Conjunção
+POIS|Conjunção
+LOGO|Conjunção
+EU|Pronome pessoal
+TU|Pronome pessoal
+ELE|Pronome pessoal
+ELA|Pronome pessoal
+NOS|Pronome pessoal
+ALI|Advérbio de lugar
+AQUI|Advérbio de lugar
+JA|Advérbio de tempo
+NAO|Advérbio de negação
+SIM|Advérbio de afirmação
+MAIS|Advérbio de quantidade
+MUITO|Advérbio de quantidade
+BEM|Contrário de mal
+MAL|Contrário de bem
+IR|Verbo de movimento
+SER|Verbo de existência
+TER|Verbo de posse
+VER|Olhar
+DAR|Oferecer
+LER|Percorrer um texto
+AR|Atmosfera
+MI|Nota musical
+FA|Nota musical
+OLE|Grito de toureiro
+EIS|Eis aqui
+TAL|Igual
+SUA|Pronome possessivo`),
+FR=BK.concat(XW).flatMap(b=>{const w=b.w,o=[];if(w.length>4)for(let i=1;i<w.length-2;i++)o.push({w:w.slice(i,i+2),t:w.slice(0,i)+'_'+w.slice(i+2),f:1});if(w.length>5)for(let i=1;i<w.length-3;i++)o.push({w:w.slice(i,i+3),t:w.slice(0,i)+'_'+w.slice(i+3),f:1});return o}),
+ALL=BK.concat(XW,FW,FR),
+rng=s=>()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296},
+isL=(g,y,z)=>typeof(g[y]||[])[z]==='string',
+pic=b=>b.e&&((b.w.charCodeAt(0)*7+b.w.length*13+LN*5)%10)<L.pic*10,
+tx=b=>pic(b)?`<span class="pc">${b.e}</span>`:b.t,
+ck=q=>!q||(!q.a&&!q.d)?'<div class="c k"></div>':q.a&&q.d?`<div class="c k s"><div>${tx(q.a)}<i class="r">▸</i></div><div>${tx(q.d)}<i class="b">▾</i></div></div>`:`<div class="c k">${tx(q.a||q.d)}<i class="${q.a?'r':'b'}">${q.a?'▸':'▾'}</i></div>`;
+let sol,clue,val,own,pend,cw,W,rack,sel,me,op,hints,done,busy,hc;
+let prog={},R,C,L,DI,LN,EX,U,DS;try{prog=JSON.parse(localStorage.getItem('pc')||'{}')}catch(e){}
+function fit(g,w,r,c,d){
+ EX=[];const dr=d?1:0,dc=1-dr,e=g[r-dr]&&g[r-dr][c-dc];
+ if(r<1||c<1||(e&&(typeof e!=='object'||e[d?'d':'a'])))return -1;
+ const er=r+dr*w.length,ec=c+dc*w.length;if(er>R||ec>C)return -1;
+ let x=0;
+ for(let i=0;i<w.length;i++){const y=r+dr*i,z=c+dc*i,v=g[y][z];
+  if(v){if(v!==w[i])return -1;x++}else{const a=dc,k=dr;let s=w[i],y0=y,z0=z,y1=y,z1=z;
+   while(isL(g,y0-a,z0-k)){y0-=a;z0-=k;s=g[y0][z0]+s}
+   while(isL(g,y1+a,z1+k)){y1+=a;z1+=k;s+=g[y1][z1]}
+   if(s.length>1){const q=g[y0-a]&&g[y0-a][z0-k];
+    if(!DS[s]||U.has(s)||EX.some(t=>t.b.w===s)||y0-a<0||z0-k<0||(q&&(typeof q!=='object'||q[d?'a':'d'])))return -1;
+    EX.push({b:DS[s],r:y0,c:z0,d:1-d})}}}
+ return x===w.length||(er<R&&ec<C&&isL(g,er,ec))?-1:x+EX.length}
+function plc(g,b,r,c,d,ws){
+ const dr=d?1:0,dc=1-dr,n=b.w.length;
+ for(let i=0;i<n;i++)g[r+dr*i][c+dc*i]=b.w[i];
+ const q=g[r-dr][c-dc]=g[r-dr][c-dc]||{};q[d?'d':'a']=b;
+ const er=r+dr*n,ec=c+dc*n;if(er<R&&ec<C&&!g[er][ec])g[er][ec]={};
+ ws.push({r,c,d,n})}
+function gen(l,seed){
+ DS={};ALL.forEach(b=>{if(b.w.length<=l.max&&!DS[b.w])DS[b.w]=b});const rn=rng(seed),pool=ALL.filter(b=>b.w.length<=l.max&&(!b.f||rn()<l.fr));let best;
+ for(let at=0;at<24;at++){
+  const g=Array.from({length:R},()=>Array(C).fill(0)),ws=[],used=U=new Set,q=pool.slice().sort(()=>rn()-.5);
+  const f=q.find(b=>b.w.length>=C-2)||q[0];plc(g,f,1,1,0,ws);used.add(f.w);
+  const ix=()=>{const m={};for(let y=1;y<R;y++)for(let z=1;z<C;z++)if(isL(g,y,z))(m[g[y][z]]=m[g[y][z]]||[]).push([y,z]);return m};
+  let m=ix();
+  for(let p=0;p<6;p++)for(const b of q){if(used.has(b.w)||(p<2&&b.w.length<4))continue;let k=[],bx=0;
+   for(let i=0;i<b.w.length;i++)for(const[y,z]of m[b.w[i]]||[])for(let d=0;d<2;d++){
+    const r=y-d*i,c=z-(1-d)*i,x=fit(g,b.w,r,c,d);if(x>0&&x>=bx){if(x>bx)k=[];bx=x;k.push([r,c,d])}}
+   if(k.length){const[r,c,d]=k[rn()*k.length|0];fit(g,b.w,r,c,d);plc(g,b,r,c,d,ws);used.add(b.w);EX.forEach(e=>{plc(g,e.b,e.r,e.c,e.d,ws);used.add(e.b.w)});m=ix()}}
+  const n=g.flat().filter(v=>typeof v==='string').length;
+  if(!best||n>best.n)best={g,ws,n}}
+ return best}
+function start(di,n){
+ DI=di;LN=n;L=LV[di];R=L.R;C=L.C;
+ const g=gen(L,di*1000+n+7),st=document.documentElement.style;
+ st.setProperty('--C',C);st.setProperty('--cs',`min(calc((100vw - 24px)/${C}),76px,calc((100dvh - 380px)/${R}))`);
+ sol=M();clue=M();val=M();own=M();pend=M();cw=M(()=>[]);W=[];
+ for(let r=0;r<R;r++)for(let c=0;c<C;c++){const v=g.g[r][c];if(typeof v==='string')sol[r][c]=v;else clue[r][c]=v||{}}
+ g.ws.forEach(({r,c,d,n})=>{const A=[];for(let i=0;i<n;i++)A.push(d?[r+i,c]:[r,c+i]);W.push(A)});
+ W.forEach((w,i)=>w.forEach(([y,x])=>cw[y][x].push(i)));
+ me=op=0;hints=L.h;done=new Set;busy=0;sel=null;hc=null;rack=[null,null,null,null,null];
+ $('tt').textContent=L.n+' · Nível '+n;$('ov').hidden=true;msg('Arrasta ou toca numa letra e depois na casa.');deal();draw()}
+function menu(){
+ document.body.className='m';
+ $('mn').innerHTML='<h1>Palavras Cruzadas</h1>'+LV.map((l,i)=>`<section><h2>${l.n} <small>${C_(l)}</small></h2><div class="lv">${Array.from({length:10},(_,n)=>{const w=prog[i+'-'+(n+1)];return`<button data-d="${i}" data-n="${n+1}"${w?' class="w"':''}>${w?'★':n+1}</button>`}).join('')}</div></section>`).join('')}
+const C_=l=>(l.C-1)+'×'+(l.R-1)+' · '+l.h+' dicas';
+
+
+function deal(){
+ const n={};for(let r=0;r<R;r++)for(let c=0;c<C;c++)if(sol[r][c]&&!val[r][c])n[sol[r][c]]=(n[sol[r][c]]||0)+1;
+ rack=rack.map(l=>l&&n[l]>0?(n[l]--,l):null);
+ const pool=[];for(const l in n)for(let i=0;i<n[l];i++)pool.push(l);shuf(pool);
+ rack=rack.map(l=>l||pool.pop()||null)}
+
+const msg=t=>$('ms').textContent=t,
+full=()=>sol.every((row,r)=>row.every((s,c)=>!s||val[r][c])),
+hasPend=()=>pend.some(r=>r.some(x=>x)),
+blocked=(r,c)=>cw[r][c].some(w=>W[w].some(([y,x])=>own[y][x]==='me'||pend[y][x]));
+
+function bonus(){let b=0;W.forEach((w,i)=>{if(!done.has(i)&&w.every(([y,x])=>val[y][x])){done.add(i);b+=w.length}});return b}
+
+function draw(){
+ let h='';
+ for(let r=0;r<R;r++)for(let c=0;c<C;c++){
+  const s=sol[r][c],q=clue[r][c];
+  if(!s)h+=ck(q);
+  else{const v=val[r][c],p=pend[r][c];
+   h+=`<div class="c ${v?own[r][c]:p?'pd':blocked(r,c)?'res':''}${hc&&hc[0]===r&&hc[1]===c?' hint':''}" data-r="${r}" data-c="${c}">${v||(p?p.l:'')}</div>`}}
+ $('g').innerHTML=h;
+ $('rk').innerHTML=rack.map((l,i)=>l?`<div class="t${sel===i?' sel':''}" data-s="${i}">${l}</div>`:'<div class="t e"></div>').join('');
+ $('a').textContent=me;$('b').textContent=op;$('hn').textContent=hints;
+ $('go').textContent=hasPend()?'Enviar':'Passar';$('go').disabled=!!busy;$('ht').disabled=!!busy||!hints}
+
+function put(s,r,c){
+ if(busy||rack[s]==null||!sol[r][c]||val[r][c]||pend[r][c])return;
+ pend[r][c]={l:rack[s],s};rack[s]=null;sel=null;draw()}
+
+$('g').addEventListener('click',e=>{
+ const c=e.target.closest('.c[data-r]');if(!c||busy)return;
+ const r=+c.dataset.r,k=+c.dataset.c,p=pend[r][k];
+ if(p){rack[p.s]=p.l;pend[r][k]=null;draw()}else if(sel!=null)put(sel,r,k)});
+
+$('rk').addEventListener('pointerdown',e=>{
+ const t=e.target.closest('.t[data-s]');if(!t||busy)return;
+ const s=+t.dataset.s,x0=e.clientX,y0=e.clientY;let g=null;
+ const mv=ev=>{if(!g&&Math.hypot(ev.clientX-x0,ev.clientY-y0)>8){g=t.cloneNode(true);g.className='t gh';document.body.append(g)}
+  if(g){g.style.left=ev.clientX+'px';g.style.top=ev.clientY-40+'px'}},
+ up=ev=>{removeEventListener('pointermove',mv);removeEventListener('pointerup',up);removeEventListener('pointercancel',up);
+  if(g){g.remove();const c=document.elementFromPoint(ev.clientX,ev.clientY-40);const q=c&&c.closest('.c[data-r]');if(q)put(s,+q.dataset.r,+q.dataset.c)}
+  else{sel=sel===s?null:s;draw()}};
+ addEventListener('pointermove',mv);addEventListener('pointerup',up);addEventListener('pointercancel',up)});
+
+$('sh').onclick=()=>{if(busy)return;shuf(rack);draw()};
+
+$('ht').onclick=()=>{
+ if(busy||!hints)return;
+ const ls=rack.filter(Boolean);if(!ls.length)return;
+ for(const l of shuf(ls.slice())){const o=[];
+  for(let r=0;r<R;r++)for(let c=0;c<C;c++)if(sol[r][c]===l&&!val[r][c]&&!pend[r][c])o.push([r,c]);
+  if(o.length){hc=o[Math.random()*o.length|0];hints--;msg('A letra '+l+' encaixa na casa a piscar.');draw();setTimeout(()=>{hc=null;draw()},2000);return}}};
+
+$('go').onclick=()=>{
+ if(busy)return;busy=1;let n=0,bad=0;
+ for(let r=0;r<R;r++)for(let c=0;c<C;c++){const p=pend[r][c];
+  if(p){if(p.l===sol[r][c]){val[r][c]=p.l;own[r][c]='me';n++}else{rack[p.s]=p.l;bad++}pend[r][c]=null}}
+ const b=bonus();me+=n+b;
+ msg((n?'+'+n+(b?' e palavra completa +'+b:''):'Passaste a vez')+(bad?' · '+bad+' fora do sítio':''));
+ sel=null;draw();
+ if(full())return end();
+ setTimeout(aiTurn,1000)};
+
+function aiTurn(){
+ const c=[];for(let r=0;r<R;r++)for(let k=0;k<C;k++)if(sol[r][k]&&!val[r][k]&&!blocked(r,k))c.push([r,k]);
+ let n=0;shuf(c).slice(0,5).forEach(([r,k])=>{if(Math.random()<L.acc){val[r][k]=sol[r][k];own[r][k]='ai';n++}});
+ const b=bonus();op+=n+b;
+ msg(n?'Oponente: +'+(n+b)+(b?' (palavra completa)':''):'O oponente passou a vez');
+ if(full()){draw();return end()}
+ busy=0;deal();draw()}
+
+function end(){
+ busy=1;draw();if(me>op){prog[DI+'-'+LN]=1;try{localStorage.setItem('pc',JSON.stringify(prog))}catch(e){}}
+ setTimeout(()=>{$('ot').textContent=(me>op?'Ganhaste! 🎉':me<op?'Perdeste.':'Empate!')+'\n'+me+' – '+op;$('ov').hidden=false},700)}
+
+$('nw').onclick=menu;$('bk').onclick=menu;
+$('mn').onclick=e=>{const b=e.target.closest('button[data-d]');if(b){document.body.className='';start(+b.dataset.d,+b.dataset.n)}};
+menu();
+</script></body></html>
