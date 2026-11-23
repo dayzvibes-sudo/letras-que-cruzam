@@ -45,25 +45,31 @@ h1{font-size:clamp(22px,6.5vw,30px);margin:2px 12px 8px;text-align:center;line-h
 .c:nth-child(n+73){border-bottom:0}
 
 .k{
-  background:var(--ct);font-size:calc(var(--cs)*.142);font-weight:700;
-  text-align:center;line-height:1.06;padding:1px 2px;text-transform:uppercase;
-  color:var(--tx);overflow-wrap:break-word;word-break:normal;overflow:hidden;
-  cursor:pointer;
+  background:var(--ct);font-size:calc(var(--cs)*.145);font-weight:700;
+  text-align:center;line-height:1.05;padding:2px 3px;text-transform:uppercase;
+  color:var(--tx);overflow:hidden;cursor:pointer;
 }
+.k.has-r{padding-right:7px}
+.k.has-b{padding-bottom:6px}
 .k.corner{background:#c5d8f0;cursor:default}
-.k i{position:absolute;font-style:normal;font-size:calc(var(--cs)*.18);color:#5c7499;pointer-events:none}
+.k i{position:absolute;font-style:normal;font-size:calc(var(--cs)*.17);color:#5c7499;pointer-events:none}
 .k .r{right:1px;top:50%;transform:translateY(-50%)}
 .k .b{bottom:-1px;left:50%;transform:translateX(-50%)}
 
 .s{flex-direction:column;padding:0}
-.s div{flex:1;width:100%;display:flex;align-items:center;justify-content:center;position:relative;font-size:calc(var(--cs)*.132);padding:0 2px;box-sizing:border-box;line-height:1.02}
+.s div{
+  flex:1;width:100%;display:flex;align-items:center;justify-content:center;
+  position:relative;font-size:calc(var(--cs)*.128);padding:0 6px 0 3px;
+  box-sizing:border-box;line-height:1.02;overflow:hidden;
+}
 .s div:first-child{border-bottom:1px solid #aebfd9}
+.s div:last-child{padding:0 3px 4px 3px}
 .s .b{bottom:-2px}
 
 .pc-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
-.pc-aff{font-size:calc(var(--cs)*.17);font-weight:800;text-transform:none;margin-bottom:1px}
-.pc{font-size:calc(var(--cs)*.44);text-transform:none;line-height:1}
-.s .pc{font-size:calc(var(--cs)*.24)}
+.pc-aff{font-size:calc(var(--cs)*.16);font-weight:800;text-transform:none;margin-bottom:1px}
+.pc{font-size:calc(var(--cs)*.42);text-transform:none;line-height:1}
+.s .pc{font-size:calc(var(--cs)*.23)}
 
 .me{color:var(--me)}
 .ai{color:var(--ai)}
@@ -188,336 +194,336 @@ M=(f=()=>null)=>Array.from({length:R},()=>Array.from({length:C},f)),
 shuf=a=>{for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
 
 const RAW_WORDS = `
-AR|Atmosfera terrestre
-AS|Artigo definido pl.
-OS|Artigo definido pl.
-UM|Artigo indefinido
-DE|Preposição simples
-EM|Preposição de lugar
-NO|Contração em + o
-NA|Contração em + a
-DO|Contração de + o
-DA|Contração de + a
-AO|Contração a + o
-OU|Conjunção alternativa
-SE|Conjunção condicional
-EU|1.ª pessoa singular
-TU|2.ª pessoa singular
-JA|Neste momento
+AR|Ar que se respira
+AS|Artigo plural
+OS|Artigo plural
+UM|Número um
+DE|De algo
+EM|Dentro de
+NO|Em + o
+NA|Em + a
+DO|De + o
+DA|De + a
+AO|A + o
+OU|Ou então
+SE|Caso, se
+EU|Eu mesmo
+TU|Tu mesmo
+JA|Agora mesmo
 LA|Nesse lugar
 CA|Neste lugar
-PE|Parte inferior da perna
+PE|Parte da perna
 PO|Poeira fina
-SO|Apenas, somente
+SO|Apenas
 MI|3.ª nota musical
 FA|4.ª nota musical
 SI|7.ª nota musical
 RE|2.ª nota musical
-IR|Deslocar-se
-VI|Verbo ver (passado)
-VA|Verbo ir (imperativo)
-VE|Verbo ver (presente)
-RI|Verbo rir (presente)
-LI|Verbo ler (passado)
-FE|Crença religiosa
+IR|Ir a pé
+VI|Eu vi ontem
+VA|Vai agora
+VE|Ele vê bem
+RI|Ele ri muito
+LI|Eu li o livro
+FE|Crença na alma
 NU|Sem roupa
-EX|Prefixo de antigo
-OI|Saudação informal
-AI|Interjeição de dor
-UI|Interjeição de espanto
-EI|Chamamento informal
-HA|Verbo haver
-MA|Contrário de boa
-ME|Pronome pessoal
+EX|Antigo cargo
+OI|Olá informal
+AI|Grito de dor
+UI|Susto leve
+EI|Chamar alguém
+HA|Existe
+MA|Não é boa
+ME|A mim
 MO|Pedra de moinho
-PA|Ferramenta de cavar
-PI|Constante 3,14
-SA|Feminino de são
-TA|Está (coloquial)
-TE|Pronome pessoal
-TI|Pronome oblíquo
-TO|Toma (coloquial)
-VO|Avó ou avô (coloquial)
+PA|Pá de cavar
+PI|Valor 3,14
+SA|Mulher sã
+TA|Está (curto)
+TE|A ti
+TI|Para ti
+TO|Toma cá
+VO|Avó ou avô
 SOL|Astro-rei|☀️
 LUA|Satélite da Terra|🌙
 MAR|Água salgada|🌊
 RIO|Curso de água|🏞️
 UVA|Fruto da vinha|🍇|-va
 OVO|Da galinha|🥚
-PAO|Alimento de trigo|🍞
+PAO|Feito de trigo|🍞
 MAO|Cinco dedos|✋
 CAO|Melhor amigo|🐶
 REI|Monarca|👑
-LEI|Norma jurídica
+LEI|Norma da nação
 SAL|Tempero do mar
-MEL|Doce das abelhas|🍯
+MEL|Doce da abelha|🍯
 CHA|Infusão quente|🍵
-COR|Tonalidade visual
-DOR|Sofrimento físico
-VOZ|Som humano
-LUZ|Claridade
+COR|Tom visual
+DOR|Dor no corpo
+VOZ|Som da fala
+LUZ|Brilho do Sol
 PAZ|Sem guerra|☮️
-GAS|Estado fluido
-GIZ|Escreve no quadro
-GOL|Ponto no futebol|⚽
-LAR|Residência|🏠
-MAE|Progenitora
-PAI|Progenitor
+GAS|Estado gasoso
+GIZ|Risca o quadro
+GOL|Ponto no jogo|⚽
+LAR|Onde se mora|🏠
+MAE|Dá à luz
+PAI|Chefe de família
 RIM|Órgão renal
-SOM|Onda acústica
+SOM|Onda sonora
 SUL|Ponto cardeal
 TIA|Irmã do pai
 TIO|Irmão da mãe
 VEZ|Ocasião
 ANO|Doze meses
 DIA|24 horas
-MES|Divisão do ano
-FIM|Término
-ERA|Época histórica
+MES|Parte do ano
+FIM|Ponto final
+ERA|Época antiga
 ECO|Som refletido
-ELO|Argola de corrente
-UMA|Artigo indefinido
-POR|Preposição
-COM|Preposição
-SEM|Sem companhia
-MAS|Conjunção adversativa
-QUE|Conjunção
-ELE|Pronome masculino
-ELA|Pronome feminino
-NOS|Pronome plural
-VOS|Pronome plural
-ALI|Naquele lugar
+ELO|Argola de metal
+UMA|Artigo feminino
+POR|Por meio de
+COM|Junto de
+SEM|Falta de
+MAS|Porém, contudo
+QUE|O qual
+ELE|Pronome (m.)
+ELA|Pronome (f.)
+NOS|Todos juntos
+VOS|Vós todos
+ALI|Naquele sítio
 NAO|Negação
 SIM|Afirmação
-BEM|De modo correto
-MAL|De modo incorreto
+BEM|De modo bom
+MAL|De modo mau
 SER|Existir
 TER|Possuir
-VER|Enxergar
+VER|Olhar bem
 DAR|Oferecer
-LER|Ler um livro
-OLE|Grito taurino
+LER|Ler um texto
+OLE|Grito na arena
 EIS|Aqui está
 TAL|Semelhante
-SUA|Pronome possessivo
-TEU|Pronome possessivo
-MEU|Pronome possessivo
-SEU|Pronome possessivo
-RUA|Via urbana
+SUA|Dela ou dele
+TEU|Pertence a ti
+MEU|Pertence a mim
+SEU|Pertence a si
+RUA|Via da cidade
 CEU|Firmamento|☁️
-BOI|Touro castrado|🐂
-AVE|Animal com penas|🐦
+BOI|Touro manso|🐂
+AVE|Tem penas|🐦
 ASA|Membro de voo
-OCA|Habitação indígena
+OCA|Casa indígena
 OLA|Saudação
-OSO|Plantígrado (esp.)
-ATO|Ação ou cena
+OSO|Urso (esp.)
+ATO|Cena da peça
 AVO|Pai do pai
-BAR|Estabelecimento
-BAU|Arca de guardar
-BOM|De qualidade
-CAL|Óxido de cálcio
-CRU|Não cozinhado
+BAR|Café ou tasca
+BAU|Arca antiga
+BOM|De boa qualidade
+CAL|Pó branco
+CRU|Não cozido
 DEZ|Número 10
-DIZ|Verbo dizer
-DOM|Talento natural
+DIZ|Ele fala
+DOM|Talento nato
 DUO|Par musical
 EGO|Amor-próprio
 EVA|Primeira mulher
-FAZ|Verbo fazer
-FEZ|Verbo fazer (passado)
+FAZ|Ele realiza
+FEZ|Ele realizou
 FIO|Linha fina
 FOZ|Foz do rio
-IRA|Raiva intensa
+IRA|Raiva forte
 MIL|Número 1000
 NOZ|Fruto seco
 NUA|Sem vestes
 NUM|Em + um
-OCO|Vazio por dentro
-PAR|Conjunto de dois
-PAU|Pedaço de madeira
+OCO|Vazio dentro
+PAR|Grupo de dois
+PAU|Pedaço de lenha
 PIA|Lava-louças
 PIO|Som de ave
 PRO|A favor de
-RIR|Dar gargalhadas|😂
+RIR|Dar risada|😂
 ROA|Verbo roer
-SOU|Verbo ser
+SOU|Eu existo
 TAO|Tão grande
 TOM|Tonalidade
-VAI|Verbo ir
-VAO|Verbo ir (plural)
-VEM|Verbo vir
+VAI|Ele segue
+VAO|Eles seguem
+VEM|Ele chega
 VEU|Tecido fino
-VIA|Estrada ou caminho
-VIM|Verbo vir (passado)
-VIR|Chegar
-VOO|Deslocamento aéreo|✈️
+VIA|Estrada
+VIM|Eu cheguei
+VIR|Chegar cá
+VOO|Viagem no ar|✈️
 IMA|Atrai metais|🧲|-mã
 GATO|Felino caseiro|🐱
 RATO|Roedor|🐭
 PATO|Ave de lagoa|🦆
-LOBO|Canídeo selvagem|🐺
+LOBO|Canídeo bravo|🐺
 URSO|Gosta de mel|🐻
 VACA|Dá leite|🐄
 CASA|Moradia|🏠
 BOLA|Esfera de jogo|⚽
 FLOR|Tem pétalas|🌸
-ROSA|Flor com espinhos|🌹
+ROSA|Tem espinhos|🌹
 MESA|Onde se come
 LUVA|Cobre a mão|🧤
 OLHO|Órgão da vista|👁️
 BOCA|Cavidade oral|👄
-FOGO|Combustão|🔥
+FOGO|Chama quente|🔥
 AGUA|Líquido vital|💧
 NEVE|Cai no inverno|❄️
-LAGO|Água interior
-ILHA|Cercada de água|🏝️
-CAFE|Bebida matinal|☕
-MACA|Fruto da macieira|🍎
+LAGO|Água parada
+ILHA|Cercada de mar|🏝️
+CAFE|Bebida escura|☕
+MACA|Fruto vermelho|🍎
 PERA|Fruto doce|🍐
 BOLO|Doce de festa|🎂
-OURO|Metal precioso|🥇
+OURO|Metal nobre|🥇
 NOTA|Sinal musical
 HORA|60 minutos
-ANJO|Ser celestial|👼
+ANJO|Ser do céu|👼
 FADA|Tem varinha|🧚
 FARO|Capital algarvia
 LEAO|Rei da selva|🦁
-SAPO|Anfíbio saltador|🐸
-AMOR|Sentimento|❤️
+SAPO|Anfíbio verde|🐸
+AMOR|Afeto forte|❤️
 SONO|Descanso|😴
 RISO|Gargalhada|😂|-iso
 POVO|Cidadãos
 JUIZ|Magistrado
-ATOR|Interpreta em cena
+ATOR|Faz papel
 TEJO|Rio de Lisboa
-FADO|Canção de Lisboa
-GELO|Água congelada|🧊
-SOPA|Prato de colher|🍲
+FADO|Canção lusa
+GELO|Água dura|🧊
+SOPA|Prato quente|🍲
 FACA|Corta à mesa
-MAPA|Carta geográfica|🗺️
-ALHO|Bolbo aromático|🧄
+MAPA|Carta do mundo|🗺️
+ALHO|Tempero forte|🧄
 BIFE|Fatia de carne|🥩
 EIXO|Linha central
-ERRO|Equívoco
-FRIO|Baixa temperatura|🥶
-GRAU|Unidade angular
+ERRO|Engano
+FRIO|Muito frio|🥶
+GRAU|Medida de ângulo
 JOGO|Atividade lúdica|🎮
-LIXO|Resíduos
+LIXO|Restos
 MITO|Lenda antiga
 MODA|Tendência
 MOLA|Peça elástica
-MURO|Parede exterior
-NAVE|Embarcação espacial|🚀
+MURO|Parede alta
+NAVE|Nave do espaço|🚀
 NETO|Filho do filho
 NOME|Designação
 NOVO|Recente
-ODIO|Aversão profunda
+ODIO|Aversão forte
 OITO|Número 8
-OLEO|Líquido gorduroso
+OLEO|Líquido gordo
 ONDA|Vaga do mar|🌊
 ONZE|Número 11
 PELE|Derme
 PENA|Pluma de ave
-PESO|Massa corporal
-PICO|Cume de montanha
-PINO|Árvore conífera
-PIPA|Papagaio de papel|🪁
-PISO|Pavimento
-POCO|Cavidade com água
-RABO|Cauda de animal
-RAIO|Descarga elétrica|⚡
+PESO|Massa do corpo
+PICO|Cume alto
+PINO|Árvore alta
+PIPA|Papagaio no ar|🪁
+PISO|Chão da sala
+POCO|Furo de água
+RABO|Cauda
+RAIO|Luz no céu|⚡
 RAIZ|Base da planta
-RAMO|Galho de árvore
-REDE|Malha entrelaçada
+RAMO|Galho verde
+REDE|Malha fina
 REMO|Pá de remar
-RETA|Linha sem curvas
-RICO|Abastado
-RODA|Peça circular
+RETA|Linha direita
+RICO|Tem muito ouro
+RODA|Peça redonda
 ROMA|Capital italiana
-SACO|Recipiente flexível
-SAIA|Peça de vestuário
+SACO|Saco de pano
+SAIA|Peça de roupa
 SALA|Divisão da casa
 SECA|Falta de chuva
-SEDE|Vontade de beber
-SELO|Estampilha postal
-SETA|Indicador de direção
+SEDE|Vontade de água
+SELO|Selo de carta
+SETA|Aponta caminho
 SETE|Número 7
-SINO|Instrumento de bronze|🔔
-SOFA|Assento estofado|🛋️
+SINO|Sino de metal|🔔
+SOFA|Sofá de sala|🛋️
 SOLO|Terreno
 SUCO|Sumo de fruta|🧃
 TACA|Troféu ou copo|🏆
-TATU|Mamífero com couraça
+TATU|Bicho de casco
 TAXA|Tributo
-TAXI|Carro de aluguer|🚕
+TAXI|Carro de praça|🚕
 TEIA|Rede de aranha|🕸️
-TELA|Superfície de pintura
+TELA|Quadro
 TEMA|Assunto
-TETO|Cobertura interior
+TETO|Parte de cima
 TIRO|Disparo
-TOLO|Ingénuo
+TOLO|Pouco esperto
 TOPO|Parte mais alta
-TREM|Comboio (BR)|🚆
+TREM|Comboio
 TRES|Número 3
-TUBO|Cilindro oco
+TUBO|Cano oco
 TUDO|Totalidade
-UNHA|Lâmina dos dedos
-VAGA|Onda ou lugar livre
-VALE|Depressão entre montes
-VASO|Recipiente de flores
-VEIA|Vaso sanguíneo
+UNHA|Ponta do dedo
+VAGA|Onda ou lugar
+VALE|Entre montes
+VASO|Jarro de flor
+VEIA|Vaso de sangue
 VELA|Cera com pavio|🕯️
 VILA|Povoação
 VIVO|Com vida
-VOTO|Escolha eleitoral
-XALE|Manta de ombros
+VOTO|Dar o voto
+XALE|Manta de ombro
 ZERO|Número 0
 ZONA|Área ou região
 ALMA|Espírito
 ALTO|Elevado
 AREA|Superfície
-ARTE|Expressão criativa|🎨
-AULA|Lição escolar
-AUTO|Automóvel
+ARTE|Belas artes|🎨
+AULA|Lição na escola
+AUTO|Carro
 AZUL|Cor do céu|🔵
 BALA|Projétil
-BASE|Fundamento
+BASE|Base sólida
 BEBE|Recém-nascido|👶
 BICO|Boca das aves
-BOBO|Palhaço da corte
+BOBO|Palhaço do rei
 BOTA|Calçado alto|👢
 CABO|Ponta ou corda
-CAIS|Porto de embarque
+CAIS|Porto de barcos
 CAMA|Móvel de dormir|🛏️
 CANA|Haste vegetal
 CAPA|Manto protetor
 CARA|Rosto
 CEDO|Antes da hora
-CENA|Parte de peça
-CERA|Substância das abelhas
+CENA|Parte da peça
+CERA|Feito da abelha
 CHAO|Solo
-CIMA|Parte superior
+CIMA|Parte alta
 COCO|Fruto tropical|🥥
 COLA|Adesivo
-COPO|Recipiente de beber|🥛
+COPO|Copo de vidro|🥛
 CORO|Grupo vocal
 COXA|Parte da perna
 CRUZ|Símbolo cristão|✝️
-CUBO|Sólido de 6 faces|🧊
+CUBO|Dado de 6 faces|🧊
 DADO|Cubo de jogo|🎲
-DATA|Dia do calendário|📅
+DATA|Dia do mês|📅
 DEDO|Parte da mão|👆
 DOCE|Açucarado|🍬
-DONO|Proprietário
+DONO|Tem a posse
 DOZE|Número 12
 DURO|Rígido
-ERVA|Planta rasteira|🌿
+ERVA|Planta baixa|🌿
 FAMA|Celebridade
-FATO|Vestuário
+FATO|Roupa formal
 FEIO|Sem beleza
-FERA|Animal selvagem
-FILA|Sequência de pessoas
+FERA|Animal bravo
+FILA|Linha de gente
 FITA|Tira estreita
 FOFO|Macio
 FOME|Vontade de comer
@@ -525,43 +531,43 @@ FORA|No exterior
 FOTO|Fotografia|📷
 FUGA|Evasão
 FURO|Buraco
-GEMA|Parte amarela do ovo
-GIRA|Bonita (coloquial)
-GOTA|Pingo de líquido|💧
-GUIA|Condutor ou manual
-JOIA|Adorno precioso|💎
+GEMA|Parte do ovo
+GIRA|Bonita
+GOTA|Pingo de água|💧
+GUIA|Manual ou guia
+JOIA|Adorno nobre|💎
 LADO|Face lateral
 LAMA|Terra molhada
-LATA|Recipiente metálico
+LATA|Caixa de metal
 LEVE|Com pouco peso
 LIMA|Fruto cítrico
-LISO|Plano, sem rugas
-LOJA|Estabelecimento comercial
+LISO|Plano, sem ruga
+LOJA|Casa de venda
 LOTE|Parcela
 LUTA|Combate
 LUXO|Ostentação
 MALA|Bagagem|🧳
-MANO|Irmão (coloquial)
+MANO|Irmão
 MARA|Excelente
-MATO|Vegetação silvestre
+MATO|Mato denso
 MEIA|Peça de calçar|🧦
 MEIO|Metade
 META|Objetivo
-MINA|Jazida subterrânea
+MINA|Jazida funda
 MOCO|Rapaz jovem
 MODO|Maneira
 MOFA|Zombaria
 MUDO|Sem fala
-MULA|Animal híbrido
+MULA|Filho de égua
 NADA|Coisa nenhuma
 NATA|Creme do leite
-NETA|Filha do filho
+NETA|Neta de avós
 NIVE|Neve (poético)
-NORA|Mulher do filho
+NORA|Nora de casa
 NUBE|Nuvem (poético)
-OBRA|Trabalho realizado
+OBRA|Trabalho feito
 ORLA|Margem
-OSSO|Parte do esqueleto|🦴
+OSSO|Parte do corpo|🦴
 PAGA|Pagamento
 PAIS|Nação
 PANO|Tecido
@@ -569,28 +575,28 @@ PAPA|Sumo Pontífice
 PARE|Sinal de stop|🛑
 PATA|Pé de animal|🐾
 PECA|Fragmento
-PERU|Ave natalícia|🦃
+PERU|Ave de Natal|🦃
 PILA|Pilha (esp.)
 PIOR|Mais mau
-POLO|Extremo terrestre
+POLO|Extremo da Terra
 PORTE|Tamanho
 POSTO|Lugar
 PRETO|Cor escura|⚫
 PROA|Frente do barco
 PULO|Salto
 PURO|Sem mistura
-RALO|Grelha de escoamento
+RALO|Escoadouro
 RAPA|Raspa
 RARO|Pouco comum
 REAL|Verdadeiro
 RUBI|Pedra vermelha
 ASAS|Membros de voo
 AMES|Verbo amar
-SODA|Bebida gasosa
+SODA|Bebida com gás
 ARES|Ventos do céu
-AVOS|Frações ou avós
-NAS|Contração em + as
-USA|Verbo usar
+AVOS|Pais dos pais
+NAS|Em + as
+USA|Ele utiliza
 GENTE|Pessoas
 PINTA|Mancha
 PISTA|Trilho
@@ -605,12 +611,12 @@ QUASE|Por pouco
 RAIVA|Fúria
 RASTO|Pegada
 REGRA|Norma
-REINO|Território do rei
-RENDA|Tecido delicado
+REINO|Território real
+RENDA|Tecido fino
 RESTO|Sobra
 RITMO|Cadência
 ROCHA|Pedra grande
-ROLHA|Tampa de cortiça
+ROLHA|Tampa de rolha
 RONDA|Patrulha
 ROUPA|Vestuário
 RUGAS|Vincos na pele
@@ -618,59 +624,59 @@ SABER|Conhecimento
 SABOR|Gosto
 SAIDA|Abertura
 SALAO|Sala grande
-SALDO|Diferença de conta
+SALDO|Resto da conta
 SANTA|Sagrada
 SANTO|Sagrado
-SAUDE|Bem-estar físico
-SECAR|Tirar humidade
-SEITA|Grupo religioso
-SELVA|Floresta densa
+SAUDE|Bem-estar
+SECAR|Tirar água
+SEITA|Grupo fechado
+SELVA|Mata densa
 SENSO|Juízo
 SERIE|Sequência
 SERVO|Criado
-SEXTO|Depois do quinto
-SIGLA|Abreviatura
-SILVA|Arbusto espinhoso
+SEXTO|Após o quinto
+SIGLA|Nome curto
+SILVA|Arbusto bravo
 SOBRA|Resto
-SOCIO|Associado
-SOGRA|Mãe do cônjuge
-SOGRO|Pai do cônjuge
-SOLDA|União metálica
-SONDA|Aparelho explorador
+SOCIO|Faz parte
+SOGRA|Mãe do par
+SOGRO|Pai do par
+SOLDA|União de metal
+SONDA|Explora o solo
 SOPRO|Ar soprado
 SURDO|Sem audição
-SUSTO|Sobressalto
-TABUA|Prancha de madeira
+SUSTO|Grande susto
+TABUA|Tábua de pinho
 TALCO|Pó mineral
-TARDE|Após o meio-dia
+TARDE|Após meio-dia
 TECLA|Botão de piano
-TELHA|Peça do telhado
-TENOR|Voz masculina
+TELHA|Peça do teto
+TENOR|Voz aguda (m.)
 TENSO|Esticado
 TERCO|Um terço
 TERRA|Planeta azul|🌍
-TESTO|Tampa de panela
+TESTO|Tampa de tacho
 TEXTO|Escrito
-TIGRE|Felino às riscas|🐯
-TINTA|Pigmento colorido
+TIGRE|Felino riscado|🐯
+TINTA|Cor líquida
 TOCHA|Archote
-TONEL|Barril grande
-TORRE|Edifício alto|🗼
+TONEL|Pipa de vinho
+TORRE|Torre alta|🗼
 TORTA|Bolo enrolado
 TOURO|Bovino bravo|🐂
 TRACO|Linha
 TRAJE|Vestimenta
 TRAMA|Enredo
-TREVO|Planta de 4 folhas|🍀
+TREVO|4 folhas|🍀
 TRIBO|Grupo indígena
 TRIGO|Cereal do pão|🌾
 TRONO|Assento real
 TROPA|Soldados
-TRUFA|Fungo ou chocolate
-TURMA|Grupo de alunos
+TRUFA|Chocolate fino
+TURMA|Grupo escolar
 UNIAO|Junção
 USINA|Fábrica
-VAGAO|Carruagem de comboio
+VAGAO|Carruagem
 VALOR|Preço ou mérito
 VAPOR|Gás de água
 VARAL|Corda de roupa
@@ -679,15 +685,15 @@ VELHO|Idoso
 VENDA|Comércio
 VENTO|Ar em movimento
 VERAO|Estação quente|☀️
-VERBO|Classe gramatical
+VERBO|Ação gramatical
 VERDE|Cor da relva|🟢
 VERSO|Linha de poema
 VIGIA|Sentinela
 VINHO|Bebida da uva|🍷
-VIOLA|Instrumento de cordas
-VIRUS|Agente infeccioso
+VIOLA|Cordas|🎸
+VIRUS|Causa gripe
 VISTA|Visão
-VIUVA|Perdeu o marido
+VIUVA|Sem marido
 ZEBRA|Equídeo riscado|🦓
 ZINCO|Metal químico
 PORCO|Suíno|🐷
@@ -695,7 +701,7 @@ LIVRO|Tem páginas|📖
 CARRO|Automóvel|🚗
 NAVIO|Barco grande|🚢
 AVIAO|Voa nos céus|✈️
-BARCO|Embarcação|⛵
+BARCO|Barco a vela|⛵
 CHAVE|Abre a porta|🔑
 NARIZ|Cheira|👃
 DENTE|Mastiga|🦷
@@ -707,58 +713,86 @@ SERRA|Cadeia de montes
 PONTE|Liga margens|🌉
 LEITE|Bebida branca|🥛
 LIMAO|Fruto azedo|🍋
-MILHO|Cereal em espiga|🌽
-ARROZ|Cereal em grão|🍚
-FESTA|Celebração|🎉
+MILHO|Espiga dourada|🌽
+ARROZ|Grão branco|🍚
+FESTA|Dia de festa|🎉
 CARTA|Vai no envelope|✉️
-FERRO|Metal resistente
-VIDRO|Material transparente
+FERRO|Metal forte
+VIDRO|Transparente
 PEDRA|Rocha pequena
 AREIA|Grãos da praia
-PAPEL|Folha de escrever
-LETRA|Parte da palavra
+PAPEL|Folha branca
+LETRA|Sinal escrito
 TEMPO|Passa nas horas
 NOITE|Sem Sol
 ALUNO|Quem estuda
 PORTO|Cidade do Douro
 BRAGA|Cidade minhota
-COBRA|Réptil sem patas|🐍
+COBRA|Réptil sem pé|🐍
 PEIXE|Vive na água|🐟
-POLVO|Tem oito braços|🐙
+POLVO|Oito braços|🐙
 POETA|Escreve versos
-RADIO|Transmite emissões|📻|-adio
+RADIO|Onda sonora|📻|-adio
 MINHO|Rio do norte
-TENIS|Desporto de raquete|🎾
-PIANO|Instrumento de teclas|🎹
-POEMA|Texto em versos
-BRUXA|Voa de vassoura|🧙
+TENIS|Jogo de raquete|🎾
+PIANO|Teclas|🎹
+POEMA|Texto em verso
+BRUXA|Voa na vassoura|🧙
 PIZZA|Prato italiano|🍕
 PRATO|Onde se serve|🍽️
-GARFO|Talher de dentes
-LOTUS|Flor aquática|🪷|-tus
-ATOMO|Partícula química|⚛️
+GARFO|Talher|🍴
+LOTUS|Flor da água|🪷|-tus
+ATOMO|Átomo|⚛️
 COROA|Insígnia real|👑
-CACTO|Planta do deserto|🌵
+CACTO|Planta do areal|🌵
 AGUIA|Ave de rapina|🦅
 CISNE|Ave elegante|🦢
 NORTE|Ponto cardeal
-PORTA|Entrada de casa|🚪
-PRECO|Valor monetário
+PORTA|Entrada da casa|🚪
+PRECO|Valor a pagar
 PRIMO|Filho do tio
-PULGA|Parasita saltador
+PULGA|Salta no cão
 QUILO|Mil gramas
 ROSTO|Face humana
 ROUCO|Sem voz clara
-SABAO|Produto de limpeza|🧼
+SABAO|Lava mãos|🧼
 SALTO|Pulo
-SENHA|Palavra-passe
+SENHA|Código secreto
 SEXTA|Dia da semana
 SINAL|Indicação
 SITIO|Lugar
-SONHO|Visão ao dormir
+SONHO|Ao dormir
 SORTE|Boa fortuna
-SUMIR|Desaparecer
+SUMIR|Sumir de vista
 TAMPA|Cobertura
+AMIGO|Companheiro
+MUITO|Em grande dose
+POUCO|Em baixa dose
+ONTEM|Dia anterior
+AGORA|Neste instante
+ANTES|Mais cedo
+ENTRE|No meio de
+DESDE|A partir de
+QUANDO|Em que hora
+MESMO|Idêntico
+TANTO|Em tal grau
+MENOS|Quantidade menor
+MAIOR|Mais grande
+MENOR|Mais pequeno
+CLARO|Com muita luz
+FORTE|Com muita força
+FRACO|Sem força
+CHEIO|Repleto
+CURTO|Pouco longo
+LARGO|Bem amplo
+FACIL|Sem custo
+POBRE|Sem dinheiro
+FELIZ|Alegre
+CALMO|Tranquilo
+BRAVO|Valente
+LINDO|Muito bonito
+LIMPO|Sem sujidade
+MORTO|Sem vida
 `;
 
 const BASE_DICT = [];
@@ -796,54 +830,85 @@ const WORDS_BY_LEN = {};
 for (let l = 2; l <= 5; l++) WORDS_BY_LEN[l] = [];
 ALL_WORDS.forEach(item => WORDS_BY_LEN[item.w.length].push(item));
 
+// 6 modelos estruturalmente distintos (24 layouts com reflexões), palavras de 2 a 5 letras
 const BASE_TEMPLATES = [
+  // Modelo A: Blocos diagonais escalonados
+  [
+    [0,0,0,0,0,0,0,0],
+    [0,1,1,1,0,0,1,1],
+    [0,1,1,1,0,1,1,1],
+    [0,1,1,0,1,1,1,1],
+    [0,0,1,1,1,1,0,0],
+    [0,1,1,1,0,1,1,1],
+    [0,1,1,0,1,1,1,1],
+    [0,1,1,1,1,0,1,1],
+    [0,1,1,1,0,1,1,1],
+    [0,0,1,1,0,1,1,1]
+  ],
+  // Modelo B: Pilares gémeos e pontes centrais
   [
     [0,0,0,0,0,0,0,0],
     [0,1,1,1,1,0,1,1],
     [0,1,1,1,1,0,1,1],
-    [0,1,1,1,1,0,1,1],
-    [0,1,1,1,1,0,0,0],
-    [0,0,0,0,0,1,1,1],
+    [0,1,1,0,1,1,1,1],
+    [0,1,1,1,1,1,0,0],
+    [0,0,1,1,1,1,1,0],
     [0,1,1,1,0,1,1,1],
-    [0,1,1,1,0,0,0,0],
+    [0,1,1,1,1,0,1,1],
+    [0,1,1,0,1,1,1,1],
+    [0,1,1,0,1,1,1,1]
+  ],
+  // Modelo C: Espinha central com asas alternadas
+  [
+    [0,0,0,0,0,0,0,0],
+    [0,1,1,1,1,0,0,0],
+    [0,1,1,1,1,1,0,0],
+    [0,0,1,1,1,1,1,0],
+    [0,1,1,1,0,1,1,1],
+    [0,1,1,1,1,0,1,1],
+    [0,1,1,0,1,1,1,1],
+    [0,0,1,1,1,1,0,0],
+    [0,1,1,1,1,0,1,1],
+    [0,1,1,1,0,0,1,1]
+  ],
+  // Modelo D: Quatro quadrantes cruzados
+  [
+    [0,0,0,0,0,0,0,0],
+    [0,1,1,1,0,1,1,1],
+    [0,1,1,1,0,1,1,1],
+    [0,1,1,1,1,1,0,0],
+    [0,0,0,1,1,1,1,1],
+    [0,1,1,1,0,1,1,1],
+    [0,1,1,1,1,1,0,0],
+    [0,0,0,1,1,1,1,1],
     [0,1,1,1,0,1,1,1],
     [0,1,1,1,0,1,1,1]
   ],
+  // Modelo E: Degraus em ziguezague
   [
     [0,0,0,0,0,0,0,0],
-    [0,1,1,1,0,1,1,1],
-    [0,1,1,1,0,1,1,1],
-    [0,1,1,1,1,1,0,0],
-    [0,0,0,1,1,1,1,1],
-    [0,1,1,1,1,0,1,1],
-    [0,1,1,1,0,1,1,1],
-    [0,1,1,0,1,1,1,1],
-    [0,1,1,1,1,1,0,0],
-    [0,1,1,1,0,1,1,0]
-  ],
-  [
-    [0,0,0,0,0,0,0,0],
-    [0,1,1,1,1,0,1,1],
-    [0,1,1,1,1,0,1,1],
-    [0,1,1,0,1,1,1,1],
-    [0,1,1,1,1,1,0,0],
-    [0,0,0,1,1,1,1,1],
     [0,1,1,1,0,0,1,1],
-    [0,1,1,1,1,1,0,0],
+    [0,1,1,1,0,1,1,1],
     [0,1,1,0,1,1,1,1],
-    [0,1,1,0,1,1,1,1]
+    [0,0,1,1,1,1,0,0],
+    [0,1,1,1,1,0,1,1],
+    [0,1,1,1,0,1,1,1],
+    [0,1,1,0,1,1,1,1],
+    [0,0,1,1,1,1,0,0],
+    [0,0,1,1,1,0,0,0]
   ],
+  // Modelo F: Favo simétrico
   [
     [0,0,0,0,0,0,0,0],
-    [0,1,1,1,0,1,1,0],
-    [0,1,1,1,1,1,1,0],
-    [0,1,1,0,1,1,1,0],
-    [0,1,1,1,1,1,0,0],
-    [0,0,0,1,1,1,1,1],
+    [0,0,1,1,0,1,1,1],
     [0,1,1,1,0,1,1,1],
-    [0,1,1,1,1,0,1,1],
     [0,1,1,0,1,1,1,1],
-    [0,1,1,0,1,1,1,1]
+    [0,1,1,1,1,0,1,1],
+    [0,0,1,1,1,1,0,0],
+    [0,1,1,0,1,1,1,1],
+    [0,1,1,1,1,0,1,1],
+    [0,1,1,1,0,1,1,1],
+    [0,0,1,1,0,1,1,1]
   ]
 ];
 
@@ -867,22 +932,40 @@ const rng = s => () => {
   return ((t ^ t >>> 14) >>> 0) / 4294967296;
 };
 
-function renderClueContent(b, lvl) {
-  const picChance = Math.max(0.28, 0.65 - (lvl * 0.003));
+function getClueFontStyle(txt, isSplit) {
+  const words = txt.split(/\s+/);
+  const maxW = words.reduce((m, w) => Math.max(m, w.length), 0);
+  const len = txt.length;
+  let factor = isSplit ? 0.128 : 0.146;
+
+  if (maxW >= 10) factor = Math.min(factor, 0.105);
+  else if (maxW === 9) factor = Math.min(factor, 0.116);
+  else if (maxW === 8) factor = Math.min(factor, 0.128);
+  else if (maxW === 7) factor = Math.min(factor, 0.138);
+
+  if (len >= 18) factor = Math.min(factor, 0.112);
+  else if (len >= 15) factor = Math.min(factor, 0.124);
+
+  return `style="font-size:calc(var(--cs)*${factor.toFixed(3)})"`;
+}
+
+function renderClueContent(b, lvl, isSplit = false) {
+  const picChance = Math.max(0.28, 0.62 - (lvl * 0.003));
   const usePic = b.e && (((b.w.charCodeAt(0) * 11 + b.w.length * 17 + lvl * 7) % 100) < picChance * 100);
   if (usePic) {
     return `<div class="pc-wrap">${b.aff ? `<span class="pc-aff">${b.aff}</span>` : ''}<span class="pc">${b.e}</span></div>`;
   }
-  return b.t;
+  return `<span ${getClueFontStyle(b.t, isSplit)}>${b.t}</span>`;
 }
 
 function ck(q, r, c, lvl) {
   if (r === 0 && c === 0) return '<div class="c k corner"></div>';
   if (!q || (!q.a && !q.d)) return '<div class="c k corner"></div>';
   if (q.a && q.d) {
-    return `<div class="c k s" data-kr="${r}" data-kc="${c}"><div>${renderClueContent(q.a, lvl)}<i class="r">▸</i></div><div>${renderClueContent(q.d, lvl)}<i class="b">▾</i></div></div>`;
+    return `<div class="c k s" data-kr="${r}" data-kc="${c}"><div>${renderClueContent(q.a, lvl, true)}<i class="r">▸</i></div><div>${renderClueContent(q.d, lvl, true)}<i class="b">▾</i></div></div>`;
   }
-  return `<div class="c k" data-kr="${r}" data-kc="${c}">${renderClueContent(q.a || q.d, lvl)}<i class="${q.a ? 'r' : 'b'}">${q.a ? '▸' : '▾'}</i></div>`;
+  const dirCls = q.a ? 'has-r' : 'has-b';
+  return `<div class="c k ${dirCls}" data-kr="${r}" data-kc="${c}">${renderClueContent(q.a || q.d, lvl, false)}<i class="${q.a ? 'r' : 'b'}">${q.a ? '▸' : '▾'}</i></div>`;
 }
 
 function extractSlots(g) {
@@ -930,7 +1013,7 @@ function extractSlots(g) {
   return slots;
 }
 
-function solveLayout(g, slots, rn, lvl, timeLimitMs = 20) {
+function solveLayout(g, slots, rn, lvl, timeLimitMs = 140) {
   if (!slots.length || slots.some(s => !WORDS_BY_LEN[s.len] || !WORDS_BY_LEN[s.len].length)) return null;
 
   const t0 = performance.now();
@@ -1045,10 +1128,15 @@ function buildFallbackBoard() {
 
 function generateBoard(lvl) {
   const rn = rng(lvl * 9973 + 31337);
-  for (let attempt = 0; attempt < 8; attempt++) {
-    const base = BASE_TEMPLATES[(lvl + attempt) % BASE_TEMPLATES.length];
-    const flipV = ((lvl + attempt) >> 2) & 1;
-    const flipH = ((lvl + attempt) >> 3) & 1;
+  const startTpl = (lvl - 1) % BASE_TEMPLATES.length;
+  const baseFlip = Math.floor((lvl - 1) / BASE_TEMPLATES.length) % 4;
+
+  for (let attempt = 0; attempt < BASE_TEMPLATES.length * 2; attempt++) {
+    const base = BASE_TEMPLATES[(startTpl + attempt) % BASE_TEMPLATES.length];
+    const flipMode = (baseFlip + Math.floor(attempt / BASE_TEMPLATES.length)) % 4;
+    const flipV = flipMode & 1;
+    const flipH = (flipMode >> 1) & 1;
+
     const g = Array.from({ length: R }, (_, r) =>
       Array.from({ length: C }, (_, c) => {
         if (r === 0 || c === 0) return 0;
@@ -1058,7 +1146,7 @@ function generateBoard(lvl) {
       })
     );
     const slots = extractSlots(g);
-    const solved = solveLayout(g, slots, rn, lvl, 18);
+    const solved = solveLayout(g, slots, rn, lvl, 140);
     if (solved) return solved;
   }
   return buildFallbackBoard();
@@ -1074,17 +1162,17 @@ const HEADLINES = [
 
 let saveData = { won: {}, active: null };
 try {
-  const raw = JSON.parse(localStorage.getItem('pc_master_v7') || localStorage.getItem('pc_master_v6') || localStorage.getItem('pc_master_v5') || 'null');
+  const raw = JSON.parse(localStorage.getItem('pc_master_v8') || localStorage.getItem('pc_master_v7') || localStorage.getItem('pc_master_v6') || 'null');
   if (raw) {
     saveData = {
       won: raw.won || {},
-      active: localStorage.getItem('pc_master_v7') ? (raw.active || null) : null
+      active: localStorage.getItem('pc_master_v8') ? (raw.active || null) : null
     };
   }
 } catch (e) {}
 
 function persist() {
-  try { localStorage.setItem('pc_master_v7', JSON.stringify(saveData)); } catch (e) {}
+  try { localStorage.setItem('pc_master_v8', JSON.stringify(saveData)); } catch (e) {}
 }
 
 function saveActiveGame() {
@@ -1179,7 +1267,7 @@ function showMenu() {
   let html = `
     <div class="m-head">
       <h1>Palavras Cruzadas</h1>
-      <p>Desafia o oponente • v7</p>
+      <p>Desafia o oponente • v8</p>
     </div>
     <div class="stats-card">
       <div><b>${wonCount}/${TOTAL_LEVELS}</b><span>Níveis Vencidos</span></div>
