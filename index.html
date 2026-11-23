@@ -8,18 +8,11 @@
 :root{
   --bg:#ffffff;--tx:#2c3548;--ct:#d6e6fa;--cl:#ffffff;--cb:#c2cbd9;
   --bl:#0a84ff;--me:#232b3d;--ai:#5c667d;--ti:#f7e2c1;--tib:#d6b585;--tt:#2c3548;
-  --bar:#f0f3f8;--ok:#c8f2c2;--bd:#e1e6f0;
+  --bar:#f0f3f8;--ok:#c8f2c2;--bn:#dcf5d7;--bd:#e1e6f0;
   --cs:min(calc((100vw - 20px)/8),64px,calc((100dvh - 310px)/10));
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
-}
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    --bg:#13161c;--tx:#e4e8f2;--ct:#22334d;--cl:#1c2029;--cb:#363d4d;
-    --me:#eef2fa;--ai:#9aa3b8;--ti:#d8b57d;--tib:#9e7e4c;--tt:#1a1e26;
-    --bar:#222733;--ok:#2a5427;--bd:#2d3342;
-  }
 }
 html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
 body{
@@ -50,6 +43,7 @@ h1{font-size:clamp(22px,6.5vw,30px);margin:2px 12px 8px;text-align:center;line-h
 }
 .c:nth-child(8n){border-right:0}
 .c:nth-child(n+73){border-bottom:0}
+.c.bn{background:var(--bn)}
 
 .k{
   background:var(--ct);font-size:calc(var(--cs)*.175);font-weight:700;
@@ -58,7 +52,6 @@ h1{font-size:clamp(22px,6.5vw,30px);margin:2px 12px 8px;text-align:center;line-h
   cursor:pointer;
 }
 .k.corner{background:#c5d8f0;cursor:default}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .k.corner{background:#1b283d}}
 .k i{position:absolute;font-style:normal;font-size:calc(var(--cs)*.19);color:#5c7499;pointer-events:none}
 .k .r{right:1px;top:50%;transform:translateY(-50%)}
 .k .b{bottom:-1px;left:50%;transform:translateX(-50%)}
@@ -66,7 +59,6 @@ h1{font-size:clamp(22px,6.5vw,30px);margin:2px 12px 8px;text-align:center;line-h
 .s{flex-direction:column;padding:0}
 .s div{flex:1;width:100%;display:flex;align-items:center;justify-content:center;position:relative;font-size:calc(var(--cs)*.145);padding:0 3px;box-sizing:border-box;line-height:1.02}
 .s div:first-child{border-bottom:1px solid #aebfd9}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .s div:first-child{border-bottom-color:#34496b}}
 .s .b{bottom:-2px}
 
 .pc-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
@@ -76,6 +68,7 @@ h1{font-size:clamp(22px,6.5vw,30px);margin:2px 12px 8px;text-align:center;line-h
 
 .me{color:var(--me)}
 .ai{color:var(--ai)}
+.init{color:#3c465c}
 .pd{
   background:linear-gradient(180deg,#fdf1dc,var(--ti));
   color:var(--tt);border-radius:4px;
@@ -85,7 +78,6 @@ h1{font-size:clamp(22px,6.5vw,30px);margin:2px 12px 8px;text-align:center;line-h
 .pd.sel{box-shadow:inset 0 0 0 2.5px var(--bl),0 2px 6px #0003}
 .hl-word{background:#fae6c3 !important;box-shadow:inset 0 0 0 2px var(--bl)}
 .hl-clue{background:#eef5ff !important}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hl-clue{background:#26334a !important}}
 .hint{animation:p .55s 3}@keyframes p{50%{background:var(--ok)}}
 
 .badge{
@@ -594,6 +586,13 @@ RAPA|Raspa
 RARO|Pouco comum
 REAL|Verdadeiro
 RUBI|Pedra vermelha
+ASAS|Membros de voo
+AMES|Verbo amar
+SODA|Bebida gasosa
+ARES|Ventos do céu
+AVOS|Frações ou avós
+NAS|Contração em + as
+USA|Verbo usar
 GENTE|Pessoas
 PINTA|Mancha
 PISTA|Trilho
@@ -762,155 +761,10 @@ SONHO|Visão ao dormir
 SORTE|Boa fortuna
 SUMIR|Desaparecer
 TAMPA|Cobertura
-OVELHA|Animal de lã
-SECULO|Cem anos
-SAPATO|Calçado|👞
-CHAPEU|Cobre a cabeça|🎩
-QUEIJO|Derivado do leite|🧀
-BANANA|Fruto amarelo|🍌
-TOMATE|Fruto vermelho|🍅|-mate
-CINEMA|Sala de filmes|🎬
-MUSICA|Arte dos sons|🎵
-OUTONO|Caem as folhas|🍂
-RAINHA|Mulher do rei|👸
-ESCOLA|Onde se aprende|🏫
-LISBOA|Capital de Portugal
-MACACO|Primata|🐒
-BALEIA|Maior mamífero|🐋
-ABELHA|Faz mel|🐝
-ESTADO|Nação soberana
-MEDICO|Trata doentes
-PINTOR|Artista plástico
-CIDADE|Centro urbano
-ALDEIA|Povoação pequena
-BRASIL|País sul-americano|🇧🇷
-CAMOES|Autor de Os Lusíadas
-PESSOA|Autor de Mensagem
-TROFEU|Prémio desportivo|🏆
-JANELA|Deixa entrar luz
-PAREDE|Divide a sala
-TAMBOR|Percussão|🥁
-TEATRO|Palco e plateia|🎭
-JORNAL|Diário de notícias|📰
-ACUCAR|Adoça o café
-COLHER|Talher da sopa|🥄
-ESPADA|Arma branca|⚔️
-ESCUDO|Arma defensiva|🛡️
-ORELHA|Órgão da audição|👂
-CAMARA|Máquina fotográfica|📷
-VULCAO|Montanha de lava|🌋
-CEREJA|Fruto vermelho|🍒
-CEBOLA|Hortaliça em camadas|🧅
-FRANGO|Ave doméstica|🍗
-GIRAFA|Pescoço comprido|🦒
-CAMELO|Animal com bossas|🐫
-CORUJA|Ave noturna|🦉
-ARANHA|Aracnídeo|🕷️
-TIJOLO|Bloco de construção|🧱
-XADREZ|Jogo de tabuleiro|♟️
-XAROPE|Medicamento líquido
-TROVAO|Segue o relâmpago
-ABRACO|Gesto de carinho
-ACORDO|Entendimento
-ADULTO|Pessoa crescida
-ALEGRE|Contente
-ALFACE|Hortaliça de salada|🥬
-ALGUEM|Alguma pessoa
-ALTURA|Elevação
-AMARGO|Sabor acre
-AMIGOS|Companheiros
-ANIMAL|Ser vivo
-ANTIGO|Muito velho
-APENAS|Somente
-ARVORE|Tem copa e tronco|🌳
-ATAQUE|Ofensiva
-ATRASO|Demora
-AZEITE|Óleo de azeitona
-BAIRRO|Zona da cidade
-BARATA|Inseto doméstico|🪳
-BATATA|Tubérculo|🥔
-BEBIDA|Líquido para beber
-BELEZA|Formosura
-BIGODE|Pelos sobre o lábio
-BONECA|Brinquedo infantil
-BOSQUE|Pequena floresta
-BRANCO|Cor da neve|⚪
-BRILHO|Luminosidade
-CABECA|Parte superior do corpo
-CABELO|Fios na cabeça
-CADEIA|Prisão
-CAMISA|Peça de roupa|👕
-CANECA|Chávena grande
-CANETA|Instrumento de escrita|🖊️
-CAVALO|Equídeo|🐴
-CENTRO|Meio
-CHEIRO|Odor
-COELHO|Mamífero orelhudo|🐰
-COLEGA|Companheiro de trabalho
-COMIDA|Alimento
-CONCHA|Casca marinha|🐚
-COSTAS|Dorso
-DEPOIS|Mais tarde
-DESEJO|Vontade
-DIRETO|Sem desvios
-DOENCA|Enfermidade
-DUVIDA|Incerteza
-EFEITO|Resultado
-FEIJAO|Leguminosa
-FERIAS|Descanso anual
-FRENTE|Parte dianteira
-FUTURO|Tempo que virá
-GAVETA|Compartimento de móvel
-GUARDA|Vigilante
-GUERRA|Conflito armado
-IGREJA|Templo cristão|⛪
-IMAGEM|Representação visual
-INICIO|Começo
-INSETO|Pequeno artrópode
-JARDIM|Espaço com flores
-JOELHO|Articulação da perna
-LADRAO|Assaltante
-LINGUA|Órgão da fala
-MARIDO|Esposo
-MENINA|Rapariga jovem
-MENINO|Rapaz jovem
-METADE|Meia parte
-MINUTO|60 segundos
-NUMERO|Algarismo
-OBJETO|Coisa material
-OCEANO|Grande massa de água
-OFERTA|Dádiva
-ORIGEM|Princípio
-PAGINA|Folha de livro
-PANELA|Utensílio de cozinha
-PARQUE|Jardim público
-PATRAO|Empregador
-PEDIDO|Solicitação
-PERIGO|Risco
-PLANTA|Ser vegetal|🌱
-POESIA|Arte dos versos
-QUARTO|Divisão de dormir
-QUENTE|Com calor
-RECADO|Mensagem breve
-RELOGIO|Mede o tempo
-SANGUE|Líquido vital
-SEMANA|Sete dias
-SENTIR|Perceber
-SERVIR|Prestar serviço
-SOMBRA|Ausência de luz
-TAPETE|Alcatifa
-TAREFA|Trabalho a fazer
-TECIDO|Pano
-TEORIA|Conjunto de ideias
-TIGELA|Taça funda
-TOALHA|Pano de secar
-TOMADA|Ligação elétrica
-ULTIMO|Final
-VIAGEM|Deslocação
-XICARA|Chávena (BR)|☕
 `;
 
 const BASE_DICT = [];
+const WORD_MAP = {};
 const seenBase = new Set();
 RAW_WORDS.trim().split('\n').forEach(line => {
   const parts = line.split('|');
@@ -918,19 +772,20 @@ RAW_WORDS.trim().split('\n').forEach(line => {
   const t = (parts[1] || '').trim();
   const e = (parts[2] || '').trim();
   const aff = (parts[3] || '').trim();
-  if (w.length >= 2 && w.length <= 6 && !seenBase.has(w)) {
+  if (w.length >= 2 && w.length <= 5 && !seenBase.has(w)) {
     seenBase.add(w);
-    BASE_DICT.push({ w, t, e, aff, f: 0 });
+    const obj = { w, t, e, aff, f: 0 };
+    BASE_DICT.push(obj);
+    WORD_MAP[w] = obj;
   }
 });
 
 const FILL_DICT = [];
 const seenFill = new Set(seenBase);
 BASE_DICT.forEach(b => {
-  if (b.w.length >= 5 && b.w.length <= 6) {
-    const idx = b.w.length === 5 ? 1 : 2;
-    const sub2 = b.w.slice(idx, idx + 2);
-    const masked2 = b.w.slice(0, idx) + '__' + b.w.slice(idx + 2);
+  if (b.w.length === 5) {
+    const sub2 = b.w.slice(1, 3);
+    const masked2 = b.w.slice(0, 1) + '__' + b.w.slice(3);
     if (!seenFill.has(sub2)) {
       seenFill.add(sub2);
       FILL_DICT.push({ w: sub2, t: masked2, e: '', aff: '', f: 1 });
@@ -940,12 +795,23 @@ BASE_DICT.forEach(b => {
 
 const ALL_WORDS = BASE_DICT.concat(FILL_DICT);
 const WORDS_BY_LEN = {};
-for (let l = 2; l <= 6; l++) WORDS_BY_LEN[l] = [];
+for (let l = 2; l <= 5; l++) WORDS_BY_LEN[l] = [];
 ALL_WORDS.forEach(item => WORDS_BY_LEN[item.w.length].push(item));
 
-// Modelos validados: max 6 letras, 0 palavras de 1 letra, resolução instantânea (< 10ms)
+// Modelos validados (palavras de 2 a 5 letras, geração ultrarrápida)
 const BASE_TEMPLATES = [
-  // Modelo 1
+  [
+    [0,0,0,0,0,0,0,0],
+    [0,1,1,1,1,0,1,1],
+    [0,1,1,1,1,0,1,1],
+    [0,1,1,1,1,0,1,1],
+    [0,1,1,1,1,0,0,0],
+    [0,0,0,0,0,1,1,1],
+    [0,1,1,1,0,1,1,1],
+    [0,1,1,1,0,0,0,0],
+    [0,1,1,1,0,1,1,1],
+    [0,1,1,1,0,1,1,1]
+  ],
   [
     [0,0,0,0,0,0,0,0],
     [0,1,1,1,0,1,1,1],
@@ -955,10 +821,9 @@ const BASE_TEMPLATES = [
     [0,1,1,1,1,0,1,1],
     [0,1,1,1,0,1,1,1],
     [0,1,1,0,1,1,1,1],
-    [0,1,1,1,1,1,1,0],
+    [0,1,1,1,1,1,0,0],
     [0,1,1,1,0,1,1,0]
   ],
-  // Modelo 2
   [
     [0,0,0,0,0,0,0,0],
     [0,1,1,1,1,0,1,1],
@@ -971,20 +836,6 @@ const BASE_TEMPLATES = [
     [0,1,1,0,1,1,1,1],
     [0,1,1,0,1,1,1,1]
   ],
-  // Modelo 3
-  [
-    [0,0,0,0,0,0,0,0],
-    [0,1,1,1,1,1,0,0],
-    [0,1,1,1,1,1,1,0],
-    [0,1,1,0,1,1,1,1],
-    [0,1,1,1,1,0,1,1],
-    [0,1,1,1,0,1,1,1],
-    [0,0,0,1,1,1,1,1],
-    [0,0,0,1,1,1,0,0],
-    [0,0,0,1,1,1,1,1],
-    [0,0,0,1,1,1,1,1]
-  ],
-  // Modelo 4
   [
     [0,0,0,0,0,0,0,0],
     [0,1,1,1,0,1,1,0],
@@ -999,6 +850,20 @@ const BASE_TEMPLATES = [
   ]
 ];
 
+// Tabuleiro de reserva 100% garantido (zero latência)
+const FALLBACK_GRID = [
+  [null,null,null,null,null,null,null,null],
+  [null,'C','A','S','A',null,'R','E'],
+  [null,'A','M','O','R',null,'E','M'],
+  [null,'R','E','D','E',null,'I','A'],
+  [null,'A','S','A','S',null,null,null],
+  [null,null,null,null,null,'L','U','A'],
+  [null,'M','A','R',null,'A','M','O'],
+  [null,'U','V','A',null,null,null,null],
+  [null,'D','O','R',null,'N','A','S'],
+  [null,'O','S','O',null,'U','S','A']
+];
+
 const rng = s => () => {
   s |= 0; s = s + 0x6D2B79F5 | 0;
   let t = Math.imul(s ^ s >>> 15, 1 | s);
@@ -1007,7 +872,7 @@ const rng = s => () => {
 };
 
 function renderClueContent(b, lvl) {
-  const picChance = Math.max(0.24, 0.60 - (lvl * 0.0035));
+  const picChance = Math.max(0.28, 0.65 - (lvl * 0.003));
   const usePic = b.e && (((b.w.charCodeAt(0) * 11 + b.w.length * 17 + lvl * 7) % 100) < picChance * 100);
   if (usePic) {
     return `<div class="pc-wrap">${b.aff ? `<span class="pc-aff">${b.aff}</span>` : ''}<span class="pc">${b.e}</span></div>`;
@@ -1069,15 +934,16 @@ function extractSlots(g) {
   return slots;
 }
 
-function solveLayout(g, slots, rn, lvl, maxSteps = 500) {
+function solveLayout(g, slots, rn, lvl, timeLimitMs = 20) {
   if (!slots.length || slots.some(s => !WORDS_BY_LEN[s.len] || !WORDS_BY_LEN[s.len].length)) return null;
 
+  const t0 = performance.now();
   const grid = Array.from({ length: R }, () => Array(C).fill(null));
   const used = new Set();
   const allowFill = lvl >= 4;
   const pools = {};
 
-  for (let l = 2; l <= 6; l++) {
+  for (let l = 2; l <= 5; l++) {
     const arr = WORDS_BY_LEN[l].filter(w => allowFill || !w.f).slice();
     for (let i = arr.length - 1; i > 0; i--) {
       const j = (rn() * (i + 1)) | 0;
@@ -1117,7 +983,7 @@ function solveLayout(g, slots, rn, lvl, maxSteps = 500) {
 
   function backtrack(assignedCount) {
     if (assignedCount === slots.length) return true;
-    if (++steps > maxSteps) return false;
+    if ((++steps & 63) === 0 && (performance.now() - t0) > timeLimitMs) return false;
 
     let bestSlot = null;
     let bestCands = null;
@@ -1171,9 +1037,19 @@ function solveLayout(g, slots, rn, lvl, maxSteps = 500) {
   return null;
 }
 
+function buildFallbackBoard() {
+  const g = FALLBACK_GRID.map(row => row.map(v => v ? 1 : 0));
+  const slots = extractSlots(g);
+  slots.forEach(s => {
+    const w = s.cells.map(([y, x]) => FALLBACK_GRID[y][x]).join('');
+    s.word = WORD_MAP[w] || { w, t: w, e: '', aff: '', f: 0 };
+  });
+  return { g, slots, grid: FALLBACK_GRID.map(r => r.slice()) };
+}
+
 function generateBoard(lvl) {
   const rn = rng(lvl * 9973 + 31337);
-  for (let attempt = 0; attempt < 40; attempt++) {
+  for (let attempt = 0; attempt < 8; attempt++) {
     const base = BASE_TEMPLATES[(lvl + attempt) % BASE_TEMPLATES.length];
     const flipV = ((lvl + attempt) >> 2) & 1;
     const flipH = ((lvl + attempt) >> 3) & 1;
@@ -1186,15 +1062,13 @@ function generateBoard(lvl) {
       })
     );
     const slots = extractSlots(g);
-    const solved = solveLayout(g, slots, rn, lvl, 500);
+    const solved = solveLayout(g, slots, rn, lvl, 18);
     if (solved) return solved;
   }
-  // Reserva garantida com Modelo 2 (max 5 letras)
-  const fbG = BASE_TEMPLATES[1].map(r => r.slice());
-  return solveLayout(fbG, extractSlots(fbG), rng(2026), 1, 8000);
+  return buildFallbackBoard();
 }
 
-let LN = 1, sol, clue, val, own, pend, W, W_INFO, rack, sel, me, op, hints, done, busy, hc, badges = [], hlCells = new Set(), hlClue = null;
+let LN = 1, sol, clue, val, own, pend, bonusCells, W, W_INFO, rack, sel, me, op, hints, done, busy, hc, badges = [], hlCells = new Set(), hlClue = null;
 
 const HEADLINES = [
   'Resolva palavras cruzadas',
@@ -1204,12 +1078,12 @@ const HEADLINES = [
 
 let saveData = { won: {}, active: null };
 try {
-  const raw = JSON.parse(localStorage.getItem('pc_master_v4') || 'null');
+  const raw = JSON.parse(localStorage.getItem('pc_master_v5') || 'null');
   if (raw) saveData = { won: raw.won || {}, active: raw.active || null };
 } catch (e) {}
 
 function persist() {
-  try { localStorage.setItem('pc_master_v4', JSON.stringify(saveData)); } catch (e) {}
+  try { localStorage.setItem('pc_master_v5', JSON.stringify(saveData)); } catch (e) {}
 }
 
 function saveActiveGame() {
@@ -1217,8 +1091,9 @@ function saveActiveGame() {
     saveData.active = null;
   } else {
     saveData.active = {
-      LN, sol, clue, val, own, pend, W, W_INFO,
-      rack, me, op, hints,
+      LN, sol, clue, val, own, pend,
+      bonusCells: Array.from(bonusCells || []),
+      W, W_INFO, rack, me, op, hints,
       done: Array.from(done)
     };
   }
@@ -1246,6 +1121,7 @@ function startLevel(n, resumeObj = null) {
       val = resumeObj.val;
       own = resumeObj.own;
       pend = resumeObj.pend || M();
+      bonusCells = new Set(resumeObj.bonusCells || []);
       W = resumeObj.W;
       W_INFO = resumeObj.W_INFO || [];
       rack = resumeObj.rack;
@@ -1263,10 +1139,15 @@ function startLevel(n, resumeObj = null) {
   if (!loaded) {
     const solved = generateBoard(LN);
     sol = M(); clue = M(() => ({})); val = M(); own = M(); pend = M(); W = []; W_INFO = [];
+    bonusCells = new Set();
 
+    const letterCoords = [];
     for (let r = 0; r < R; r++) {
       for (let c = 0; c < C; c++) {
-        if (solved.grid[r][c] !== null) sol[r][c] = solved.grid[r][c];
+        if (solved.grid[r][c] !== null) {
+          sol[r][c] = solved.grid[r][c];
+          letterCoords.push([r, c]);
+        }
       }
     }
 
@@ -1280,6 +1161,27 @@ function startLevel(n, resumeObj = null) {
         text: s.word.t + (s.word.e ? ' ' + s.word.e : '')
       });
     });
+
+    // Revela ~25% das letras iniciais como âncoras (sem completar palavras inteiras)
+    const shuffledCoords = shuf(letterCoords.slice());
+    const targetAnchors = Math.floor(letterCoords.length * 0.25);
+    let revealed = 0;
+    for (const [r, c] of shuffledCoords) {
+      if (revealed >= targetAnchors) break;
+      val[r][c] = sol[r][c];
+      own[r][c] = 'init';
+      const completesWord = W.some(w => w.every(([y, x]) => val[y][x]));
+      if (completesWord) {
+        val[r][c] = null;
+        own[r][c] = null;
+      } else {
+        revealed++;
+      }
+    }
+
+    // Marca até 6 casas bónus verdes
+    const openForBonus = shuffledCoords.filter(([r, c]) => !val[r][c]);
+    openForBonus.slice(0, 6).forEach(([r, c]) => bonusCells.add(r + ',' + c));
 
     me = 0; op = 0;
     hints = 3;
@@ -1304,7 +1206,7 @@ function showMenu() {
   let html = `
     <div class="m-head">
       <h1>Palavras Cruzadas</h1>
-      <p>Desafia o oponente • v4</p>
+      <p>Desafia o oponente • v5</p>
     </div>
     <div class="stats-card">
       <div><b>${wonCount}/${TOTAL_LEVELS}</b><span>Níveis Vencidos</span></div>
@@ -1402,10 +1304,12 @@ function draw() {
         const isHl = hlCells.has(r + ',' + c);
         const isClueHl = hlClue && hlClue.has(r + ',' + c);
         const isHint = hc && hc[0] === r && hc[1] === c;
+        const isBonus = bonusCells && bonusCells.has(r + ',' + c);
         const isSel = p && sel && sel.type === 'board' && sel.r === r && sel.c === c;
         const badge = badges.find(b => b.r === r && b.c === c);
 
         let cls = 'c';
+        if (isBonus && !v && !p) cls += ' bn';
         if (v) cls += ' ' + own[r][c];
         else if (p) cls += ' pd' + (isSel ? ' sel' : '');
         if (isHl) cls += ' hl-word';
@@ -1643,7 +1547,7 @@ $('ht').onclick = () => {
 $('go').onclick = () => {
   if (busy) return;
   busy = 1;
-  let right = 0, wrong = 0;
+  let right = 0, wrong = 0, tileBonus = 0;
   const lastRightCells = [];
 
   for (let r = 0; r < R; r++) {
@@ -1654,6 +1558,10 @@ $('go').onclick = () => {
           val[r][c] = p.l;
           own[r][c] = 'me';
           right++;
+          if (bonusCells && bonusCells.has(r + ',' + c)) {
+            tileBonus += 2;
+            bonusCells.delete(r + ',' + c);
+          }
           lastRightCells.push([r, c]);
         } else {
           rack[p.s] = p.l;
@@ -1665,19 +1573,20 @@ $('go').onclick = () => {
   }
 
   const wordBonus = checkCompletedWords();
-  me += right + wordBonus;
+  const totalTurn = right + tileBonus + wordBonus;
+  me += totalTurn;
 
-  if (right > 0 && wordBonus === 0) {
+  if (totalTurn > 0 && wordBonus === 0) {
     const last = lastRightCells[lastRightCells.length - 1];
-    badges = [{ r: last[0], c: last[1], pts: '+' + right }];
+    badges = [{ r: last[0], c: last[1], pts: '+' + totalTurn }];
     setTimeout(() => { badges = []; draw(); }, 1400);
   }
 
   if (right === 0 && wrong === 0) {
     msg('Passaste a vez.');
   } else {
-    msg((right ? `+${right} pt${right > 1 ? 's' : ''}` : '') +
-        (wordBonus ? ` +${wordBonus} bónus de palavra!` : '') +
+    msg((totalTurn ? `+${totalTurn} pt${totalTurn > 1 ? 's' : ''}` : '') +
+        (wordBonus ? ` (inclui +${wordBonus} bónus de palavra!)` : '') +
         (wrong ? ` (${wrong} letra${wrong > 1 ? 's' : ''} devolvida${wrong > 1 ? 's' : ''})` : ''));
   }
 
@@ -1697,20 +1606,24 @@ function aiTurn() {
 
   const aiAccuracy = Math.min(0.96, 0.68 + (LN * 0.0028));
   const maxTiles = LN > 35 ? 5 : 4;
-  let placed = 0;
+  let placed = 0, tileBonus = 0;
 
   shuf(open).slice(0, maxTiles).forEach(([r, c]) => {
     if (Math.random() < aiAccuracy) {
       val[r][c] = sol[r][c];
       own[r][c] = 'ai';
       placed++;
+      if (bonusCells && bonusCells.has(r + ',' + c)) {
+        tileBonus += 2;
+        bonusCells.delete(r + ',' + c);
+      }
     }
   });
 
   const wordBonus = checkCompletedWords();
-  op += placed + wordBonus;
+  op += placed + tileBonus + wordBonus;
 
-  msg(placed ? `Oponente marcou +${placed + wordBonus} pontos.` : 'O oponente passou a vez.');
+  msg(placed ? `Oponente marcou +${placed + tileBonus + wordBonus} pontos.` : 'O oponente passou a vez.');
   if (full()) {
     draw();
     return endGame();
