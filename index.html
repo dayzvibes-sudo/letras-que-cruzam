@@ -830,7 +830,8 @@ const WORDS_BY_LEN = {};
 for (let l = 2; l <= 5; l++) WORDS_BY_LEN[l] = [];
 ALL_WORDS.forEach(item => WORDS_BY_LEN[item.w.length].push(item));
 
-// 6 modelos 100% validados (máx. 5 letras em qualquer linha ou coluna -> 24 formatos distintos)
+// 6 modelos com TODA a barra do topo (linha 0) e TODA a barra lateral esquerda (coluna 0) preenchidas com pistas!
+// Cada modelo garante palavras de 2 a 5 letras (24 variações com reflexões).
 const BASE_TEMPLATES = [
   // Modelo 1
   [
@@ -839,9 +840,9 @@ const BASE_TEMPLATES = [
     [0,1,1,1,1,0,1,1],
     [0,1,1,1,0,1,1,1],
     [0,1,1,0,1,1,1,0],
-    [0,0,0,1,1,1,0,0],
-    [0,0,1,1,1,0,1,1],
+    [0,1,1,0,1,1,1,1],
     [0,1,1,1,0,1,1,1],
+    [0,1,1,1,1,0,1,1],
     [0,1,1,0,1,1,1,1],
     [0,1,1,0,1,1,1,1]
   ],
@@ -851,64 +852,64 @@ const BASE_TEMPLATES = [
     [0,1,1,0,1,1,1,1],
     [0,1,1,1,1,0,1,1],
     [0,1,1,1,0,1,1,1],
-    [0,1,0,1,1,1,0,0],
-    [0,0,1,0,0,1,1,1],
+    [0,1,1,0,1,1,1,0],
     [0,1,1,1,0,1,1,1],
     [0,1,1,1,1,0,1,1],
-    [0,0,0,1,1,1,1,0],
-    [0,1,1,1,0,1,1,1]
+    [0,1,1,0,1,1,1,1],
+    [0,1,1,1,0,1,1,1],
+    [0,1,1,1,1,0,1,1]
   ],
   // Modelo 3
   [
     [0,0,0,0,0,0,0,0],
-    [0,0,1,1,1,0,1,1],
+    [0,1,1,1,0,1,1,1],
     [0,1,1,1,1,0,1,1],
     [0,1,1,0,1,1,1,0],
     [0,1,1,1,0,1,1,1],
-    [0,0,0,1,1,1,1,0],
     [0,1,1,0,1,1,1,1],
-    [0,1,1,1,0,1,1,1],
     [0,1,1,1,1,0,1,1],
-    [0,0,1,1,0,1,1,1]
+    [0,1,1,0,1,1,1,1],
+    [0,1,1,1,0,1,1,0],
+    [0,1,1,1,1,0,1,1]
   ],
   // Modelo 4
   [
     [0,0,0,0,0,0,0,0],
-    [0,1,1,1,0,1,1,1],
-    [0,1,1,0,1,1,1,0],
     [0,1,1,1,1,0,1,1],
-    [0,0,1,1,1,1,0,1],
-    [0,1,1,0,0,1,1,1],
-    [0,1,0,1,1,1,0,1],
-    [0,1,1,1,0,1,1,0],
     [0,1,1,0,1,1,1,1],
-    [0,0,1,1,1,0,1,1]
+    [0,1,1,1,0,1,1,1],
+    [0,1,1,0,1,1,1,1],
+    [0,1,1,1,1,0,1,1],
+    [0,1,1,0,1,1,1,0],
+    [0,1,1,1,0,1,1,1],
+    [0,1,1,1,1,0,1,1],
+    [0,1,1,0,1,1,1,1]
   ],
   // Modelo 5
   [
     [0,0,0,0,0,0,0,0],
-    [0,1,1,0,1,1,0,1],
-    [0,1,1,1,0,1,1,1],
-    [0,0,1,1,1,0,1,1],
-    [0,1,0,1,1,1,1,0],
-    [0,1,1,1,1,0,0,1],
-    [0,0,1,1,0,1,1,1],
     [0,1,1,0,1,1,1,1],
-    [0,1,0,1,1,1,0,1],
-    [0,1,1,1,0,1,1,0]
+    [0,1,1,1,0,1,1,1],
+    [0,1,1,1,1,0,1,1],
+    [0,1,1,0,1,1,1,1],
+    [0,1,1,1,0,1,1,0],
+    [0,1,1,0,1,1,1,1],
+    [0,1,1,1,1,0,1,1],
+    [0,1,1,1,0,1,1,1],
+    [0,1,1,0,1,1,1,1]
   ],
   // Modelo 6
   [
     [0,0,0,0,0,0,0,0],
-    [0,0,1,1,1,1,0,0],
+    [0,1,1,1,0,1,1,1],
+    [0,1,1,0,1,1,1,1],
+    [0,1,1,1,1,0,1,1],
+    [0,1,1,1,0,1,1,0],
     [0,1,1,0,1,1,1,1],
     [0,1,1,1,0,1,1,1],
-    [0,1,0,1,1,1,0,1],
-    [0,0,1,1,1,0,1,1],
-    [0,1,1,0,1,1,1,0],
-    [0,1,1,1,0,1,1,1],
+    [0,1,1,0,1,1,1,1],
     [0,1,1,1,1,0,1,1],
-    [0,0,0,1,1,1,1,0]
+    [0,1,1,1,0,1,1,1]
   ]
 ];
 
@@ -916,13 +917,13 @@ const FALLBACK_GRID = [
   [null,null,null,null,null,null,null,null],
   [null,'C','A','S','A',null,'R','E'],
   [null,'A','M','O','R',null,'E','M'],
-  [null,'R','E','D','E',null,'I','A'],
-  [null,'A','S','A','S',null,null,null],
-  [null,null,null,null,null,'L','U','A'],
-  [null,'M','A','R',null,'A','M','O'],
-  [null,'U','V','A',null,null,null,null],
-  [null,'D','O','R',null,'N','A','S'],
-  [null,'O','S','O',null,'U','S','A']
+  [null,'R','E','D',null,'L','U','A'],
+  [null,'A','S',null,'M','A','R',null],
+  [null,'S','O',null,'A','R','E','S'],
+  [null,'O','L','A',null,'S','A','L'],
+  [null,'L','A','G','O',null,'R','E'],
+  [null,'U','V',null,'R','I','O',null],
+  [null,'A','R',null,'O','S','O',null]
 ];
 
 const rng = s => () => {
@@ -1013,7 +1014,7 @@ function extractSlots(g) {
   return slots;
 }
 
-function solveLayout(g, slots, rn, lvl, timeLimitMs = 60) {
+function solveLayout(g, slots, rn, lvl, timeLimitMs = 75) {
   if (!slots.length || slots.some(s => !WORDS_BY_LEN[s.len] || !WORDS_BY_LEN[s.len].length)) return null;
 
   const t0 = performance.now();
@@ -1129,24 +1130,23 @@ function buildFallbackBoard() {
 function generateBoard(lvl) {
   const rn = rng(lvl * 9973 + 31337);
   const startTpl = (lvl - 1) % BASE_TEMPLATES.length;
-  const baseFlip = Math.floor((lvl - 1) / BASE_TEMPLATES.length) % 4;
+  const baseFlip = Math.floor((lvl - 1) / BASE_TEMPLATES.length) % 2;
 
-  for (let attempt = 0; attempt < 24; attempt++) {
+  // Apenas reflexão vertical (flipV): mantém sempre a coluna 1 e a linha 1 jogáveis
+  // garantindo que TODAS as casas do topo e da barra lateral esquerda têm pistas!
+  for (let attempt = 0; attempt < BASE_TEMPLATES.length * 2; attempt++) {
     const base = BASE_TEMPLATES[(startTpl + attempt) % BASE_TEMPLATES.length];
-    const flipMode = (baseFlip + Math.floor(attempt / BASE_TEMPLATES.length)) % 4;
-    const flipV = flipMode & 1;
-    const flipH = (flipMode >> 1) & 1;
+    const flipV = (baseFlip + Math.floor(attempt / BASE_TEMPLATES.length)) % 2;
 
     const g = Array.from({ length: R }, (_, r) =>
       Array.from({ length: C }, (_, c) => {
         if (r === 0 || c === 0) return 0;
         const sr = flipV ? (R - r) : r;
-        const sc = flipH ? (C - c) : c;
-        return base[sr][sc];
+        return base[sr][c];
       })
     );
     const slots = extractSlots(g);
-    const solved = solveLayout(g, slots, rn, lvl, 60);
+    const solved = solveLayout(g, slots, rn, lvl, 75);
     if (solved) return solved;
   }
   return buildFallbackBoard();
@@ -1162,17 +1162,17 @@ const HEADLINES = [
 
 let saveData = { won: {}, active: null };
 try {
-  const raw = JSON.parse(localStorage.getItem('pc_master_v9') || localStorage.getItem('pc_master_v8') || localStorage.getItem('pc_master_v7') || 'null');
+  const raw = JSON.parse(localStorage.getItem('pc_master_v10') || localStorage.getItem('pc_master_v9') || localStorage.getItem('pc_master_v8') || 'null');
   if (raw) {
     saveData = {
       won: raw.won || {},
-      active: localStorage.getItem('pc_master_v9') ? (raw.active || null) : null
+      active: localStorage.getItem('pc_master_v10') ? (raw.active || null) : null
     };
   }
 } catch (e) {}
 
 function persist() {
-  try { localStorage.setItem('pc_master_v9', JSON.stringify(saveData)); } catch (e) {}
+  try { localStorage.setItem('pc_master_v10', JSON.stringify(saveData)); } catch (e) {}
 }
 
 function saveActiveGame() {
@@ -1267,7 +1267,7 @@ function showMenu() {
   let html = `
     <div class="m-head">
       <h1>Palavras Cruzadas</h1>
-      <p>Desafia o oponente • v9</p>
+      <p>Desafia o oponente • v10</p>
     </div>
     <div class="stats-card">
       <div><b>${wonCount}/${TOTAL_LEVELS}</b><span>Níveis Vencidos</span></div>
