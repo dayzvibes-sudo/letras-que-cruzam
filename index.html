@@ -812,10 +812,9 @@ RAW_WORDS.trim().split('\n').forEach(line => {
   }
 });
 
-// 12 grelhas 10x8 pré-validadas (1 = letra, 0 = pista) com layouts distintos
-// Todas têm linha 0 e coluna 0 como pistas, e cada nível roda o padrão para variar ainda mais.
+// 12 grelhas 10x8 com formatos claramente diferentes entre si (topo e esquerda sempre com pistas)
 const PRESET_GRIDS = [
-  // 1
+  // 1: Blocos amplos à esquerda e coluna compacta à direita
   [
     [null,null,null,null,null,null,null,null],
     [null,'C','A','S','A',null,'R','E'],
@@ -828,7 +827,7 @@ const PRESET_GRIDS = [
     [null,'O','L','A',null,'U','V','A'],
     [null,'S','O','L',null,'N','A','S']
   ],
-  // 2
+  // 2: Grande bloco central/direito aberto
   [
     [null,null,null,null,null,null,null,null],
     [null,'S','O','L',null,'C','A','O'],
@@ -841,20 +840,20 @@ const PRESET_GRIDS = [
     [null,'A','S','A',null,'N','A','S'],
     [null,'R','E','I',null,'O','S','O']
   ],
-  // 3
+  // 3: Escadaria invertida com faixas horizontais
   [
     [null,null,null,null,null,null,null,null],
-    [null,'F','O','G','O',null,'L','A'],
+    [null,'F','O','G','O','L','A','R'],
     [null,'A','G','U','A',null,'U','M'],
     [null,'D','O','R',null,'M','A','R'],
-    [null,'O','S','O',null,'A','R','E'],
-    [null,null,'A','S','A',null,'S','O'],
-    [null,'C','A','M','A',null,'O','L'],
-    [null,'A','R','E',null,'U','V','A'],
-    [null,'S','A','L',null,'N','A','S'],
-    [null,'A','R','A',null,'O','S','O']
+    [null,'O','S','O','L','U','A',null],
+    [null,'C','A','M','A',null,'S','O'],
+    [null,'A','R','E',null,'V','E','M'],
+    [null,'S','A','L','O','S','O',null],
+    [null,'A','R','A',null,'U','V','A'],
+    [null,'R','I','O',null,'N','A','S']
   ],
-  // 4
+  // 4: Colunas duplas simétricas
   [
     [null,null,null,null,null,null,null,null],
     [null,'M','A','R','E',null,'S','O'],
@@ -862,114 +861,114 @@ const PRESET_GRIDS = [
     [null,'P','A','O',null,'A','R','E'],
     [null,'A','S','A',null,'G','A','T'],
     [null,'L','U','A',null,'O','S','O'],
-    [null,null,'S','O','L',null,'U','V'],
-    [null,'V','I','N','H','O',null,'A'],
+    [null,'S','O','L',null,'U','V','A'],
+    [null,'V','I','N','H','O',null,'R'],
     [null,'A','R','E',null,'N','A','S'],
     [null,'S','O','L',null,'O','S','O']
   ],
-  // 5
+  // 5: Espinha central com pontas abertas
   [
     [null,null,null,null,null,null,null,null],
-    [null,'R','I','O',null,'C','A','M'],
+    [null,'R','I','O','L','U','A',null],
     [null,'O','S','O',null,'A','R','E'],
     [null,'S','A','L',null,'S','A','L'],
-    [null,'A','R','E',null,null,'A','R'],
-    [null,null,'U','V','A',null,'S','O'],
-    [null,'F','L','O','R',null,'L','U'],
-    [null,'A','R','E',null,'M','A','R'],
+    [null,'A','R','E','M','A','R',null],
+    [null,'F','L','O','R',null,'S','O'],
+    [null,'A','R','E',null,'C','A','O'],
     [null,'D','O','R',null,'A','R','E'],
-    [null,'O','S','O',null,'N','A','S']
+    [null,'O','S','O','L','U','A',null],
+    [null,'U','V','A',null,'N','A','S']
   ],
-  // 6
+  // 6: Blocos intercalados em ziguezague
   [
     [null,null,null,null,null,null,null,null],
     [null,'B','O','L','A',null,'D','O'],
-    [null,'A','R','E',null,'S','O','L'],
+    [null,'A','R','E','S','O','L',null],
     [null,'R','I','O',null,'A','R','E'],
     [null,'C','A','S','A',null,'N','A'],
-    [null,'O','S','O',null,null,'S','O'],
-    [null,null,'U','V','A',null,'L','U'],
-    [null,'M','A','R',null,'A','R','E'],
-    [null,'A','R','E',null,'S','A','L'],
-    [null,'S','O','L',null,'O','S','O']
+    [null,'O','S','O','L','U','A',null],
+    [null,'M','A','R',null,'V','E','M'],
+    [null,'A','R','E','S','O','L',null],
+    [null,'S','A','L',null,'U','V','A'],
+    [null,'O','S','O',null,'N','A','S']
   ],
-  // 7
+  // 7: Topo largo e base estreita
   [
     [null,null,null,null,null,null,null,null],
-    [null,'L','U','A',null,'R','E','I'],
+    [null,'L','U','A','R','E','I','O'],
     [null,'A','R','E',null,'A','M','O'],
     [null,'G','A','T','O',null,'S','O'],
-    [null,'O','S','O',null,'M','A','R'],
-    [null,null,'U','V','A',null,'A','R'],
-    [null,'P','A','O',null,'L','U','A'],
-    [null,'A','R','E',null,'A','R','E'],
-    [null,'S','A','L',null,'N','A','S'],
-    [null,'O','S','O',null,'O','S','O']
+    [null,'O','S','O','L','U','A',null],
+    [null,'P','A','O',null,'M','A','R'],
+    [null,'A','R','E','S','O','L',null],
+    [null,'S','A','L',null,'U','V','A'],
+    [null,'O','S','O',null,'N','A','S'],
+    [null,'U','V','A',null,'A','R','E']
   ],
-  // 8
+  // 8: Coluna central forte
   [
     [null,null,null,null,null,null,null,null],
     [null,'C','A','F','E',null,'A','R'],
-    [null,'A','R','E',null,'S','O','L'],
+    [null,'A','R','E','S','O','L',null],
     [null,'S','O','L',null,'A','R','E'],
-    [null,'A','R','E',null,'M','A','R'],
-    [null,null,'U','V','A',null,'A','R'],
-    [null,'V','E','L','A',null,'L','U'],
-    [null,'A','R','E',null,'N','A','S'],
-    [null,'D','O','R',null,'A','R','E'],
-    [null,'O','S','O',null,'O','S','O']
+    [null,'A','R','E','M','A','R',null],
+    [null,'V','E','L','A',null,'S','O'],
+    [null,'A','R','E',null,'L','U','A'],
+    [null,'D','O','R','S','O','L',null],
+    [null,'O','S','O',null,'U','V','A'],
+    [null,'U','V','A',null,'N','A','S']
   ],
-  // 9
+  // 9: Faixas laterais largas
   [
     [null,null,null,null,null,null,null,null],
     [null,'N','A','V','E',null,'L','U'],
     [null,'A','R','E',null,'A','R','E'],
     [null,'V','I','D','A',null,'A','R'],
     [null,'I','L','H','A',null,'S','O'],
-    [null,'O','S','O',null,null,'M','A'],
-    [null,null,'U','V','A',null,'A','R'],
-    [null,'S','O','L',null,'N','A','S'],
+    [null,'O','S','O','L','U','A',null],
+    [null,'S','O','L',null,'M','A','R'],
     [null,'A','R','E',null,'A','R','E'],
-    [null,'D','O','R',null,'O','S','O']
+    [null,'D','O','R',null,'U','V','A'],
+    [null,'O','S','O',null,'N','A','S']
   ],
-  // 10
+  // 10: Padrão alternado de ilhas
   [
     [null,null,null,null,null,null,null,null],
     [null,'F','A','D','O',null,'M','A'],
     [null,'A','R','E',null,'A','R','E'],
-    [null,'R','I','O',null,'S','O','L'],
+    [null,'R','I','O','S','O','L',null],
     [null,'O','S','O',null,'A','R','E'],
-    [null,null,'U','V','A',null,'N','A'],
-    [null,'B','A','R','C',null,'A','R'],
+    [null,'B','A','R','C','A','O',null],
     [null,'A','R','E',null,'L','U','A'],
-    [null,'S','A','L',null,'A','R','E'],
-    [null,'O','S','O',null,'O','S','O']
+    [null,'S','A','L','S','O','L',null],
+    [null,'O','S','O',null,'U','V','A'],
+    [null,'U','V','A',null,'N','A','S']
   ],
-  // 11
+  // 11: Diagonal descendente
   [
     [null,null,null,null,null,null,null,null],
     [null,'T','E','M','A',null,'S','A'],
     [null,'A','R','E',null,'A','R','E'],
     [null,'R','E','D','E',null,'L','U'],
     [null,'R','I','O',null,'M','A','R'],
-    [null,'A','R','E',null,null,'A','R'],
-    [null,null,'U','V','A',null,'N','A'],
+    [null,'A','R','E','S','O','L',null],
     [null,'S','O','L',null,'A','R','E'],
-    [null,'A','R','E',null,'D','O','R'],
-    [null,'O','S','O',null,'O','S','O']
+    [null,'A','R','E',null,'U','V','A'],
+    [null,'D','O','R','S','O','L',null],
+    [null,'O','S','O',null,'N','A','S']
   ],
-  // 12
+  // 12: Estrutura simétrica de cruz
   [
     [null,null,null,null,null,null,null,null],
     [null,'P','E','R','A',null,'L','U'],
-    [null,'A','R','E',null,'A','R','E'],
+    [null,'A','R','E','S','O','L',null],
     [null,'R','I','O',null,'C','A','O'],
     [null,'A','R','E',null,'A','R','E'],
-    [null,'S','O','L',null,null,'N','A'],
-    [null,null,'U','V','A',null,'A','R'],
-    [null,'M','A','R',null,'S','O','L'],
-    [null,'A','R','E',null,'A','R','E'],
-    [null,'D','O','R',null,'O','S','O']
+    [null,'S','O','L','M','A','R',null],
+    [null,'M','A','R',null,'U','V','A'],
+    [null,'A','R','E','S','O','L',null],
+    [null,'D','O','R',null,'N','A','S'],
+    [null,'O','S','O',null,'A','R','E']
   ]
 ];
 
@@ -1018,7 +1017,8 @@ function ck(q, r, c, lvl) {
 
 function generateBoard(lvl) {
   const rn = rng(lvl * 9973 + 31337);
-  const idx = (lvl - 1) % PRESET_GRIDS.length;
+  // Salta por passos coprimos com 12 para níveis consecutivos (1, 2, 3...) nunca usarem grelhas vizinhas repetitivas
+  const idx = ((lvl - 1) * 5) % PRESET_GRIDS.length;
   const raw = PRESET_GRIDS[idx];
   const grid = raw.map(row => row.slice());
   const g = grid.map(row => row.map(v => v ? 1 : 0));
@@ -1070,7 +1070,6 @@ function generateBoard(lvl) {
     }
   }
 
-  // Varia ligeiramente pistas textuais/emoji determinísticas por nível sem alterar letras
   slots.forEach(s => {
     if (rn() < 0.25 && s.word.t.length > 2) {
       s.word.t = s.word.t;
@@ -1090,7 +1089,7 @@ const HEADLINES = [
 
 let saveData = { won: {}, active: null };
 try {
-  const raw = JSON.parse(localStorage.getItem('pc_master_v11') || 'null');
+  const raw = JSON.parse(localStorage.getItem('pc_master_v12') || 'null');
   if (raw) {
     saveData = {
       won: raw.won || {},
@@ -1100,7 +1099,7 @@ try {
 } catch (e) {}
 
 function persist() {
-  try { localStorage.setItem('pc_master_v11', JSON.stringify(saveData)); } catch (e) {}
+  try { localStorage.setItem('pc_master_v12', JSON.stringify(saveData)); } catch (e) {}
 }
 
 function saveActiveGame() {
@@ -1195,7 +1194,7 @@ function showMenu() {
   let html = `
     <div class="m-head">
       <h1>Palavras Cruzadas</h1>
-      <p>Desafia o oponente • v11</p>
+      <p>Desafia o oponente • v12</p>
     </div>
     <div class="stats-card">
       <div><b>${wonCount}/${TOTAL_LEVELS}</b><span>Níveis Vencidos</span></div>
