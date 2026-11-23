@@ -46,29 +46,28 @@ h1{font-size:clamp(22px,6.5vw,30px);margin:2px 12px 8px;text-align:center;line-h
 .c.bn{background:var(--bn)}
 
 .k{
-  background:var(--ct);font-size:calc(var(--cs)*.175);font-weight:700;
-  text-align:center;line-height:1.06;padding:2px 3px;text-transform:uppercase;
-  color:var(--tx);overflow-wrap:break-word;word-break:normal;overflow:hidden;
+  background:var(--ct);font-size:calc(var(--cs)*.152);font-weight:700;
+  text-align:center;line-height:1.05;padding:1px 2px;text-transform:uppercase;
+  color:var(--tx);overflow-wrap:break-word;word-break:break-word;overflow:hidden;
   cursor:pointer;
 }
 .k.corner{background:#c5d8f0;cursor:default}
-.k i{position:absolute;font-style:normal;font-size:calc(var(--cs)*.19);color:#5c7499;pointer-events:none}
+.k i{position:absolute;font-style:normal;font-size:calc(var(--cs)*.18);color:#5c7499;pointer-events:none}
 .k .r{right:1px;top:50%;transform:translateY(-50%)}
 .k .b{bottom:-1px;left:50%;transform:translateX(-50%)}
 
 .s{flex-direction:column;padding:0}
-.s div{flex:1;width:100%;display:flex;align-items:center;justify-content:center;position:relative;font-size:calc(var(--cs)*.145);padding:0 3px;box-sizing:border-box;line-height:1.02}
+.s div{flex:1;width:100%;display:flex;align-items:center;justify-content:center;position:relative;font-size:calc(var(--cs)*.138);padding:0 2px;box-sizing:border-box;line-height:1.02}
 .s div:first-child{border-bottom:1px solid #aebfd9}
 .s .b{bottom:-2px}
 
 .pc-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
-.pc-aff{font-size:calc(var(--cs)*.18);font-weight:800;text-transform:none;margin-bottom:1px}
+.pc-aff{font-size:calc(var(--cs)*.17);font-weight:800;text-transform:none;margin-bottom:1px}
 .pc{font-size:calc(var(--cs)*.44);text-transform:none;line-height:1}
 .s .pc{font-size:calc(var(--cs)*.24)}
 
 .me{color:var(--me)}
 .ai{color:var(--ai)}
-.init{color:#3c465c}
 .pd{
   background:linear-gradient(180deg,#fdf1dc,var(--ti));
   color:var(--tt);border-radius:4px;
@@ -798,7 +797,6 @@ const WORDS_BY_LEN = {};
 for (let l = 2; l <= 5; l++) WORDS_BY_LEN[l] = [];
 ALL_WORDS.forEach(item => WORDS_BY_LEN[item.w.length].push(item));
 
-// Modelos validados (palavras de 2 a 5 letras, geração ultrarrápida)
 const BASE_TEMPLATES = [
   [
     [0,0,0,0,0,0,0,0],
@@ -850,7 +848,6 @@ const BASE_TEMPLATES = [
   ]
 ];
 
-// Tabuleiro de reserva 100% garantido (zero latência)
 const FALLBACK_GRID = [
   [null,null,null,null,null,null,null,null],
   [null,'C','A','S','A',null,'R','E'],
@@ -1078,12 +1075,17 @@ const HEADLINES = [
 
 let saveData = { won: {}, active: null };
 try {
-  const raw = JSON.parse(localStorage.getItem('pc_master_v5') || 'null');
-  if (raw) saveData = { won: raw.won || {}, active: raw.active || null };
+  const raw = JSON.parse(localStorage.getItem('pc_master_v6') || localStorage.getItem('pc_master_v5') || 'null');
+  if (raw) {
+    saveData = {
+      won: raw.won || {},
+      active: localStorage.getItem('pc_master_v6') ? (raw.active || null) : null
+    };
+  }
 } catch (e) {}
 
 function persist() {
-  try { localStorage.setItem('pc_master_v5', JSON.stringify(saveData)); } catch (e) {}
+  try { localStorage.setItem('pc_master_v6', JSON.stringify(saveData)); } catch (e) {}
 }
 
 function saveActiveGame() {
@@ -1162,26 +1164,8 @@ function startLevel(n, resumeObj = null) {
       });
     });
 
-    // Revela ~25% das letras iniciais como âncoras (sem completar palavras inteiras)
-    const shuffledCoords = shuf(letterCoords.slice());
-    const targetAnchors = Math.floor(letterCoords.length * 0.25);
-    let revealed = 0;
-    for (const [r, c] of shuffledCoords) {
-      if (revealed >= targetAnchors) break;
-      val[r][c] = sol[r][c];
-      own[r][c] = 'init';
-      const completesWord = W.some(w => w.every(([y, x]) => val[y][x]));
-      if (completesWord) {
-        val[r][c] = null;
-        own[r][c] = null;
-      } else {
-        revealed++;
-      }
-    }
-
-    // Marca até 6 casas bónus verdes
-    const openForBonus = shuffledCoords.filter(([r, c]) => !val[r][c]);
-    openForBonus.slice(0, 6).forEach(([r, c]) => bonusCells.add(r + ',' + c));
+    // Marca até 6 casas bónus verdes no tabuleiro vazio
+    shuf(letterCoords.slice()).slice(0, 6).forEach(([r, c]) => bonusCells.add(r + ',' + c));
 
     me = 0; op = 0;
     hints = 3;
@@ -1206,7 +1190,7 @@ function showMenu() {
   let html = `
     <div class="m-head">
       <h1>Palavras Cruzadas</h1>
-      <p>Desafia o oponente • v5</p>
+      <p>Desafia o oponente • v6</p>
     </div>
     <div class="stats-card">
       <div><b>${wonCount}/${TOTAL_LEVELS}</b><span>Níveis Vencidos</span></div>
