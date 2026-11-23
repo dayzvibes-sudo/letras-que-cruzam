@@ -59,7 +59,7 @@ h1{font-size:clamp(22px,6.5vw,30px);margin:2px 12px 8px;text-align:center;line-h
 .s{flex-direction:column;padding:0}
 .s div{
   flex:1;width:100%;display:flex;align-items:center;justify-content:center;
-  position:relative;font-size:calc(var(--cs)*.128);padding:0 6px 0 3px;
+  position:relative;font-size:calc(var(--cs)*.125);padding:0 6px 0 3px;
   box-sizing:border-box;line-height:1.02;overflow:hidden;
 }
 .s div:first-child{border-bottom:1px solid #aebfd9}
@@ -67,7 +67,7 @@ h1{font-size:clamp(22px,6.5vw,30px);margin:2px 12px 8px;text-align:center;line-h
 .s .b{bottom:-2px}
 
 .pc-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
-.pc-aff{font-size:calc(var(--cs)*.16);font-weight:800;text-transform:none;margin-bottom:1px}
+.pc-aff{font-size:calc(var(--cs)*.15);font-weight:800;text-transform:none;margin-bottom:1px}
 .pc{font-size:calc(var(--cs)*.42);text-transform:none;line-height:1}
 .s .pc{font-size:calc(var(--cs)*.23)}
 
@@ -812,163 +812,165 @@ RAW_WORDS.trim().split('\n').forEach(line => {
   }
 });
 
-// 12 grelhas 10x8 com formatos claramente diferentes entre si (topo e esquerda sempre com pistas)
-const PRESET_GRIDS = [
-  // 1: Blocos amplos à esquerda e coluna compacta à direita
+// 12 mapas 10x8 com layouts espalhados e variados:
+// Linha 0 e Coluna 0 = pistas azuis (null no array).
+// No interior (r>=1, c>=1), 'X' = célula de pista interna, '.' = célula de letra (preenchida com palavras reais válidas).
+const LAYOUT_TEMPLATES = [
+  // 1: Espalhado com dois blocos internos separados
   [
-    [null,null,null,null,null,null,null,null],
-    [null,'C','A','S','A',null,'R','E'],
-    [null,'A','M','O','R',null,'E','M'],
-    [null,'R','A','I','O',null,'I','A'],
-    [null,'A','S','A','S',null,'S','O'],
-    [null,'L','U','A',null,'M','A','R'],
-    [null,'O','V','O',null,'A','R','E'],
-    [null,'B','A','R',null,'O','S','O'],
-    [null,'O','L','A',null,'U','V','A'],
-    [null,'S','O','L',null,'N','A','S']
+    '........',
+    '.CCCC.CC',
+    '.C..C.CC',
+    '.C..C.CC',
+    '.C..C.CC',
+    '.C.X.CCC',
+    '.C.X.CCC',
+    '.C.X.CCC',
+    '.C.X.CCC',
+    '.C.X.CCC'
   ],
-  // 2: Grande bloco central/direito aberto
+  // 2: Centro aberto com ilha de pistas no meio
   [
-    [null,null,null,null,null,null,null,null],
-    [null,'S','O','L',null,'C','A','O'],
-    [null,'A','R','E',null,'A','M','O'],
-    [null,'L','A','G','O',null,'R','A'],
-    [null,null,'I','A',null,'M','A','R'],
-    [null,'V','E','M',null,'A','R','E'],
-    [null,'I','L','H','A',null,'O','S'],
-    [null,'D','O','R',null,'U','V','A'],
-    [null,'A','S','A',null,'N','A','S'],
-    [null,'R','E','I',null,'O','S','O']
+    '........',
+    '.CCC.CCC',
+    '.CCC.CCC',
+    '.CCCC.CC',
+    '.X.C.CCC',
+    '.CCC.CCC',
+    '.CCCC.CC',
+    '.CCC.CCC',
+    '.CCC.CCC',
+    '.CCC.CCC'
   ],
-  // 3: Escadaria invertida com faixas horizontais
+  // 3: Escada diagonal com secções soltas à direita
   [
-    [null,null,null,null,null,null,null,null],
-    [null,'F','O','G','O','L','A','R'],
-    [null,'A','G','U','A',null,'U','M'],
-    [null,'D','O','R',null,'M','A','R'],
-    [null,'O','S','O','L','U','A',null],
-    [null,'C','A','M','A',null,'S','O'],
-    [null,'A','R','E',null,'V','E','M'],
-    [null,'S','A','L','O','S','O',null],
-    [null,'A','R','A',null,'U','V','A'],
-    [null,'R','I','O',null,'N','A','S']
+    '........',
+    '.CCCCCCC',
+    '.CCCC.CC',
+    '.CCC.CCC',
+    '.CCCCCCC',
+    '.CCCC.CC',
+    '.CCC.CCC',
+    '.CCCCCCC',
+    '.CCC.CCC',
+    '.CCC.CCC'
   ],
-  // 4: Colunas duplas simétricas
+  // 4: Duas colunas longas com faixas horizontais intercaladas
   [
-    [null,null,null,null,null,null,null,null],
-    [null,'M','A','R','E',null,'S','O'],
-    [null,'A','R','E',null,'L','U','A'],
-    [null,'P','A','O',null,'A','R','E'],
-    [null,'A','S','A',null,'G','A','T'],
-    [null,'L','U','A',null,'O','S','O'],
-    [null,'S','O','L',null,'U','V','A'],
-    [null,'V','I','N','H','O',null,'R'],
-    [null,'A','R','E',null,'N','A','S'],
-    [null,'S','O','L',null,'O','S','O']
+    '........',
+    '.CCCC.CC',
+    '.CCC.CCC',
+    '.CCC.CCC',
+    '.CCC.CCC',
+    '.CCC.CCC',
+    '.CCC.CCC',
+    '.CCCCC.C',
+    '.CCC.CCC',
+    '.CCC.CCC'
   ],
-  // 5: Espinha central com pontas abertas
+  // 5: Espinha horizontal e vertical espalhada
   [
-    [null,null,null,null,null,null,null,null],
-    [null,'R','I','O','L','U','A',null],
-    [null,'O','S','O',null,'A','R','E'],
-    [null,'S','A','L',null,'S','A','L'],
-    [null,'A','R','E','M','A','R',null],
-    [null,'F','L','O','R',null,'S','O'],
-    [null,'A','R','E',null,'C','A','O'],
-    [null,'D','O','R',null,'A','R','E'],
-    [null,'O','S','O','L','U','A',null],
-    [null,'U','V','A',null,'N','A','S']
+    '........',
+    '.CCCCCC.',
+    '.CCC.CCC',
+    '.CCC.CCC',
+    '.CCCCCCC',
+    '.CCCC.CC',
+    '.CCC.CCC',
+    '.CCC.CCC',
+    '.CCCCCC.',
+    '.CCC.CCC'
   ],
-  // 6: Blocos intercalados em ziguezague
+  // 6: Ziguezague amplo com blocos em posições diferentes
   [
-    [null,null,null,null,null,null,null,null],
-    [null,'B','O','L','A',null,'D','O'],
-    [null,'A','R','E','S','O','L',null],
-    [null,'R','I','O',null,'A','R','E'],
-    [null,'C','A','S','A',null,'N','A'],
-    [null,'O','S','O','L','U','A',null],
-    [null,'M','A','R',null,'V','E','M'],
-    [null,'A','R','E','S','O','L',null],
-    [null,'S','A','L',null,'U','V','A'],
-    [null,'O','S','O',null,'N','A','S']
+    '........',
+    '.CCCC.CC',
+    '.CCCCCC.',
+    '.CCC.CCC',
+    '.CCCC.CC',
+    '.CCCCCC.',
+    '.CCC.CCC',
+    '.CCCCCC.',
+    '.CCC.CCC',
+    '.CCC.CCC'
   ],
-  // 7: Topo largo e base estreita
+  // 7: Topo largo, meio repartido e base espalhada
   [
-    [null,null,null,null,null,null,null,null],
-    [null,'L','U','A','R','E','I','O'],
-    [null,'A','R','E',null,'A','M','O'],
-    [null,'G','A','T','O',null,'S','O'],
-    [null,'O','S','O','L','U','A',null],
-    [null,'P','A','O',null,'M','A','R'],
-    [null,'A','R','E','S','O','L',null],
-    [null,'S','A','L',null,'U','V','A'],
-    [null,'O','S','O',null,'N','A','S'],
-    [null,'U','V','A',null,'A','R','E']
+    '........',
+    '.CCCCCCC',
+    '.CCC.CCC',
+    '.CCCC.CC',
+    '.CCCCCC.',
+    '.CCC.CCC',
+    '.CCCCCC.',
+    '.CCC.CCC',
+    '.CCC.CCC',
+    '.CCC.CCC'
   ],
-  // 8: Coluna central forte
+  // 8: Coluna central forte com ramificações laterais
   [
-    [null,null,null,null,null,null,null,null],
-    [null,'C','A','F','E',null,'A','R'],
-    [null,'A','R','E','S','O','L',null],
-    [null,'S','O','L',null,'A','R','E'],
-    [null,'A','R','E','M','A','R',null],
-    [null,'V','E','L','A',null,'S','O'],
-    [null,'A','R','E',null,'L','U','A'],
-    [null,'D','O','R','S','O','L',null],
-    [null,'O','S','O',null,'U','V','A'],
-    [null,'U','V','A',null,'N','A','S']
+    '........',
+    '.CCCC.CC',
+    '.CCCCCC.',
+    '.CCC.CCC',
+    '.CCCCCCC',
+    '.CCCC.CC',
+    '.CCC.CCC',
+    '.CCCCCC.',
+    '.CCC.CCC',
+    '.CCC.CCC'
   ],
-  // 9: Faixas laterais largas
+  // 9: Blocos altos à esquerda e faixas abertas em baixo
   [
-    [null,null,null,null,null,null,null,null],
-    [null,'N','A','V','E',null,'L','U'],
-    [null,'A','R','E',null,'A','R','E'],
-    [null,'V','I','D','A',null,'A','R'],
-    [null,'I','L','H','A',null,'S','O'],
-    [null,'O','S','O','L','U','A',null],
-    [null,'S','O','L',null,'M','A','R'],
-    [null,'A','R','E',null,'A','R','E'],
-    [null,'D','O','R',null,'U','V','A'],
-    [null,'O','S','O',null,'N','A','S']
+    '........',
+    '.CCCC.CC',
+    '.CCC.CCC',
+    '.CCCC.CC',
+    '.CCCC.CC',
+    '.CCCCCC.',
+    '.CCC.CCC',
+    '.CCC.CCC',
+    '.CCC.CCC',
+    '.CCC.CCC'
   ],
-  // 10: Padrão alternado de ilhas
+  // 10: Alternância de ilhas pelo mapa todo
   [
-    [null,null,null,null,null,null,null,null],
-    [null,'F','A','D','O',null,'M','A'],
-    [null,'A','R','E',null,'A','R','E'],
-    [null,'R','I','O','S','O','L',null],
-    [null,'O','S','O',null,'A','R','E'],
-    [null,'B','A','R','C','A','O',null],
-    [null,'A','R','E',null,'L','U','A'],
-    [null,'S','A','L','S','O','L',null],
-    [null,'O','S','O',null,'U','V','A'],
-    [null,'U','V','A',null,'N','A','S']
+    '........',
+    '.CCCC.CC',
+    '.CCC.CCC',
+    '.CCCCCC.',
+    '.CCC.CCC',
+    '.CCCCCC.',
+    '.CCC.CCC',
+    '.CCCCCC.',
+    '.CCC.CCC',
+    '.CCC.CCC'
   ],
-  // 11: Diagonal descendente
+  // 11: Diagonal com blocos internos deslocados
   [
-    [null,null,null,null,null,null,null,null],
-    [null,'T','E','M','A',null,'S','A'],
-    [null,'A','R','E',null,'A','R','E'],
-    [null,'R','E','D','E',null,'L','U'],
-    [null,'R','I','O',null,'M','A','R'],
-    [null,'A','R','E','S','O','L',null],
-    [null,'S','O','L',null,'A','R','E'],
-    [null,'A','R','E',null,'U','V','A'],
-    [null,'D','O','R','S','O','L',null],
-    [null,'O','S','O',null,'N','A','S']
+    '........',
+    '.CCCC.CC',
+    '.CCC.CCC',
+    '.CCCC.CC',
+    '.CCC.CCC',
+    '.CCCCCC.',
+    '.CCC.CCC',
+    '.CCC.CCC',
+    '.CCCCCC.',
+    '.CCC.CCC'
   ],
-  // 12: Estrutura simétrica de cruz
+  // 12: Cruzeiro espalhado com vários pontos de cruzamento
   [
-    [null,null,null,null,null,null,null,null],
-    [null,'P','E','R','A',null,'L','U'],
-    [null,'A','R','E','S','O','L',null],
-    [null,'R','I','O',null,'C','A','O'],
-    [null,'A','R','E',null,'A','R','E'],
-    [null,'S','O','L','M','A','R',null],
-    [null,'M','A','R',null,'U','V','A'],
-    [null,'A','R','E','S','O','L',null],
-    [null,'D','O','R',null,'N','A','S'],
-    [null,'O','S','O',null,'A','R','E']
+    '........',
+    '.CCCC.CC',
+    '.CCCCCC.',
+    '.CCC.CCC',
+    '.CCC.CCC',
+    '.CCCCCCC',
+    '.CCC.CCC',
+    '.CCCCCC.',
+    '.CCC.CCC',
+    '.CCC.CCC'
   ]
 ];
 
@@ -983,22 +985,22 @@ function getClueFontStyle(txt, isSplit) {
   const words = txt.split(/\s+/);
   const maxW = words.reduce((m, w) => Math.max(m, w.length), 0);
   const len = txt.length;
-  let factor = isSplit ? 0.128 : 0.146;
+  let factor = isSplit ? 0.125 : 0.145;
 
-  if (maxW >= 10) factor = Math.min(factor, 0.105);
-  else if (maxW === 9) factor = Math.min(factor, 0.116);
-  else if (maxW === 8) factor = Math.min(factor, 0.128);
-  else if (maxW === 7) factor = Math.min(factor, 0.138);
+  if (maxW >= 10) factor = Math.min(factor, 0.104);
+  else if (maxW === 9) factor = Math.min(factor, 0.115);
+  else if (maxW === 8) factor = Math.min(factor, 0.126);
+  else if (maxW === 7) factor = Math.min(factor, 0.136);
 
-  if (len >= 18) factor = Math.min(factor, 0.112);
-  else if (len >= 15) factor = Math.min(factor, 0.124);
+  if (len >= 18) factor = Math.min(factor, 0.11);
+  else if (len >= 15) factor = Math.min(factor, 0.122);
 
   return `style="font-size:calc(var(--cs)*${factor.toFixed(3)})"`;
 }
 
 function renderClueContent(b, lvl, isSplit = false) {
-  const picChance = Math.max(0.28, 0.62 - (lvl * 0.003));
-  const usePic = b.e && (((b.w.charCodeAt(0) * 11 + b.w.length * 17 + lvl * 7) % 100) < picChance * 100);
+  const picChance = Math.max(0.25, 0.58 - (lvl * 0.003));
+  const usePic = b.e && (((b.w.charCodeAt(0) * 13 + b.w.length * 19 + lvl * 11) % 100) < picChance * 100);
   if (usePic) {
     return `<div class="pc-wrap">${b.aff ? `<span class="pc-aff">${b.aff}</span>` : ''}<span class="pc">${b.e}</span></div>`;
   }
@@ -1015,15 +1017,17 @@ function ck(q, r, c, lvl) {
   return `<div class="c k ${dirCls}" data-kr="${r}" data-kc="${c}">${renderClueContent(q.a || q.d, lvl, false)}<i class="${q.a ? 'r' : 'b'}">${q.a ? '▸' : '▾'}</i></div>`;
 }
 
-function generateBoard(lvl) {
-  const rn = rng(lvl * 9973 + 31337);
-  // Salta por passos coprimos com 12 para níveis consecutivos (1, 2, 3...) nunca usarem grelhas vizinhas repetitivas
-  const idx = ((lvl - 1) * 5) % PRESET_GRIDS.length;
-  const raw = PRESET_GRIDS[idx];
-  const grid = raw.map(row => row.slice());
-  const g = grid.map(row => row.map(v => v ? 1 : 0));
-  const slots = [];
+// Preenche o mapa com palavras reais do RAW_WORDS usando backtracking rápido
+function solveLayout(layoutRows, rn) {
+  const g = Array.from({ length: R }, (_, r) =>
+    Array.from({ length: C }, (_, c) => {
+      if (r === 0 || c === 0) return 0;
+      const ch = layoutRows[r][c];
+      return ch === 'C' ? 1 : 0;
+    })
+  );
 
+  const slots = [];
   for (let r = 1; r < R; r++) {
     let c = 1;
     while (c < C) {
@@ -1034,19 +1038,11 @@ function generateBoard(lvl) {
         if (len >= 2) {
           const cells = [];
           for (let i = 0; i < len; i++) cells.push([r, c0 + i]);
-          const w = cells.map(([y, x]) => grid[y][x]).join('');
-          const baseObj = WORD_MAP[w] || { w, t: w, e: '', aff: '' };
-          slots.push({
-            id: slots.length, r, c: c0, d: 0, len,
-            clueR: r, clueC: c0 - 1,
-            word: { ...baseObj },
-            cells
-          });
+          slots.push({ id: slots.length, r, c: c0, d: 0, len, clueR: r, clueC: c0 - 1, cells });
         }
       } else c++;
     }
   }
-
   for (let c = 1; c < C; c++) {
     let r = 1;
     while (r < R) {
@@ -1057,26 +1053,76 @@ function generateBoard(lvl) {
         if (len >= 2) {
           const cells = [];
           for (let i = 0; i < len; i++) cells.push([r0 + i, c]);
-          const w = cells.map(([y, x]) => grid[y][x]).join('');
-          const baseObj = WORD_MAP[w] || { w, t: w, e: '', aff: '' };
-          slots.push({
-            id: slots.length, r: r0, c, d: 1, len,
-            clueR: r0 - 1, clueC: c,
-            word: { ...baseObj },
-            cells
-          });
+          slots.push({ id: slots.length, r: r0, c, d: 1, len, clueR: r0 - 1, clueC: c, cells });
         }
       } else r++;
     }
   }
 
-  slots.forEach(s => {
-    if (rn() < 0.25 && s.word.t.length > 2) {
-      s.word.t = s.word.t;
-    }
+  const byLen = {};
+  BASE_DICT.forEach(entry => {
+    const L = entry.w.length;
+    if (!byLen[L]) byLen[L] = [];
+    byLen[L].push(entry);
+  });
+  Object.keys(byLen).forEach(L => {
+    byLen[L].sort((a, b) => (a.f - b.f) + (rn() - 0.5) * 2.5);
   });
 
+  const grid = Array.from({ length: R }, () => Array(C).fill(null));
+  const usedWords = new Set();
+
+  // Ordena slots por mais cruzamentos para resolver rápido
+  const order = slots.slice().sort((a, b) => b.len - a.len);
+
+  function matchPattern(cells, pat) {
+    for (let i = 0; i < cells.length; i++) {
+      const ch = grid[cells[i][0]][cells[i][1]];
+      if (ch && ch !== pat[i]) return false;
+    }
+    return true;
+  }
+
+  function bt(idx) {
+    if (idx === order.length) return true;
+    const s = order[idx];
+    const pool = byLen[s.len] || [];
+    for (let i = 0; i < pool.length; i++) {
+      const cand = pool[i];
+      if (usedWords.has(cand.w)) continue;
+      if (!matchPattern(s.cells, cand.w)) continue;
+
+      const prev = s.cells.map(([y, x]) => grid[y][x]);
+      for (let k = 0; k < s.len; k++) grid[s.cells[k][0]][s.cells[k][1]] = cand.w[k];
+      usedWords.add(cand.w);
+      s.word = cand;
+
+      if (bt(idx + 1)) return true;
+
+      usedWords.delete(cand.w);
+      for (let k = 0; k < s.len; k++) grid[s.cells[k][0]][s.cells[k][1]] = prev[k];
+      s.word = null;
+    }
+    return false;
+  }
+
+  if (!bt(0)) return null;
+  slots.forEach(s => { if (s.word) s.word.f++; });
   return { g, slots, grid };
+}
+
+function generateBoard(lvl) {
+  const rn = rng(lvl * 104729 + 7919);
+  const startIdx = ((lvl - 1) * 5) % LAYOUT_TEMPLATES.length;
+
+  for (let offset = 0; offset < LAYOUT_TEMPLATES.length; offset++) {
+    const tIdx = (startIdx + offset) % LAYOUT_TEMPLATES.length;
+    const solved = solveLayout(LAYOUT_TEMPLATES[tIdx], rn);
+    if (solved) return solved;
+  }
+
+  // Fallback seguro caso raro
+  return solveLayout(LAYOUT_TEMPLATES[0], rn);
 }
 
 let LN = 1, sol, clue, val, own, pend, W, W_INFO, rack, sel, me, op, hints, done, busy, hc, badges = [], hlCells = new Set(), hlClue = null;
@@ -1089,7 +1135,7 @@ const HEADLINES = [
 
 let saveData = { won: {}, active: null };
 try {
-  const raw = JSON.parse(localStorage.getItem('pc_master_v12') || 'null');
+  const raw = JSON.parse(localStorage.getItem('pc_master_v13') || 'null');
   if (raw) {
     saveData = {
       won: raw.won || {},
@@ -1099,7 +1145,7 @@ try {
 } catch (e) {}
 
 function persist() {
-  try { localStorage.setItem('pc_master_v12', JSON.stringify(saveData)); } catch (e) {}
+  try { localStorage.setItem('pc_master_v13', JSON.stringify(saveData)); } catch (e) {}
 }
 
 function saveActiveGame() {
@@ -1194,7 +1240,7 @@ function showMenu() {
   let html = `
     <div class="m-head">
       <h1>Palavras Cruzadas</h1>
-      <p>Desafia o oponente • v12</p>
+      <p>Desafia o oponente • v13</p>
     </div>
     <div class="stats-card">
       <div><b>${wonCount}/${TOTAL_LEVELS}</b><span>Níveis Vencidos</span></div>
