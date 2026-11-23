@@ -1158,7 +1158,6 @@ RAW_WORDS.trim().split('\n').forEach(line => {
   }
 });
 
-// Pistas de completar 2 letras exatas ("CA__O" -> RR) para níveis avançados
 const FILL_DICT = [];
 const seenFill = new Set(seenBase);
 BASE_DICT.forEach(b => {
@@ -1178,9 +1177,7 @@ const WORDS_BY_LEN = {};
 for (let l = 2; l <= 9; l++) WORDS_BY_LEN[l] = [];
 ALL_WORDS.forEach(item => WORDS_BY_LEN[item.w.length].push(item));
 
-// Topologias escandinavas 100% validadas (todas as palavras H e V têm >= 2 letras)
 const BASE_TEMPLATES = [
-  // Modelo 1
   [
     [0,0,0,0,0,0,0,0],
     [0,1,1,1,0,1,1,1],
@@ -1193,7 +1190,6 @@ const BASE_TEMPLATES = [
     [0,1,1,1,1,1,1,1],
     [0,1,1,0,1,1,1,1]
   ],
-  // Modelo 2
   [
     [0,0,0,0,0,0,0,0],
     [0,1,1,1,1,0,1,1],
@@ -1206,7 +1202,6 @@ const BASE_TEMPLATES = [
     [0,1,1,1,1,1,1,1],
     [0,1,1,0,1,1,1,1]
   ],
-  // Modelo 3
   [
     [0,0,0,0,0,0,0,0],
     [0,1,1,1,1,1,0,0],
@@ -1219,7 +1214,6 @@ const BASE_TEMPLATES = [
     [0,1,1,1,1,1,1,1],
     [0,1,1,0,1,1,1,1]
   ],
-  // Modelo 4
   [
     [0,0,0,0,0,0,0,0],
     [0,1,1,1,0,1,1,1],
@@ -1270,7 +1264,7 @@ function extractSlots(g) {
         const len = c - c0;
         const cells = [];
         for (let i = 0; i < len; i++) cells.push([r, c0 + i]);
-        slots.push({ id: slots.length, r, c: c0, d: 0, len, clueR: r, clueC: c0 - 1, word: null, cells });
+        slots.push({ id: slots.length, r, c: c0, d: 0, len, clueR: r, clueC: c0 - 1, word: null, cells, cross: [] });
       } else c++;
     }
   }
@@ -1283,14 +1277,24 @@ function extractSlots(g) {
         const len = r - r0;
         const cells = [];
         for (let i = 0; i < len; i++) cells.push([r0 + i, c]);
-        slots.push({ id: slots.length, r: r0, c, d: 1, len, clueR: r0 - 1, clueC: c, word: null, cells });
+        slots.push({ id: slots.length, r: r0, c, d: 1, len, clueR: r0 - 1, clueC: c, word: null, cells, cross: [] });
       } else r++;
+    }
+  }
+  for (let i = 0; i < slots.length; i++) {
+    for (let j = i + 1; j < slots.length; j++) {
+      if (slots[i].d === slots[j].d) continue;
+      const setA = new Set(slots[i].cells.map(([y, x]) => y + ',' + x));
+      if (slots[j].cells.some(([y, x]) => setA.has(y + ',' + x))) {
+        slots[i].cross.push(slots[j]);
+        slots[j].cross.push(slots[i]);
+      }
     }
   }
   return slots;
 }
 
-function solveLayout(g, slots, rn, lvl, maxSteps = 25000) {
+function solveLayout(g, slots, rn, lvl, maxSteps = 2500) {
   if (slots.some(s => !WORDS_BY_LEN[s.len] || WORDS_BY_LEN[s.len].length === 0)) return null;
 
   const grid = Array.from({ length: R }, () => Array(C).fill(null));
@@ -1307,21 +1311,31 @@ function solveLayout(g, slots, rn, lvl, maxSteps = 25000) {
     pools[l] = arr;
   }
 
+  function matches(item, s) {
+    if (used.has(item.w)) return false;
+    for (let i = 0; i < s.len; i++) {
+      const [y, x] = s.cells[i];
+      const ch = grid[y][x];
+      if (ch !== null && ch !== item.w[i]) return false;
+    }
+    return true;
+  }
+
   function getCandidates(s) {
     const out = [];
-    const pool = pools[s.len] || [];
+    const pool = pools[s.len];
     for (let k = 0; k < pool.length; k++) {
-      const item = pool[k];
-      if (used.has(item.w)) continue;
-      let match = true;
-      for (let i = 0; i < s.len; i++) {
-        const [y, x] = s.cells[i];
-        const ch = grid[y][x];
-        if (ch !== null && ch !== item.w[i]) { match = false; break; }
-      }
-      if (match) out.push(item);
+      if (matches(pool[k], s)) out.push(pool[k]);
     }
     return out;
+  }
+
+  function hasAnyCandidate(s) {
+    const pool = pools[s.len];
+    for (let k = 0; k < pool.length; k++) {
+      if (matches(pool[k], s)) return true;
+    }
+    return false;
   }
 
   let steps = 0;
@@ -1345,18 +1359,28 @@ function solveLayout(g, slots, rn, lvl, maxSteps = 25000) {
       }
     }
 
+    const prevChars = bestSlot.cells.map(([y, x]) => grid[y][x]);
+
     for (let i = 0; i < bestCands.length; i++) {
       const cand = bestCands[i];
       bestSlot.word = cand;
       used.add(cand.w);
 
-      const prevChars = bestSlot.cells.map(([y, x]) => grid[y][x]);
       for (let cIdx = 0; cIdx < bestSlot.len; cIdx++) {
         const [y, x] = bestSlot.cells[cIdx];
         grid[y][x] = cand.w[cIdx];
       }
 
-      if (backtrack(assignedCount + 1)) return true;
+      let ok = true;
+      for (let c = 0; c < bestSlot.cross.length; c++) {
+        const other = bestSlot.cross[c];
+        if (other.word === null && !hasAnyCandidate(other)) {
+          ok = false;
+          break;
+        }
+      }
+
+      if (ok && backtrack(assignedCount + 1)) return true;
 
       for (let cIdx = 0; cIdx < bestSlot.len; cIdx++) {
         const [y, x] = bestSlot.cells[cIdx];
@@ -1374,7 +1398,7 @@ function solveLayout(g, slots, rn, lvl, maxSteps = 25000) {
 
 function generateBoard(lvl) {
   const rn = rng(lvl * 9973 + 31337);
-  for (let attempt = 0; attempt < 80; attempt++) {
+  for (let attempt = 0; attempt < 60; attempt++) {
     const base = BASE_TEMPLATES[(lvl + attempt) % BASE_TEMPLATES.length];
     const flipV = ((lvl + attempt) >> 2) & 1;
     const flipH = ((lvl + attempt) >> 3) & 1;
@@ -1387,10 +1411,11 @@ function generateBoard(lvl) {
       })
     );
     const slots = extractSlots(g);
-    const solved = solveLayout(g, slots, rn, lvl, attempt < 40 ? 25000 : 80000);
+    const solved = solveLayout(g, slots, rn, lvl, 2500);
     if (solved) return solved;
   }
-  throw new Error('Falha ao gerar tabuleiro');
+  const fbG = BASE_TEMPLATES[0].map(r => r.slice());
+  return solveLayout(fbG, extractSlots(fbG), rng(777), 1, 20000);
 }
 
 let LN = 1, sol, clue, val, own, pend, W, W_INFO, rack, sel, me, op, hints, done, busy, hc, badges = [], hlCells = new Set(), hlClue = null;
@@ -1437,21 +1462,29 @@ function startLevel(n, resumeObj = null) {
   hc = null;
   busy = 0;
 
+  let loaded = false;
   if (resumeObj && Array.isArray(resumeObj.sol) && Array.isArray(resumeObj.W) && resumeObj.W.length > 0) {
-    sol = resumeObj.sol;
-    clue = resumeObj.clue;
-    val = resumeObj.val;
-    own = resumeObj.own;
-    pend = resumeObj.pend || M();
-    W = resumeObj.W;
-    W_INFO = resumeObj.W_INFO || [];
-    rack = resumeObj.rack;
-    me = resumeObj.me;
-    op = resumeObj.op;
-    hints = resumeObj.hints;
-    done = new Set(resumeObj.done);
-    msg('Partida retomada. Boa sorte!');
-  } else {
+    try {
+      sol = resumeObj.sol;
+      clue = resumeObj.clue;
+      val = resumeObj.val;
+      own = resumeObj.own;
+      pend = resumeObj.pend || M();
+      W = resumeObj.W;
+      W_INFO = resumeObj.W_INFO || [];
+      rack = resumeObj.rack;
+      me = resumeObj.me;
+      op = resumeObj.op;
+      hints = resumeObj.hints;
+      done = new Set(resumeObj.done);
+      msg('Partida retomada. Boa sorte!');
+      loaded = true;
+    } catch (e) {
+      saveData.active = null;
+    }
+  }
+
+  if (!loaded) {
     const solved = generateBoard(LN);
     sol = M(); clue = M(() => ({})); val = M(); own = M(); pend = M(); W = []; W_INFO = [];
 
@@ -1495,7 +1528,7 @@ function showMenu() {
   let html = `
     <div class="m-head">
       <h1>Palavras Cruzadas</h1>
-      <p>Desafia o oponente em tabuleiros escandinavos</p>
+      <p>Desafia o oponente • v3</p>
     </div>
     <div class="stats-card">
       <div><b>${wonCount}/${TOTAL_LEVELS}</b><span>Níveis Vencidos</span></div>
