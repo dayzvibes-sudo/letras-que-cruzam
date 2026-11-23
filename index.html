@@ -8,7 +8,7 @@
 :root{
   --bg:#ffffff;--tx:#2c3548;--ct:#d6e6fa;--cl:#ffffff;--cb:#c2cbd9;
   --bl:#0a84ff;--me:#232b3d;--ai:#5c667d;--ti:#f7e2c1;--tib:#d6b585;--tt:#2c3548;
-  --bar:#f0f3f8;--ok:#c8f2c2;--bn:#dcf5d7;--bd:#e1e6f0;
+  --bar:#f0f3f8;--ok:#c8f2c2;--bd:#e1e6f0;
   --cs:min(calc((100vw - 20px)/8),64px,calc((100dvh - 310px)/10));
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
@@ -43,12 +43,11 @@ h1{font-size:clamp(22px,6.5vw,30px);margin:2px 12px 8px;text-align:center;line-h
 }
 .c:nth-child(8n){border-right:0}
 .c:nth-child(n+73){border-bottom:0}
-.c.bn{background:var(--bn)}
 
 .k{
-  background:var(--ct);font-size:calc(var(--cs)*.152);font-weight:700;
-  text-align:center;line-height:1.05;padding:1px 2px;text-transform:uppercase;
-  color:var(--tx);overflow-wrap:break-word;word-break:break-word;overflow:hidden;
+  background:var(--ct);font-size:calc(var(--cs)*.142);font-weight:700;
+  text-align:center;line-height:1.06;padding:1px 2px;text-transform:uppercase;
+  color:var(--tx);overflow-wrap:break-word;word-break:normal;overflow:hidden;
   cursor:pointer;
 }
 .k.corner{background:#c5d8f0;cursor:default}
@@ -57,7 +56,7 @@ h1{font-size:clamp(22px,6.5vw,30px);margin:2px 12px 8px;text-align:center;line-h
 .k .b{bottom:-1px;left:50%;transform:translateX(-50%)}
 
 .s{flex-direction:column;padding:0}
-.s div{flex:1;width:100%;display:flex;align-items:center;justify-content:center;position:relative;font-size:calc(var(--cs)*.138);padding:0 2px;box-sizing:border-box;line-height:1.02}
+.s div{flex:1;width:100%;display:flex;align-items:center;justify-content:center;position:relative;font-size:calc(var(--cs)*.132);padding:0 2px;box-sizing:border-box;line-height:1.02}
 .s div:first-child{border-bottom:1px solid #aebfd9}
 .s .b{bottom:-2px}
 
@@ -1065,7 +1064,7 @@ function generateBoard(lvl) {
   return buildFallbackBoard();
 }
 
-let LN = 1, sol, clue, val, own, pend, bonusCells, W, W_INFO, rack, sel, me, op, hints, done, busy, hc, badges = [], hlCells = new Set(), hlClue = null;
+let LN = 1, sol, clue, val, own, pend, W, W_INFO, rack, sel, me, op, hints, done, busy, hc, badges = [], hlCells = new Set(), hlClue = null;
 
 const HEADLINES = [
   'Resolva palavras cruzadas',
@@ -1075,17 +1074,17 @@ const HEADLINES = [
 
 let saveData = { won: {}, active: null };
 try {
-  const raw = JSON.parse(localStorage.getItem('pc_master_v6') || localStorage.getItem('pc_master_v5') || 'null');
+  const raw = JSON.parse(localStorage.getItem('pc_master_v7') || localStorage.getItem('pc_master_v6') || localStorage.getItem('pc_master_v5') || 'null');
   if (raw) {
     saveData = {
       won: raw.won || {},
-      active: localStorage.getItem('pc_master_v6') ? (raw.active || null) : null
+      active: localStorage.getItem('pc_master_v7') ? (raw.active || null) : null
     };
   }
 } catch (e) {}
 
 function persist() {
-  try { localStorage.setItem('pc_master_v6', JSON.stringify(saveData)); } catch (e) {}
+  try { localStorage.setItem('pc_master_v7', JSON.stringify(saveData)); } catch (e) {}
 }
 
 function saveActiveGame() {
@@ -1094,7 +1093,6 @@ function saveActiveGame() {
   } else {
     saveData.active = {
       LN, sol, clue, val, own, pend,
-      bonusCells: Array.from(bonusCells || []),
       W, W_INFO, rack, me, op, hints,
       done: Array.from(done)
     };
@@ -1123,7 +1121,6 @@ function startLevel(n, resumeObj = null) {
       val = resumeObj.val;
       own = resumeObj.own;
       pend = resumeObj.pend || M();
-      bonusCells = new Set(resumeObj.bonusCells || []);
       W = resumeObj.W;
       W_INFO = resumeObj.W_INFO || [];
       rack = resumeObj.rack;
@@ -1141,15 +1138,10 @@ function startLevel(n, resumeObj = null) {
   if (!loaded) {
     const solved = generateBoard(LN);
     sol = M(); clue = M(() => ({})); val = M(); own = M(); pend = M(); W = []; W_INFO = [];
-    bonusCells = new Set();
 
-    const letterCoords = [];
     for (let r = 0; r < R; r++) {
       for (let c = 0; c < C; c++) {
-        if (solved.grid[r][c] !== null) {
-          sol[r][c] = solved.grid[r][c];
-          letterCoords.push([r, c]);
-        }
+        if (solved.grid[r][c] !== null) sol[r][c] = solved.grid[r][c];
       }
     }
 
@@ -1163,9 +1155,6 @@ function startLevel(n, resumeObj = null) {
         text: s.word.t + (s.word.e ? ' ' + s.word.e : '')
       });
     });
-
-    // Marca até 6 casas bónus verdes no tabuleiro vazio
-    shuf(letterCoords.slice()).slice(0, 6).forEach(([r, c]) => bonusCells.add(r + ',' + c));
 
     me = 0; op = 0;
     hints = 3;
@@ -1190,7 +1179,7 @@ function showMenu() {
   let html = `
     <div class="m-head">
       <h1>Palavras Cruzadas</h1>
-      <p>Desafia o oponente • v6</p>
+      <p>Desafia o oponente • v7</p>
     </div>
     <div class="stats-card">
       <div><b>${wonCount}/${TOTAL_LEVELS}</b><span>Níveis Vencidos</span></div>
@@ -1288,12 +1277,10 @@ function draw() {
         const isHl = hlCells.has(r + ',' + c);
         const isClueHl = hlClue && hlClue.has(r + ',' + c);
         const isHint = hc && hc[0] === r && hc[1] === c;
-        const isBonus = bonusCells && bonusCells.has(r + ',' + c);
         const isSel = p && sel && sel.type === 'board' && sel.r === r && sel.c === c;
         const badge = badges.find(b => b.r === r && b.c === c);
 
         let cls = 'c';
-        if (isBonus && !v && !p) cls += ' bn';
         if (v) cls += ' ' + own[r][c];
         else if (p) cls += ' pd' + (isSel ? ' sel' : '');
         if (isHl) cls += ' hl-word';
@@ -1531,7 +1518,7 @@ $('ht').onclick = () => {
 $('go').onclick = () => {
   if (busy) return;
   busy = 1;
-  let right = 0, wrong = 0, tileBonus = 0;
+  let right = 0, wrong = 0;
   const lastRightCells = [];
 
   for (let r = 0; r < R; r++) {
@@ -1542,10 +1529,6 @@ $('go').onclick = () => {
           val[r][c] = p.l;
           own[r][c] = 'me';
           right++;
-          if (bonusCells && bonusCells.has(r + ',' + c)) {
-            tileBonus += 2;
-            bonusCells.delete(r + ',' + c);
-          }
           lastRightCells.push([r, c]);
         } else {
           rack[p.s] = p.l;
@@ -1557,7 +1540,7 @@ $('go').onclick = () => {
   }
 
   const wordBonus = checkCompletedWords();
-  const totalTurn = right + tileBonus + wordBonus;
+  const totalTurn = right + wordBonus;
   me += totalTurn;
 
   if (totalTurn > 0 && wordBonus === 0) {
@@ -1590,24 +1573,20 @@ function aiTurn() {
 
   const aiAccuracy = Math.min(0.96, 0.68 + (LN * 0.0028));
   const maxTiles = LN > 35 ? 5 : 4;
-  let placed = 0, tileBonus = 0;
+  let placed = 0;
 
   shuf(open).slice(0, maxTiles).forEach(([r, c]) => {
     if (Math.random() < aiAccuracy) {
       val[r][c] = sol[r][c];
       own[r][c] = 'ai';
       placed++;
-      if (bonusCells && bonusCells.has(r + ',' + c)) {
-        tileBonus += 2;
-        bonusCells.delete(r + ',' + c);
-      }
     }
   });
 
   const wordBonus = checkCompletedWords();
-  op += placed + tileBonus + wordBonus;
+  op += placed + wordBonus;
 
-  msg(placed ? `Oponente marcou +${placed + tileBonus + wordBonus} pontos.` : 'O oponente passou a vez.');
+  msg(placed ? `Oponente marcou +${placed + wordBonus} pontos.` : 'O oponente passou a vez.');
   if (full()) {
     draw();
     return endGame();
