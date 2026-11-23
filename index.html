@@ -1,356 +1,1945 @@
 <!DOCTYPE html>
-<html lang="pt">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<html lang="pt-PT"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <title>Palavras Cruzadas</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
-html,body{width:100%;height:100%;overflow:hidden;background:#0e1217;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#fff}
-.scr{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:space-between;background:#0e1217;z-index:10;overflow:hidden}
-.scr.on{display:flex}
+:root{
+  --bg:#ffffff;--tx:#2c3548;--ct:#d6e6fa;--cl:#ffffff;--cb:#c2cbd9;
+  --bl:#0a84ff;--me:#232b3d;--ai:#5c667d;--ti:#f7e2c1;--tib:#d6b585;--tt:#2c3548;
+  --bar:#f0f3f8;--ok:#c8f2c2;--bd:#e1e6f0;
+  --cs:min(calc((100vw - 20px)/8),64px,calc((100dvh - 310px)/10));
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#13161c;--tx:#e4e8f2;--ct:#22334d;--cl:#1c2029;--cb:#363d4d;
+    --me:#eef2fa;--ai:#9aa3b8;--ti:#d8b57d;--tib:#9e7e4c;--tt:#1a1e26;
+    --bar:#222733;--ok:#2a5427;--bd:#2d3342;
+  }
+}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{
+  margin:0;height:100%;background:var(--bg);color:var(--tx);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  display:flex;flex-direction:column;align-items:center;
+  user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;
+  overflow:hidden;
+}
 
-/* MENU */
-#s-menu{justify-content:center;padding:24px 20px;background:radial-gradient(ellipse at 50% 18%,#1a293d 0%,#0e1217 68%)}
-.m-logo{display:grid;grid-template-columns:repeat(3,30px);gap:4px;margin-bottom:14px}
-.m-tile{width:30px;height:30px;border-radius:7px;background:linear-gradient(180deg,#f5ead6,#dfd0b4);color:#141a24;font-weight:900;font-size:17px;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 0 #8a7c64}
-.m-tile.b{background:linear-gradient(180deg,#1a72c8,#115599);color:#fff;box-shadow:0 3px 0 #0a3562}
-.m-title{font-size:29px;font-weight:900;letter-spacing:-0.6px;margin-bottom:4px;text-align:center}
-.m-sub{font-size:13px;color:#8c98a9;margin-bottom:24px;text-align:center}
-.m-card{width:100%;max-width:340px;background:#161d26;border:1px solid #263140;border-radius:20px;padding:18px;margin-bottom:18px;box-shadow:0 12px 30px rgba(0,0,0,.4)}
-.m-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.m-lbl{font-size:12px;color:#8c98a9;text-transform:uppercase;letter-spacing:.8px;font-weight:700}
-.m-lvl{font-size:22px;font-weight:900;color:#47a8ff}
-.lvl-sel{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#0e131a;border-radius:12px;padding:6px 10px;border:1px solid #24303e}
-.lvl-btn{width:34px;height:34px;border-radius:9px;border:none;background:#1e2835;color:#fff;font-size:18px;font-weight:800;cursor:pointer}
-.lvl-btn:active{transform:scale(.94)}
-#lvl-range{flex:1;accent-color:#1584f3;cursor:pointer}
-.btn-play{width:100%;max-width:340px;padding:16px;border-radius:28px;border:none;background:linear-gradient(180deg,#198cff,#0b69d4);color:#fff;font-size:18px;font-weight:800;box-shadow:0 6px 20px rgba(21,132,243,.42);cursor:pointer;margin-bottom:10px}
-.btn-play:active{transform:scale(.97)}
-.btn-sec{width:100%;max-width:340px;padding:12px;border-radius:22px;border:1px solid #283342;background:#161d26;color:#cbd5e1;font-size:14px;font-weight:700;cursor:pointer}
+#top{width:min(96vw,520px);display:flex;align-items:center;justify-content:space-between;padding:8px 4px 2px}
+#bk{height:38px;width:38px;border-radius:50%;background:var(--bar);color:var(--tx);font-size:18px;display:flex;align-items:center;justify-content:center}
+#lvl-tag{font-size:13px;font-weight:700;color:var(--ai);background:var(--bar);padding:4px 12px;border-radius:14px}
+h1{font-size:clamp(22px,6.5vw,30px);margin:2px 12px 8px;text-align:center;line-height:1.1;font-weight:800;letter-spacing:-.02em}
 
-/* GAME HEADER */
-#s-game{padding:8px 8px 12px;justify-content:space-between}
-.top-bar{width:100%;max-width:440px;display:flex;align-items:center;justify-content:space-between;padding:2px 4px;flex-shrink:0}
-.ico-btn{width:34px;height:34px;border-radius:50%;border:none;background:#1a222c;color:#9aa7b8;font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer}
-.ico-btn:active{transform:scale(.92)}
-.lvl-pill{background:#1b232e;padding:5px 14px;border-radius:14px;font-size:13px;font-weight:700;color:#cfd8e3}
-.hero-t{font-size:20px;font-weight:900;text-align:center;letter-spacing:-0.4px;margin:2px 0 4px;flex-shrink:0}
-.score-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:5px;flex-shrink:0}
-.sc-name{font-size:13px;font-weight:700;color:#d0d8e2;transition:color .2s}
-.sc-name.turn{color:#47a8ff}
-.sc-box{min-width:52px;height:30px;padding:0 12px;border-radius:9px;background:#1b232e;border:1.5px solid transparent;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;transition:all .2s}
-.sc-box.you{color:#2196f3}
-.sc-box.opp{color:#9aa7b8}
-.sc-box.turn{border-color:#198cff;box-shadow:0 0 12px rgba(25,140,255,.28)}
-.sc-sep{color:#5e6b7c;font-weight:700}
-.prog-wrap{width:100%;max-width:440px;height:4px;background:#1d2631;border-radius:3px;overflow:hidden;margin-bottom:4px;flex-shrink:0}
-.prog-fill{height:100%;width:0%;background:linear-gradient(90deg,#1584f3,#38b6ff);transition:width .35s ease}
+#sc{display:flex;gap:12px;align-items:center;font-weight:600;margin-bottom:8px;font-size:15px}
+#sc b{background:var(--bar);padding:4px 16px;border-radius:10px;font-size:20px;min-width:36px;text-align:center;transition:transform .2s}
+#sc b.y{color:var(--bl)}
+#sc b.ai-s{color:var(--ai)}
 
-/* BOARD */
-.board-area{flex:1;width:100%;display:flex;align-items:center;justify-content:center;min-height:0;padding:2px 0;position:relative}
-.grid{display:grid;background:#0a0e13;border:2px solid #182330;border-radius:10px;overflow:hidden;box-shadow:0 10px 28px rgba(0,0,0,.55)}
-.cell{position:relative;border-right:1px solid #192636;border-bottom:1px solid #192636;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.cell.corner{background:#0b3b6e}
-.cell.clue{background:linear-gradient(180deg,#1259a3,#0d4785);color:#fff;padding:1.5px;text-align:center;cursor:pointer;line-height:1.02}
-.cell.clue:active{filter:brightness(1.18)}
-.cell.clue.act-clue{background:linear-gradient(180deg,#1c7ed6,#135ca8);box-shadow:inset 0 0 0 1.5px #66b8ff}
-.cl-txt{font-weight:800;text-transform:uppercase;letter-spacing:-0.35px;word-break:break-word;hyphens:auto;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;pointer-events:none;text-shadow:0 1px 1px rgba(0,0,0,.45)}
-.arr{position:absolute;font-size:8px;line-height:1;color:#fff;text-shadow:0 1px 2px #000;pointer-events:none;z-index:3}
-.arr-r{right:1px;top:50%;transform:translateY(-50%)}
-.arr-d{bottom:0px;left:50%;transform:translateX(-50%)}
+#g{display:grid;grid-template-columns:repeat(8,var(--cs));border:2px solid #7d8799;background:var(--cb);box-shadow:0 4px 16px #00000012}
+.c{
+  width:var(--cs);height:var(--cs);
+  border-right:1px solid var(--cb);border-bottom:1px solid var(--cb);
+  box-sizing:border-box;display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:calc(var(--cs)*.54);background:var(--cl);
+  position:relative;transition:background .15s;
+}
+.c:nth-child(8n){border-right:0}
+.c:nth-child(n+73){border-bottom:0}
 
-.cell.w{background:#f3f5f8;cursor:pointer;transition:background .12s}
-.cell.w.hi{background:#cfe8ff}
-.cell.w.cur{background:#9ed0ff;box-shadow:inset 0 0 0 2px #1584f3}
-.cell.w.mult::after{content:attr(data-m);position:absolute;inset:2px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:9px;color:#8aa4be;pointer-events:none}
-.cell.w.has-tile::after{display:none}
+.k{
+  background:var(--ct);font-size:calc(var(--cs)*.175);font-weight:700;
+  text-align:center;line-height:1.06;padding:2px 3px;text-transform:uppercase;
+  color:var(--tx);overflow-wrap:break-word;word-break:normal;overflow:hidden;
+  cursor:pointer;
+}
+.k.corner{background:#c5d8f0;cursor:default}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .k.corner{background:#1b283d}}
+.k i{position:absolute;font-style:normal;font-size:calc(var(--cs)*.19);color:#5c7499;pointer-events:none}
+.k .r{right:1px;top:50%;transform:translateY(-50%)}
+.k .b{bottom:-1px;left:50%;transform:translateX(-50%)}
 
-/* PLACED TILES ON BOARD */
-.b-tile{position:absolute;inset:1.5px;border-radius:4px;background:linear-gradient(180deg,#f7ebd4,#e3d2b4);color:#141a24;font-weight:900;display:flex;align-items:center;justify-content:center;box-shadow:0 1.5px 0 #94846a;z-index:2;animation:popIn .16s ease}
-.b-tile .pt{position:absolute;top:1px;right:2px;font-size:6.5px;font-weight:800;color:#4a3f30;line-height:1}
-.b-tile.draft{background:linear-gradient(180deg,#fff3d1,#f6dc99);box-shadow:0 0 0 1.5px #f59e0b,0 2px 4px rgba(0,0,0,.35)}
-.b-tile.locked-you{background:linear-gradient(180deg,#2492ff,#126ad1);color:#fff;box-shadow:0 1.5px 0 #0b438a}
-.b-tile.locked-you .pt{color:rgba(255,255,255,.88)}
-.b-tile.locked-opp{background:linear-gradient(180deg,#f4e8d1,#dfd0b2);color:#141a24}
-@keyframes popIn{from{transform:scale(.72);opacity:.4}to{transform:scale(1);opacity:1}}
+.s{flex-direction:column;padding:0}
+.s div{flex:1;width:100%;display:flex;align-items:center;justify-content:center;position:relative;font-size:calc(var(--cs)*.145);padding:0 3px;box-sizing:border-box;line-height:1.02}
+.s div:first-child{border-bottom:1px solid #aebfd9}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .s div:first-child{border-bottom-color:#34496b}}
+.s .b{bottom:-2px}
 
-/* CLUE BANNER */
-.clue-bar{width:100%;max-width:440px;min-height:30px;background:#151d27;border:1px solid #233040;border-radius:10px;padding:4px 10px;display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px;flex-shrink:0}
-.cb-dir{font-size:10px;font-weight:900;background:#1259a3;color:#fff;padding:2px 6px;border-radius:5px;white-space:nowrap}
-.cb-txt{flex:1;font-size:12px;font-weight:700;color:#e6edf5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cb-len{font-size:11px;font-weight:800;color:#7f8fa3;white-space:nowrap}
+.pc-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.pc-aff{font-size:calc(var(--cs)*.18);font-weight:800;text-transform:none;margin-bottom:1px}
+.pc{font-size:calc(var(--cs)*.44);text-transform:none;line-height:1}
+.s .pc{font-size:calc(var(--cs)*.24)}
 
-/* RACK */
-.rack{width:100%;max-width:340px;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;min-height:52px;flex-shrink:0}
-.r-slot{width:50px;height:50px;border-radius:10px;background:#171f29;border:1.5px dashed #293647;display:flex;align-items:center;justify-content:center}
-.r-tile{width:48px;height:48px;border-radius:10px;background:linear-gradient(180deg,#f7ebd4,#e1d0b0);color:#141a24;font-size:23px;font-weight:900;display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 4px 0 #8f7f65,0 6px 12px rgba(0,0,0,.4);cursor:pointer;transition:transform .12s,box-shadow .12s}
-.r-tile .pt{position:absolute;top:3px;right:5px;font-size:10px;font-weight:800;color:#4a3f30}
-.r-tile.sel{transform:translateY(-7px) scale(1.05);box-shadow:0 0 0 2.5px #2196f3,0 8px 16px rgba(33,150,243,.45)}
-.r-tile.used{opacity:.22;pointer-events:none;transform:scale(.92)}
+.me{color:var(--me)}
+.ai{color:var(--ai)}
+.pd{
+  background:linear-gradient(180deg,#fdf1dc,var(--ti));
+  color:var(--tt);border-radius:4px;
+  box-shadow:inset 0 0 0 1.5px var(--tib),0 2px 4px #0002;
+  cursor:grab;z-index:2;
+}
+.pd.sel{box-shadow:inset 0 0 0 2.5px var(--bl),0 2px 6px #0003}
+.hl-word{background:#fae6c3 !important;box-shadow:inset 0 0 0 2px var(--bl)}
+.hl-clue{background:#eef5ff !important}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hl-clue{background:#26334a !important}}
+.hint{animation:p .55s 3}@keyframes p{50%{background:var(--ok)}}
 
-/* CONTROLS */
-.ctrl-row{width:100%;max-width:340px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-shrink:0}
-.c-round{width:46px;height:46px;border-radius:50%;border:none;background:#1d2632;color:#2b95ff;font-size:19px;font-weight:800;display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,.3)}
-.c-round:active{transform:scale(.93)}
-.badge{position:absolute;top:-3px;right:-3px;min-width:19px;height:19px;padding:0 4px;border-radius:10px;background:#198cff;color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center}
-.btn-main{flex:1;height:48px;border-radius:24px;border:none;background:linear-gradient(180deg,#198cff,#0b69d4);color:#fff;font-size:17px;font-weight:800;box-shadow:0 5px 16px rgba(21,132,243,.4);cursor:pointer;transition:all .15s}
-.btn-main:active{transform:scale(.96)}
-.btn-main.confirm{background:linear-gradient(180deg,#16a34a,#15803d);box-shadow:0 5px 16px rgba(22,163,74,.42)}
-.btn-main:disabled{opacity:.45;pointer-events:none}
+.badge{
+  position:absolute;top:-7px;right:-6px;
+  background:var(--bl);color:#fff;font-size:11px;font-weight:800;
+  padding:1px 5px;border-radius:8px;z-index:10;line-height:1.2;
+  box-shadow:0 2px 4px #0004;animation:pop .35s ease-out;
+}
+@keyframes pop{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
 
-/* FLOATING SCORE & TOAST */
-.f-pts{position:fixed;z-index:60;font-size:19px;font-weight:900;color:#4ade80;text-shadow:0 2px 8px rgba(0,0,0,.85);pointer-events:none;animation:floatUp 1.05s ease forwards}
-.f-pts.opp{color:#fbbf24}
-@keyframes floatUp{0%{opacity:0;transform:translateY(8px) scale(.8)}20%{opacity:1;transform:translateY(0) scale(1.08)}100%{opacity:0;transform:translateY(-36px) scale(1)}}
-.toast{position:fixed;top:64px;left:50%;transform:translateX(-50%);background:#1f2937;border:1px solid #374151;color:#fff;padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;z-index:70;box-shadow:0 8px 24px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .2s}
-.toast.on{opacity:1}
+#ms{min-height:20px;margin:6px 12px 2px;font-size:13px;font-weight:600;color:var(--ai);text-align:center;max-width:94vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-/* MODALS */
-.modal-bg{position:fixed;inset:0;background:rgba(6,10,15,.82);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:20px;z-index:80}
-.modal-bg.on{display:flex}
-.modal-card{width:100%;max-width:340px;background:#161e28;border:1px solid #293647;border-radius:22px;padding:22px;text-align:center;box-shadow:0 18px 40px rgba(0,0,0,.65)}
-.modal-t{font-size:22px;font-weight:900;margin-bottom:6px}
-.modal-p{font-size:13.5px;color:#9aa7b8;line-height:1.45;margin-bottom:16px}
-.res-scores{display:flex;justify-content:center;gap:18px;margin:14px 0 18px}
-.res-box{background:#0f151d;border:1px solid #24303e;border-radius:14px;padding:12px 18px;min-width:105px}
-.res-box .lbl{font-size:11px;color:#8c98a9;font-weight:700;text-transform:uppercase}
-.res-box .val{font-size:26px;font-weight:900;margin-top:2px}
-.res-box.w .val{color:#2196f3}
-.m-btns{display:flex;flex-direction:column;gap:8px}
-.rules-list{text-align:left;font-size:13px;color:#cbd5e1;line-height:1.5;margin-bottom:16px}
-.rules-list li{margin-bottom:6px;margin-left:16px}
-</style>
-</head>
-<body>
+#rk{display:flex;gap:10px;margin:4px 0 6px;height:calc(var(--cs)*.92);align-items:center}
+.t{
+  width:calc(var(--cs)*.9);height:calc(var(--cs)*.9);border-radius:8px;
+  background:linear-gradient(180deg,#fdf1dc,var(--ti));color:var(--tt);
+  border:1.5px solid var(--tib);box-shadow:0 3px 0 #c9a673,0 4px 6px #0002;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:calc(var(--cs)*.52);touch-action:none;cursor:grab;
+}
+.t.e{background:var(--bar);border:1.5px dashed var(--cb);box-shadow:none;cursor:default}
+.t.sel{outline:3px solid var(--bl);transform:translateY(-3px)}
+.gh{position:fixed;transform:translate(-50%,-50%) scale(1.08);pointer-events:none;z-index:50;opacity:.95;box-shadow:0 8px 18px #0004}
 
-<!-- MENU SCREEN -->
-<div id="s-menu" class="scr on">
-  <div class="m-logo">
-    <div class="m-tile">P</div><div class="m-tile b">A</div><div class="m-tile">L</div>
-    <div class="m-tile b">A</div><div class="m-tile">V</div><div class="m-tile b">R</div>
-    <div class="m-tile">A</div><div class="m-tile b">S</div><div class="m-tile">!</div>
-  </div>
-  <div class="m-title">Palavras Cruzadas</div>
-  <div class="m-sub">Duelo de vocabulário estilo escandinavo</div>
+#bar{display:flex;gap:14px;align-items:center;width:min(92vw,440px);margin:4px 0 8px}
+button{font:inherit;border:0;border-radius:28px;height:52px;cursor:pointer;transition:transform .1s,opacity .15s}
+button:active:not(:disabled){transform:scale(.96)}
+#sh,#ht{width:52px;background:var(--bar);color:var(--bl);font-size:22px;position:relative;flex:none;display:flex;align-items:center;justify-content:center}
+#go{flex:1;background:var(--bl);color:#fff;font-weight:700;font-size:18px;box-shadow:0 4px 12px #0a84ff40}
+#go:disabled{background:var(--bar);color:var(--ai);box-shadow:none;cursor:default}
+#ht em{position:absolute;top:-4px;right:-4px;background:var(--bl);color:#fff;border-radius:50%;width:21px;height:21px;font:700 12px/21px system-ui}
 
-  <div class="m-card">
-    <div class="m-row">
-      <span class="m-lbl">Nível Selecionado</span>
-      <span class="m-lvl" id="m-lvl-txt">Nível 1</span>
-    </div>
-    <div class="lvl-sel">
-      <button class="lvl-btn" id="lvl-dec">−</button>
-      <input type="range" id="lvl-range" min="1" max="100" value="1">
-      <button class="lvl-btn" id="lvl-inc">+</button>
-    </div>
-  </div>
+body.m>:not(#mn){display:none}
+body:not(.m) #mn{display:none}
+#mn{width:min(94vw,500px);flex:1;min-height:0;overflow-y:auto;padding:16px 4px 32px;display:flex;flex-direction:column;gap:14px}
+.m-head{text-align:center;padding:8px 0 4px}
+.m-head h1{margin:0 0 4px;font-size:30px}
+.m-head p{margin:0;color:var(--ai);font-size:14px}
+.stats-card{
+  display:flex;justify-content:space-around;background:var(--bar);
+  padding:12px;border-radius:16px;text-align:center;
+}
+.stats-card div b{display:block;font-size:20px;color:var(--bl)}
+.stats-card div span{font-size:12px;color:var(--ai);font-weight:600}
+#resume-btn{
+  background:linear-gradient(135deg,#0a84ff,#0066cc);color:#fff;
+  border-radius:16px;height:auto;padding:14px 18px;
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 6px 16px #0a84ff35;text-align:left;
+}
+#resume-btn strong{display:block;font-size:17px}
+#resume-btn small{font-size:13px;opacity:.9}
+#resume-btn span.arr{font-size:22px;font-weight:800}
 
-  <button class="btn-play" id="btn-start">Jogar Nível 1</button>
-  <button class="btn-sec" id="btn-rules">Como Jogar</button>
+.lv-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.lv-btn{
+  height:52px;border-radius:14px;background:var(--bar);color:var(--tx);
+  font-weight:800;font-size:16px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;position:relative;
+}
+.lv-btn.won{background:var(--bl);color:#fff}
+.lv-btn.curr{outline:2.5px solid var(--bl);color:var(--bl)}
+.lv-btn.won.curr{color:#fff}
+.lv-btn small{font-size:10px;font-weight:600;opacity:.85}
+
+#ov{position:fixed;inset:0;background:#0009;display:flex;align-items:center;justify-content:center;z-index:30;backdrop-filter:blur(2px)}
+#ov[hidden]{display:none}
+#ov .box{background:var(--bg);padding:26px 28px;border-radius:22px;text-align:center;width:min(84vw,340px);box-shadow:0 12px 32px #0005}
+#ov h2{margin:0 0 8px;font-size:26px}
+#ov p{font-size:18px;font-weight:600;color:var(--ai);margin:0 0 20px;white-space:pre-line}
+#ov .btns{display:flex;gap:10px}
+#ov .btns button{flex:1;font-weight:700;font-size:16px}
+#ov-m{background:var(--bar);color:var(--tx)}
+#nw{background:var(--bl);color:#fff}
+</style></head><body>
+
+<div id="mn"></div>
+
+<div id="top">
+  <button id="bk" aria-label="Menu">←</button>
+  <span id="lvl-tag">Nível 1</span>
+  <div style="width:38px"></div>
+</div>
+<h1 id="headline">Resolva palavras cruzadas</h1>
+<div id="sc"><span>Você</span><b class="y" id="a">0</b><span>-</span><b class="ai-s" id="b">0</b><span>Oponente</span></div>
+<div id="g"></div>
+<div id="ms"></div>
+<div id="rk"></div>
+<div id="bar">
+  <button id="sh" aria-label="Baralhar letras">⇄</button>
+  <button id="go">Passar</button>
+  <button id="ht" aria-label="Dica">💡<em id="hn">3</em></button>
 </div>
 
-<!-- GAME SCREEN -->
-<div id="s-game" class="scr">
-  <div class="top-bar">
-    <button class="ico-btn" id="btn-back" title="Menu">←</button>
-    <div class="lvl-pill" id="g-lvl">Nível 1</div>
-    <button class="ico-btn" id="btn-help" title="Regras">?</button>
-  </div>
-
-  <div class="hero-t">Amplie seu vocabulário</div>
-
-  <div class="score-row">
-    <span class="sc-name turn" id="nm-you">Você</span>
-    <div class="sc-box you turn" id="sc-you">0</div>
-    <span class="sc-sep">-</span>
-    <div class="sc-box opp" id="sc-opp">0</div>
-    <span class="sc-name" id="nm-opp">Oponente</span>
-  </div>
-
-  <div class="prog-wrap"><div class="prog-fill" id="prog-fill"></div></div>
-
-  <div class="board-area" id="board-area">
-    <div class="grid" id="grid"></div>
-  </div>
-
-  <div class="clue-bar" id="clue-bar">
-    <span class="cb-dir" id="cb-dir">PISTA</span>
-    <span class="cb-txt" id="cb-txt">Toque numa casa ou pista azul para ver a definição</span>
-    <span class="cb-len" id="cb-len"></span>
-  </div>
-
-  <div class="rack" id="rack"></div>
-
-  <div class="ctrl-row">
-    <button class="c-round" id="btn-swap" title="Trocar / Recolher letras">⇄</button>
-    <button class="btn-main" id="btn-action">Passar</button>
-    <button class="c-round" id="btn-hint" title="Dica">💡<span class="badge" id="hint-cnt">3</span></button>
-  </div>
-</div>
-
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
-
-<!-- END LEVEL MODAL -->
-<div class="modal-bg" id="m-end">
-  <div class="modal-card">
-    <div class="modal-t" id="end-title">Vitória!</div>
-    <div class="modal-p" id="end-sub">Excelente domínio de vocabulário!</div>
-    <div class="res-scores">
-      <div class="res-box w"><div class="lbl">Você</div><div class="val" id="end-you">0</div></div>
-      <div class="res-box"><div class="lbl">Oponente</div><div class="val" id="end-opp">0</div></div>
+<div id="ov" hidden>
+  <div class="box">
+    <h2 id="ot-title">Vitória! 🎉</h2>
+    <p id="ot"></p>
+    <div class="btns">
+      <button id="ov-m">Menu</button>
+      <button id="nw">Próximo</button>
     </div>
-    <div class="m-btns">
-      <button class="btn-play" id="btn-next" style="margin:0">Próximo Nível</button>
-      <button class="btn-sec" id="btn-replay">Jogar Novamente</button>
-    </div>
-  </div>
-</div>
-
-<!-- RULES MODAL -->
-<div class="modal-bg" id="m-rules">
-  <div class="modal-card">
-    <div class="modal-t">Como Jogar</div>
-    <ul class="rules-list">
-      <li>Cada <b>casa azul</b> contém uma pista com uma seta (<b>▸</b> horizontal ou <b>▾</b> vertical) indicando onde começa a palavra.</li>
-      <li>Selecione uma letra do seu suporte e toque numa casa branca (ou toque diretamente na casa e depois na letra).</li>
-      <li>Coloque as <b>5 letras</b> num turno para ganhar <b>+25 pontos bónus</b>!</li>
-      <li>Casas <b>2X</b> e <b>3X</b> multiplicam o valor da letra colocada.</li>
-      <li>Use <b>💡</b> para revelar uma letra correta e <b>⇄</b> para recolher rascunhos ou trocar as letras da mão.</li>
-    </ul>
-    <button class="btn-play" id="btn-close-rules" style="margin:0">Entendi!</button>
   </div>
 </div>
 
 <script>
+const $=id=>document.getElementById(id),
+R=10,C=8,TOTAL_LEVELS=100,
+M=(f=()=>null)=>Array.from({length:R},()=>Array.from({length:C},f)),
+shuf=a=>{for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+
 const RAW_WORDS = `
-SOL|Astro rei do dia
-LUA|Satélite natural da Terra
-MAR|Oceano salgado
-RIO|Curso de água doce
-CEU|Firmamento azul
+AR|Atmosfera terrestre
+AS|Artigo definido pl.
+OS|Artigo definido pl.
+UM|Artigo indefinido
+DE|Preposição simples
+EM|Preposição de lugar
+NO|Contração em + o
+NA|Contração em + a
+DO|Contração de + o
+DA|Contração de + a
+AO|Contração a + o
+OU|Conjunção alternativa
+SE|Conjunção condicional
+EU|1.ª pessoa singular
+TU|2.ª pessoa singular
+JA|Neste momento
+LA|Nesse lugar
+CA|Neste lugar
+PE|Parte inferior da perna
+PO|Poeira fina
+SO|Apenas, somente
+MI|3.ª nota musical
+FA|4.ª nota musical
+SI|7.ª nota musical
+RE|2.ª nota musical
+IR|Deslocar-se
+VI|Verbo ver (passado)
+VA|Verbo ir (imperativo)
+VE|Verbo ver (presente)
+RI|Verbo rir (presente)
+LI|Verbo ler (passado)
+FE|Crença religiosa
+NU|Sem roupa
+EX|Prefixo de antigo
+OI|Saudação informal
+AI|Interjeição de dor
+UI|Interjeição de espanto
+EI|Chamamento informal
+HA|Verbo haver
+MA|Contrário de boa
+ME|Pronome pessoal
+MO|Pedra de moinho
+PA|Ferramenta de cavar
+PI|Constante 3,14
+SA|Feminino de são
+TA|Está (coloquial)
+TE|Pronome pessoal
+TI|Pronome oblíquo
+TO|Toma (coloquial)
+VO|Avó ou avô (coloquial)
+SOL|Astro-rei|☀️
+LUA|Satélite da Terra|🌙
+MAR|Água salgada|🌊
+RIO|Curso de água|🏞️
+UVA|Fruto da vinha|🍇|-va
+OVO|Da galinha|🥚
+PAO|Alimento de trigo|🍞
+MAO|Cinco dedos|✋
+CAO|Melhor amigo|🐶
+REI|Monarca|👑
+LEI|Norma jurídica
+SAL|Tempero do mar
+MEL|Doce das abelhas|🍯
+CHA|Infusão quente|🍵
 COR|Tonalidade visual
-LUZ|Claridade iluminadora
-SOM|Onda acústica audível
-VOZ|Som produzido ao falar
-PAZ|Ausência de guerra
-DOR|Sensação física penosa
-LEI|Norma jurídica obrigatória
-REI|Monarca soberano
-AVE|Animal com penas e asas
-CAO|Melhor amigo do homem
-BOI|Touro castrado
-OVO|Alimento posto pela galinha
-PAO|Alimento assado de farinha
-SAL|Tempero branco marinho
-CHA|Infusão quente de folhas
-MEL|Néctar doce das abelhas
-UVA|Fruto da videira
-NOZ|Fruto seco com casca dura
-FIGO|Fruto doce mediterrânico
-PERA|Fruto sumarento verde ou amarelo
-MACA|Fruto da macieira
-KIWI|Fruto verde peludo
-LIMA|Cítrico verde ácido
-COCO|Fruto tropical com água
-ALHO|Bolbo aromático de tempero
-CEBOLA|Bolbo que faz chorar
-ARROZ|Cereal branco base
-FEIJAO|Leguminosa de vagem
-MILHO|Cereal amarelo de espiga
-TRIGO|Cereal usado na farinha
-AVEIA|Cereal nutritivo de pequeno-almoço
-CARNE|Alimento proteico animal
-PEIXE|Animal aquático com guelras
-LEITE|Bebida branca nutritiva
-QUEIJO|Laticínio curado
-SOPA|Caldo quente nutritivo
-BOLO|Doce assado de festa
-DOCE|Com sabor açucarado
-AGUA|Líquido vital incolor
-SUCO|Sumo extraído de fruta
-VINHO|Bebida fermentada de uva
-CAFE|Bebida estimulante escura
-CASA|Habitação familiar
-SALA|Divisão de convívio
-CAMA|Móvel onde dormimos
-MESA|Tampo com pernas para refeições
-SOFA|Assento acolchoado de sala
-PORTA|Entrada móvel de uma divisão
-JANELA|Abertura envidraçada na parede
-TETO|Cobertura interior superior
-CHAO|Piso onde pisamos
-MURO|Parede exterior de pedra ou tijolo
-CHAVE|Abre fechaduras
-LIVRO|Obra literária impressa
-PAPEL|Folha para escrever
-LAPIS|Utensílio de grafite
-CANETA|Escreve com tinta
-GOMA|Borracha de apagar
-REGUA|Mede centímetros
-MAPA|Representação geográfica
-GLOBO|Esfera terrestre
-ATLAS|Coleção de mapas
-ARTE|Expressão criativa humana
-OBRA|Criação artística ou construção
-FOTO|Imagem captada por câmara
-FILME|Longa-metragem de cinema
-PALCO|Tablado de espetáculos
-ATOR|Intérprete teatral ou de cinema
-CENA|Sequência dramática
-CORO|Grupo de cantores
-NOTA|Sinal musical ou escolar
-TOM|Altura sonora ou matiz
-RITMO|Cadência musical
-PIANO|Instrumento de teclas brancas e pretas
-VIOLA|Instrumento de cordas dedilhadas
-HARPA|Instrumento grande de cordas
-FLAUTA|Instrumento de sopro
-TAMBOR|Instrumento de percussão
-BANDA|Grupo musical
-DISCO|Registo fonográfico
-RADIO|Emissora sonora
-CANAL|Via navegável ou emissora
-REDE|Malha entrelaçada ou internet
-DADO|Cubo numerado de jogo
-JOGO|Atividade lúdica com regras
-BOLA|Esfera desportiva
-GOLO|Ponto marcado no futebol
-REMO|Pá para impulsionar barco
-VELA|Lona de barco ou cilindro de cera
-BARCO|Embarcação aquática
-NAVIO|Grande embarcação marítima
-PORTO|Abrigo costeiro de navios
-CAIS|Plataforma de embarque
-ILHA|Terra cercada de água
-PRAIA|Faixa de areia junto ao mar
-ONDA|Elevação da água do mar
-MARE|Oscilação do nível do mar
-AREIA|Grãos finos da praia
-ROCHA|Pedra grande e dura
-PEDRA|Fragmento mineral sólido
-MONTE|Elevação natural do terreno
-SERRA|Cadeia de montanhas
-VALE|Depressão entre montes
-CAMPO|Terreno rural aberto
-MATO|Vegetação silvestre
-MATA|Bosque denso
-ARVORE|Planta lenhosa de grande porte
-TRONCO|Caule lenhoso da árvore
+DOR|Sofrimento físico
+VOZ|Som humano
+LUZ|Claridade
+PAZ|Sem guerra|☮️
+GAS|Estado fluido
+GIZ|Escreve no quadro
+GOL|Ponto no futebol|⚽
+LAR|Residência|🏠
+MAE|Progenitora
+PAI|Progenitor
+RIM|Órgão renal
+SOM|Onda acústica
+SUL|Ponto cardeal
+TIA|Irmã do pai
+TIO|Irmão da mãe
+VEZ|Ocasião
+ANO|Doze meses
+DIA|24 horas
+MES|Divisão do ano
+FIM|Término
+ERA|Época histórica
+ECO|Som refletido
+ELO|Argola de corrente
+UMA|Artigo indefinido
+POR|Preposição
+COM|Preposição
+SEM|Sem companhia
+MAS|Conjunção adversativa
+QUE|Conjunção
+ELE|Pronome masculino
+ELA|Pronome feminino
+NOS|Pronome plural
+VOS|Pronome plural
+ALI|Naquele lugar
+NAO|Negação
+SIM|Afirmação
+BEM|De modo correto
+MAL|De modo incorreto
+SER|Existir
+TER|Possuir
+VER|Enxergar
+DAR|Oferecer
+LER|Ler um livro
+OLE|Grito taurino
+EIS|Aqui está
+TAL|Semelhante
+SUA|Pronome possessivo
+TEU|Pronome possessivo
+MEU|Pronome possessivo
+SEU|Pronome possessivo
+RUA|Via urbana
+CEU|Firmamento|☁️
+BOI|Touro castrado|🐂
+AVE|Animal com penas|🐦
+ASA|Membro de voo
+OCA|Habitação indígena
+OLA|Saudação
+OSO|Plantígrado (esp.)
+ATO|Ação ou cena
+AVO|Pai do pai
+BAR|Estabelecimento
+BAU|Arca de guardar
+BOM|De qualidade
+CAL|Óxido de cálcio
+CRU|Não cozinhado
+DEZ|Número 10
+DIZ|Verbo dizer
+DOM|Talento natural
+DUO|Par musical
+EGO|Amor-próprio
+EVA|Primeira mulher
+FAZ|Verbo fazer
+FEZ|Verbo fazer (passado)
+FIO|Linha fina
+FOZ|Foz do rio
+IRA|Raiva intensa
+MIL|Número 1000
+NOZ|Fruto seco
+NUA|Sem vestes
+NUM|Em + um
+OCO|Vazio por dentro
+PAR|Conjunto de dois
+PAU|Pedaço de madeira
+PIA|Lava-louças
+PIO|Som de ave
+PRO|A favor de
+RIR|Dar gargalhadas|😂
+ROA|Verbo roer
+SOU|Verbo ser
+TAO|Tão grande
+TOM|Tonalidade
+VAI|Verbo ir
+VAO|Verbo ir (plural)
+VEM|Verbo vir
+VEU|Tecido fino
+VIA|Estrada ou caminho
+VIM|Verbo vir (passado)
+VIR|Chegar
+VOO|Deslocamento aéreo|✈️
+IMA|Atrai metais|🧲|-mã
+GATO|Felino caseiro|🐱
+RATO|Roedor|🐭
+PATO|Ave de lagoa|🦆
+LOBO|Canídeo selvagem|🐺
+URSO|Gosta de mel|🐻
+VACA|Dá leite|🐄
+CASA|Moradia|🏠
+BOLA|Esfera de jogo|⚽
+FLOR|Tem pétalas|🌸
+ROSA|Flor com espinhos|🌹
+MESA|Onde se come
+LUVA|Cobre a mão|🧤
+OLHO|Órgão da vista|👁️
+BOCA|Cavidade oral|👄
+FOGO|Combustão|🔥
+AGUA|Líquido vital|💧
+NEVE|Cai no inverno|❄️
+LAGO|Água interior
+ILHA|Cercada de água|🏝️
+CAFE|Bebida matinal|☕
+MACA|Fruto da macieira|🍎
+PERA|Fruto doce|🍐
+BOLO|Doce de festa|🎂
+OURO|Metal precioso|🥇
+NOTA|Sinal musical
+HORA|60 minutos
+ANJO|Ser celestial|👼
+FADA|Tem varinha|🧚
+FARO|Capital algarvia
+LEAO|Rei da selva|🦁
+SAPO|Anfíbio saltador|🐸
+AMOR|Sentimento|❤️
+SONO|Descanso|😴
+RISO|Gargalhada|😂|-iso
+POVO|Cidadãos
+JUIZ|Magistrado
+ATOR|Interpreta em cena
+TEJO|Rio de Lisboa
+FADO|Canção de Lisboa
+GELO|Água congelada|🧊
+SOPA|Prato de colher|🍲
+FACA|Corta à mesa
+MAPA|Carta geográfica|🗺️
+ALHO|Bolbo aromático|🧄
+BIFE|Fatia de carne|🥩
+EIXO|Linha central
+ERRO|Equívoco
+FRIO|Baixa temperatura|🥶
+GRAU|Unidade angular
+JOGO|Atividade lúdica|🎮
+LIXO|Resíduos
+MITO|Lenda antiga
+MODA|Tendência
+MOLA|Peça elástica
+MURO|Parede exterior
+NAVE|Embarcação espacial|🚀
+NETO|Filho do filho
+NOME|Designação
+NOVO|Recente
+ODIO|Aversão profunda
+OITO|Número 8
+OLEO|Líquido gorduroso
+ONDA|Vaga do mar|🌊
+ONZE|Número 11
+PELE|Derme
+PENA|Pluma de ave
+PESO|Massa corporal
+PICO|Cume de montanha
+PINO|Árvore conífera
+PIPA|Papagaio de papel|🪁
+PISO|Pavimento
+POCO|Cavidade com água
+RABO|Cauda de animal
+RAIO|Descarga elétrica|⚡
+RAIZ|Base da planta
 RAMO|Galho de árvore
-FOLHA|Órgão verde da planta
-FLOR|Estrutura reprodutiva colorida
-ROSA|Flor perfumada com espinhos
-LIRIO|Flor ornamental elegante
-CRAVO|Flor aromática vermelha ou branca
-ERVA|Planta rasteira verde
-RELVA|Tapete de erva aparada
-TERRA|Solo fértil ou o nosso planeta
-LAMA|Mistura de terra e água
-POEIRA|Pó fino suspenso no ar
+REDE|Malha entrelaçada
+REMO|Pá de remar
+RETA|Linha sem curvas
+RICO|Abastado
+RODA|Peça circular
+ROMA|Capital italiana
+SACO|Recipiente flexível
+SAIA|Peça de vestuário
+SALA|Divisão da casa
+SECA|Falta de chuva
+SEDE|Vontade de beber
+SELO|Estampilha postal
+SETA|Indicador de direção
+SETE|Número 7
+SINO|Instrumento de bronze|🔔
+SOFA|Assento estofado|🛋️
+SOLO|Terreno
+SUCO|Sumo de fruta|🧃
+TACA|Troféu ou copo|🏆
+TATU|Mamífero com couraça
+TAXA|Tributo
+TAXI|Carro de aluguer|🚕
+TEIA|Rede de aranha|🕸️
+TELA|Superfície de pintura
+TEMA|Assunto
+TETO|Cobertura interior
+TIRO|Disparo
+TOLO|Ingénuo
+TOPO|Parte mais alta
+TREM|Comboio (BR)|🚆
+TRES|Número 3
+TUBO|Cilindro oco
+TUDO|Totalidade
+UNHA|Lâmina dos dedos
+VAGA|Onda ou lugar livre
+VALE|Depressão entre montes
+VASO|Recipiente de flores
+VEIA|Vaso sanguíneo
+VELA|Cera com pavio|🕯️
+VILA|Povoação
+VIVO|Com vida
+VOTO|Escolha eleitoral
+XALE|Manta de ombros
+ZERO|Número 0
+ZONA|Área ou região
+ALMA|Espírito
+ALTO|Elevado
+AREA|Superfície
+ARTE|Expressão criativa|🎨
+AULA|Lição escolar
+AUTO|Automóvel
+AZUL|Cor do céu|🔵
+BALA|Projétil
+BASE|Fundamento
+BEBE|Recém-nascido|👶
+BICO|Boca das aves
+BOBO|Palhaço da corte
+BOTA|Calçado alto|👢
+CABO|Ponta ou corda
+CAIS|Porto de embarque
+CAMA|Móvel de dormir|🛏️
+CANA|Haste vegetal
+CAPA|Manto protetor
+CARA|Rosto
+CEDO|Antes da hora
+CENA|Parte de peça
+CERA|Substância das abelhas
+CHAO|Solo
+CIMA|Parte superior
+COCO|Fruto tropical|🥥
+COLA|Adesivo
+COPO|Recipiente de beber|🥛
+CORO|Grupo vocal
+COXA|Parte da perna
+CRUZ|Símbolo cristão|✝️
+CUBO|Sólido de 6 faces|🧊
+DADO|Cubo de jogo|🎲
+DATA|Dia do calendário|📅
+DEDO|Parte da mão|👆
+DOCE|Açucarado|🍬
+DONO|Proprietário
+DOZE|Número 12
+DURO|Rígido
+ERVA|Planta rasteira|🌿
+FAMA|Celebridade
+FATO|Vestuário
+FEIO|Sem beleza
+FERA|Animal selvagem
+FILA|Sequência de pessoas
+FITA|Tira estreita
+FOFO|Macio
+FOME|Vontade de comer
+FORA|No exterior
+FOTO|Fotografia|📷
+FUGA|Evasão
+FURO|Buraco
+GEMA|Parte amarela do ovo
+GIRA|Bonita (coloquial)
+GOTA|Pingo de líquido|💧
+GUIA|Condutor ou manual
+JOIA|Adorno precioso|💎
+LADO|Face lateral
+LAMA|Terra molhada
+LATA|Recipiente metálico
+LEVE|Com pouco peso
+LIMA|Fruto cítrico
+LISO|Plano, sem rugas
+LOJA|Estabelecimento comercial
+LOTE|Parcela
+LUTA|Combate
+LUXO|Ostentação
+MALA|Bagagem|🧳
+MANO|Irmão (coloquial)
+MARA|Excelente
+MATO|Vegetação silvestre
+MEIA|Peça de calçar|🧦
+MEIO|Metade
+META|Objetivo
+MINA|Jazida subterrânea
+MOCO|Rapaz jovem
+MODO|Maneira
+MOFA|Zombaria
+MUDO|Sem fala
+MULA|Animal híbrido
+NADA|Coisa nenhuma
+NATA|Creme do leite
+NETA|Filha do filho
+NIVE|Neve (poético)
+NORA|Mulher do filho
+NUBE|Nuvem (poético)
+OBRA|Trabalho realizado
+ORLA|Margem
+OSSO|Parte do esqueleto|🦴
+PAGA|Pagamento
+PAIS|Nação
+PANO|Tecido
+PAPA|Sumo Pontífice
+PARE|Sinal de stop|🛑
+PATA|Pé de animal|🐾
+PECA|Fragmento
+PERU|Ave natalícia|🦃
+PILA|Pilha (esp.)
+PIOR|Mais mau
+POLO|Extremo terrestre
+PORTE|Tamanho
+POSTO|Lugar
+PRETO|Cor escura|⚫
+PROA|Frente do barco
+PULO|Salto
+PURO|Sem mistura
+RALO|Grelha de escoamento
+RAPA|Raspa
+RARO|Pouco comum
+REAL|Verdadeiro
+RUBI|Pedra vermelha
+GENTE|Pessoas
+PINTA|Mancha
+PISTA|Trilho
+PLANO|Projeto
+PLUMA|Pena leve
+PODER|Força
+POMBA|Ave da paz|🕊️
+PONTA|Extremidade
+PRATA|Metal branco
+PRIMA|Filha do tio
+QUASE|Por pouco
+RAIVA|Fúria
+RASTO|Pegada
+REGRA|Norma
+REINO|Território do rei
+RENDA|Tecido delicado
+RESTO|Sobra
+RITMO|Cadência
+ROCHA|Pedra grande
+ROLHA|Tampa de cortiça
+RONDA|Patrulha
+ROUPA|Vestuário
+RUGAS|Vincos na pele
+SABER|Conhecimento
+SABOR|Gosto
+SAIDA|Abertura
+SALAO|Sala grande
+SALDO|Diferença de conta
+SANTA|Sagrada
+SANTO|Sagrado
+SAUDE|Bem-estar físico
+SECAR|Tirar humidade
+SEITA|Grupo religioso
+SELVA|Floresta densa
+SENSO|Juízo
+SERIE|Sequência
+SERVO|Criado
+SEXTO|Depois do quinto
+SIGLA|Abreviatura
+SILVA|Arbusto espinhoso
+SOBRA|Resto
+SOCIO|Associado
+SOGRA|Mãe do cônjuge
+SOGRO|Pai do cônjuge
+SOLDA|União metálica
+SONDA|Aparelho explorador
+SOPRO|Ar soprado
+SURDO|Sem audição
+SUSTO|Sobressalto
+TABUA|Prancha de madeira
+TALCO|Pó mineral
+TARDE|Após o meio-dia
+TECLA|Botão de piano
+TELHA|Peça do telhado
+TENOR|Voz masculina
+TENSO|Esticado
+TERCO|Um terço
+TERRA|Planeta azul|🌍
+TESTO|Tampa de panela
+TEXTO|Escrito
+TIGRE|Felino às riscas|🐯
+TINTA|Pigmento colorido
+TOCHA|Archote
+TONEL|Barril grande
+TORRE|Edifício alto|🗼
+TORTA|Bolo enrolado
+TOURO|Bovino bravo|🐂
+TRACO|Linha
+TRAJE|Vestimenta
+TRAMA|Enredo
+TREVO|Planta de 4 folhas|🍀
+TRIBO|Grupo indígena
+TRIGO|Cereal do pão|🌾
+TRONO|Assento real
+TROPA|Soldados
+TRUFA|Fungo ou chocolate
+TURMA|Grupo de alunos
+UNIAO|Junção
+USINA|Fábrica
+VAGAO|Carruagem de comboio
+VALOR|Preço ou mérito
+VAPOR|Gás de água
+VARAL|Corda de roupa
+VAZIO|Sem nada
+VELHO|Idoso
+VENDA|Comércio
 VENTO|Ar em movimento
-BRISA|Vento suave e fresco
-NUVEM|Massa de vapor no céu
-CHUVA|Precipitação de gotas de água
-NEVE|Prec
+VERAO|Estação quente|☀️
+VERBO|Classe gramatical
+VERDE|Cor da relva|🟢
+VERSO|Linha de poema
+VIGIA|Sentinela
+VINHO|Bebida da uva|🍷
+VIOLA|Instrumento de cordas
+VIRUS|Agente infeccioso
+VISTA|Visão
+VIUVA|Perdeu o marido
+ZEBRA|Equídeo riscado|🦓
+ZINCO|Metal químico
+PORCO|Suíno|🐷
+LIVRO|Tem páginas|📖
+CARRO|Automóvel|🚗
+NAVIO|Barco grande|🚢
+AVIAO|Voa nos céus|✈️
+BARCO|Embarcação|⛵
+CHAVE|Abre a porta|🔑
+NARIZ|Cheira|👃
+DENTE|Mastiga|🦷
+CHUVA|Cai das nuvens|🌧️
+NUVEM|Cobre o céu|☁️
+PRAIA|Areia e mar|🏖️
+MONTE|Pequeno cume
+SERRA|Cadeia de montes
+PONTE|Liga margens|🌉
+LEITE|Bebida branca|🥛
+LIMAO|Fruto azedo|🍋
+MILHO|Cereal em espiga|🌽
+ARROZ|Cereal em grão|🍚
+FESTA|Celebração|🎉
+CARTA|Vai no envelope|✉️
+FERRO|Metal resistente
+VIDRO|Material transparente
+PEDRA|Rocha pequena
+AREIA|Grãos da praia
+PAPEL|Folha de escrever
+LETRA|Parte da palavra
+TEMPO|Passa nas horas
+NOITE|Sem Sol
+ALUNO|Quem estuda
+PORTO|Cidade do Douro
+BRAGA|Cidade minhota
+COBRA|Réptil sem patas|🐍
+PEIXE|Vive na água|🐟
+POLVO|Tem oito braços|🐙
+POETA|Escreve versos
+RADIO|Transmite emissões|📻|-adio
+MINHO|Rio do norte
+TENIS|Desporto de raquete|🎾
+PIANO|Instrumento de teclas|🎹
+POEMA|Texto em versos
+BRUXA|Voa de vassoura|🧙
+PIZZA|Prato italiano|🍕
+PRATO|Onde se serve|🍽️
+GARFO|Talher de dentes
+LOTUS|Flor aquática|🪷|-tus
+ATOMO|Partícula química|⚛️
+COROA|Insígnia real|👑
+CACTO|Planta do deserto|🌵
+AGUIA|Ave de rapina|🦅
+CISNE|Ave elegante|🦢
+NORTE|Ponto cardeal
+PORTA|Entrada de casa|🚪
+PRECO|Valor monetário
+PRIMO|Filho do tio
+PULGA|Parasita saltador
+QUILO|Mil gramas
+ROSTO|Face humana
+ROUCO|Sem voz clara
+SABAO|Produto de limpeza|🧼
+SALTO|Pulo
+SENHA|Palavra-passe
+SEXTA|Dia da semana
+SINAL|Indicação
+SITIO|Lugar
+SONHO|Visão ao dormir
+SORTE|Boa fortuna
+SUMIR|Desaparecer
+TAMPA|Cobertura
+OVELHA|Animal de lã
+SECULO|Cem anos
+SAPATO|Calçado|👞
+CHAPEU|Cobre a cabeça|🎩
+QUEIJO|Derivado do leite|🧀
+BANANA|Fruto amarelo|🍌
+TOMATE|Fruto vermelho|🍅|-mate
+CINEMA|Sala de filmes|🎬
+MUSICA|Arte dos sons|🎵
+OUTONO|Caem as folhas|🍂
+RAINHA|Mulher do rei|👸
+ESCOLA|Onde se aprende|🏫
+LISBOA|Capital de Portugal
+MACACO|Primata|🐒
+BALEIA|Maior mamífero|🐋
+ABELHA|Faz mel|🐝
+ESTADO|Nação soberana
+MEDICO|Trata doentes
+PINTOR|Artista plástico
+CIDADE|Centro urbano
+ALDEIA|Povoação pequena
+BRASIL|País sul-americano|🇧🇷
+CAMOES|Autor de Os Lusíadas
+PESSOA|Autor de Mensagem
+TROFEU|Prémio desportivo|🏆
+JANELA|Deixa entrar luz
+PAREDE|Divide a sala
+TAMBOR|Percussão|🥁
+TEATRO|Palco e plateia|🎭
+JORNAL|Diário de notícias|📰
+ACUCAR|Adoça o café
+COLHER|Talher da sopa|🥄
+ESPADA|Arma branca|⚔️
+ESCUDO|Arma defensiva|🛡️
+ORELHA|Órgão da audição|👂
+CAMARA|Máquina fotográfica|📷
+VULCAO|Montanha de lava|🌋
+CEREJA|Fruto vermelho|🍒
+CEBOLA|Hortaliça em camadas|🧅
+FRANGO|Ave doméstica|🍗
+GIRAFA|Pescoço comprido|🦒
+CAMELO|Animal com bossas|🐫
+CORUJA|Ave noturna|🦉
+ARANHA|Aracnídeo|🕷️
+TIJOLO|Bloco de construção|🧱
+XADREZ|Jogo de tabuleiro|♟️
+XAROPE|Medicamento líquido
+TROVAO|Segue o relâmpago
+ABRACO|Gesto de carinho
+ACORDO|Entendimento
+ADULTO|Pessoa crescida
+ALEGRE|Contente
+ALFACE|Hortaliça de salada|🥬
+ALGUEM|Alguma pessoa
+ALTURA|Elevação
+AMARGO|Sabor acre
+AMIGOS|Companheiros
+ANIMAL|Ser vivo
+ANTIGO|Muito velho
+APENAS|Somente
+ARVORE|Tem copa e tronco|🌳
+ATAQUE|Ofensiva
+ATRASO|Demora
+AZEITE|Óleo de azeitona
+BAIRRO|Zona da cidade
+BARATA|Inseto doméstico|🪳
+BATATA|Tubérculo|🥔
+BEBIDA|Líquido para beber
+BELEZA|Formosura
+BIGODE|Pelos sobre o lábio
+BONECA|Brinquedo infantil
+BOSQUE|Pequena floresta
+BRANCO|Cor da neve|⚪
+BRILHO|Luminosidade
+CABECA|Parte superior do corpo
+CABELO|Fios na cabeça
+CADEIA|Prisão
+CAMISA|Peça de roupa|👕
+CANECA|Chávena grande
+CANETA|Instrumento de escrita|🖊️
+CAVALO|Equídeo|🐴
+CENTRO|Meio
+CHEIRO|Odor
+COELHO|Mamífero orelhudo|🐰
+COLEGA|Companheiro de trabalho
+COMIDA|Alimento
+CONCHA|Casca marinha|🐚
+COSTAS|Dorso
+DEPOIS|Mais tarde
+DESEJO|Vontade
+DIRETO|Sem desvios
+DOENCA|Enfermidade
+DUVIDA|Incerteza
+EFEITO|Resultado
+FEIJAO|Leguminosa
+FERIAS|Descanso anual
+FRENTE|Parte dianteira
+FUTURO|Tempo que virá
+GAVETA|Compartimento de móvel
+GUARDA|Vigilante
+GUERRA|Conflito armado
+IGREJA|Templo cristão|⛪
+IMAGEM|Representação visual
+INICIO|Começo
+INSETO|Pequeno artrópode
+JARDIM|Espaço com flores
+JOELHO|Articulação da perna
+LADRAO|Assaltante
+LINGUA|Órgão da fala
+MARIDO|Esposo
+MENINA|Rapariga jovem
+MENINO|Rapaz jovem
+METADE|Meia parte
+MINUTO|60 segundos
+NUMERO|Algarismo
+OBJETO|Coisa material
+OCEANO|Grande massa de água
+OFERTA|Dádiva
+ORIGEM|Princípio
+PAGINA|Folha de livro
+PANELA|Utensílio de cozinha
+PARQUE|Jardim público
+PATRAO|Empregador
+PEDIDO|Solicitação
+PERIGO|Risco
+PLANTA|Ser vegetal|🌱
+POESIA|Arte dos versos
+QUARTO|Divisão de dormir
+QUENTE|Com calor
+RECADO|Mensagem breve
+RELOGIO|Mede o tempo
+SANGUE|Líquido vital
+SEMANA|Sete dias
+SENTIR|Perceber
+SERVIR|Prestar serviço
+SOMBRA|Ausência de luz
+TAPETE|Alcatifa
+TAREFA|Trabalho a fazer
+TECIDO|Pano
+TEORIA|Conjunto de ideias
+TIGELA|Taça funda
+TOALHA|Pano de secar
+TOMADA|Ligação elétrica
+ULTIMO|Final
+VIAGEM|Deslocação
+XICARA|Chávena (BR)|☕
+ESTRELA|Brilha de noite|⭐
+CENOURA|Raiz laranja|🥕
+CORACAO|Bombeia sangue|❤️
+AMIZADE|Laço fraterno
+GOVERNO|Poder executivo
+PADEIRO|Faz pão
+COMBOIO|Anda sobre carris|🚆
+ESTRADA|Via de circulação
+ALGARVE|Sul de Portugal
+MADEIRA|Ilha do Funchal
+ESPANHA|Vizinha de Portugal
+FUTEBOL|Desporto rei|⚽
+NATACAO|Desporto aquático
+CORRIDA|Prova de velocidade
+CAMPEAO|Vencedor
+COZINHA|Onde se cozinha
+TELHADO|Cobre a casa
+VIOLINO|Instrumento de arco|🎻
+ROMANCE|Livro de ficção
+REVISTA|Publicação periódica
+CERVEJA|Bebida de cevada|🍺
+FOGUETE|Nave espacial|🚀
+PLANETA|Corpo celeste|🪐
+DESERTO|Região árida|🏜️
+MORANGO|Fruto silvestre|🍓
+ABACATE|Fruto verde|🥑
+CAMARAO|Crustáceo|🦐
+TUBARAO|Predador marinho|🦈
+FORMIGA|Inseto trabalhador|🐜
+CARACOL|Molusco lento|🐌
+BOLACHA|Biscoito doce|🍪
+CADERNO|Bloco de notas|📓
+CASTELO|Fortaleza medieval|🏰
+EXEMPLO|Modelo a seguir
+FABRICA|Unidade industrial
+FAMILIA|Pais e filhos
+GARRAFA|Recipiente de vidro|🍾
+GRAVATA|Adorno de pescoço|👔
+INVERNO|Estação fria|❄️
+LARANJA|Fruto cítrico|🍊
+MERCADO|Local de compras
+PISCINA|Tanque de natação
+QUINTAL|Pátio de casa
+SOLDADO|Militar
+SORRISO|Expressão alegre|😊
+SUCESSO|Êxito
+TESOURO|Riqueza escondida
+VERDADE|Opinião exata
+VIZINHO|Mora ao lado
+ABACAXI|Fruto tropical|🍍
+ALGODAO|Fibra branca
+ALIANCA|Anel de casamento|💍
+ARMARIO|Móvel de arrumação
+ASSUNTO|Tema
+ATITUDE|Postura
+BALANCA|Mede o peso
+BARULHO|Ruído
+BATERIA|Fonte de energia|🔋
+BILHETE|Ingresso
+CADEIRA|Assento com encosto|🪑
+CAMINHO|Trilho
+CAPITAO|Comandante
+CARINHO|Afeto
+CELULAR|Telemóvel (BR)|📱
+CHINELO|Calçado caseiro
+CINTURA|Meio do corpo
+COLCHAO|Base da cama
+CORAGEM|Bravura
+CORTINA|Pano de janela
+COSTUME|Hábito
+CRIANCA|Menino ou menina
+CUIDADO|Atenção
+CULTURA|Conhecimento
+DESENHO|Ilustração
+DESTINO|Fado ou rumo
+DIREITO|Justiça ou lado
+ELEICAO|Votação
+EMPREGO|Trabalho
+ENERGIA|Força ativa
+ENGENHO|Habilidade
+ENTRADA|Acesso
+ESCRITA|Texto escrito
+ESPELHO|Reflete a imagem|🪞
+ESPORTE|Desporto (BR)
+ESTACAO|Época ou paragem
+FACHADA|Frente de edifício
+FAZENDA|Quinta rural
+FERIADO|Dia festivo
+FORTUNA|Riqueza
+GALINHA|Ave de capoeira|🐔
+GARAGEM|Abrigo de carros
+GERENTE|Administrador
+HISTORIA|Narrativa do passado
+INFERNO|Submundo
+INIMIGO|Adversário
+JOGADOR|Atleta
+LAGRIMA|Gota de choro|😢
+LAMPADA|Fonte de luz|💡
+LEITURA|Ato de ler
+LIMPEZA|Higiene
+LOUCURA|Demência
+MAQUINA|Aparelho mecânico
+MARINHA|Força naval
+MATERIA|Substância
+MEDALHA|Condecoração|🏅
+MEMORIA|Recordação
+MENTIRA|Falsidade
+MILAGRE|Prodígio
+MOCHILA|Saco às costas|🎒
+MORADIA|Habitação
+NEGOCIO|Comércio
+NOTICIA|Informação atual
+OFICINA|Local de reparação
+OPINIAO|Parecer
+PALACIO|Residência real
+PALAVRA|Vocábulo
+PARENTE|Familiar
+PASSEIO|Caminhada
+PIMENTA|Especiaria picante|🌶️
+POLICIA|Força de segurança|🚓
+POPULAR|Do povo
+PROJETO|Plano
+QUANTIA|Montante
+QUARTEL|Base militar
+QUESTAO|Pergunta
+RECEITA|Fórmula culinária
+RECURSO|Meio disponível
+REFORMA|Aposentação
+RELACAO|Ligação
+REMEDIO|Medicamento|💊
+REPOUSO|Descanso
+REUNIAO|Encontro
+RIQUEZA|Abundância
+RODOVIA|Estrada principal
+SAUDADE|Nostalgia
+SEGREDO|Mistério
+SEMENTE|Grão de plantar
+SENTIDO|Direção ou significado
+SERVICO|Trabalho prestado
+SISTEMA|Conjunto organizado
+SOLUCAO|Resposta
+SORVETE|Gelado (BR)|🍨
+TALENTO|Aptidão
+TECLADO|Teclas de computador|⌨️
+TEMPERO|Condimento
+TESOURA|Instrumento de corte|✂️
+TURISMO|Viagens de lazer
+URGENTE|Imediato
+VARANDA|Sacada
+VESTIDO|Roupa feminina|👗
+VITORIA|Triunfo
+AVENTURA|Experiência emocionante
+BANDEIRA|Símbolo nacional
+BOMBEIRO|Apaga incêndios
+CACHORRO|Melhor amigo do homem
+CARTEIRA|Guarda dinheiro e cartões
+COBERTOR|Aquece na cama
+COMERCIO|Compra e venda
+CONSELHO|Recomendação útil
+CONTRATO|Acordo formal
+DENTISTA|Cuida dos dentes
+DIAMANTE|Pedra preciosa dura
+DINHEIRO|Moeda e notas
+DISCURSO|Fala em público
+ECONOMIA|Gestão financeira
+EDUCACAO|Ensino e formação
+EXERCITO|Forças armadas
+FANTASMA|Espírito assombrado
+FLORESTA|Mata com muitas árvores
+GASOLINA|Combustível de carro
+GUITARRA|Instrumento de 6 cordas
+HOSPITAL|Centro de saúde
+LANTERNA|Luz portátil
+MENSAGEM|Comunicação escrita
+MISTERIO|Enigma por resolver
+MONTANHA|Grande elevação
+NATUREZA|Mundo natural
+OLIVEIRA|Árvore da azeitona
+OPERACAO|Intervenção cirúrgica
+PAISAGEM|Vista panorâmica
+PARABENS|Felicitações
+PORTUGAL|País de Camões
+PRESENTE|Oferta ou tempo atual
+PRINCESA|Filha do rei
+PROBLEMA|Questão difícil
+PROCESSO|Sequência de atos
+PROMESSA|Compromisso verbal
+PROPOSTA|Sugestão apresentada
+RESPEITO|Consideração pelo outro
+RESPOSTA|Réplica a uma pergunta
+SILENCIO|Ausência de som
+SUSTENTO|Meio de vida
+TELEFONE|Aparelho de chamadas
+TRABALHO|Atividade profissional
+TRANSITO|Circulação de veículos
+TRIBUNAL|Local de julgamentos
+UNIVERSO|Todo o espaço sideral
+VANTAGEM|Benefício superior
+VASSOURA|Varre o chão
+ELEFANTE|Maior mamífero terrestre
+CROCODILO|Réptil de grandes mandíbulas
+TARTARUGA|Réptil com carapaça
+ESCORPIAO|Aracnídeo com ferrão
+GOLFINHO|Mamífero marinho inteligente
+FLAMINGO|Ave pernalta cor-de-rosa
+BORBOLETA|Inseto de asas coloridas
+CHOCOLATE|Doce feito de cacau
+BICICLETA|Veículo de duas rodas
+BRINQUEDO|Objeto infantil de jogo
+CAVALEIRO|Guerreiro a cavalo
+GINASTICA|Exercício físico
+INDUSTRIA|Produção fabril
+JUVENTUDE|Fase jovem da vida
+LIBERDADE|Direito de ser livre
+ORQUESTRA|Conjunto sinfónico
+PACIENCIA|Calma para esperar
+PROFESSOR|Quem ensina na escola
+QUALIDADE|Excelência de algo
+SEGURANCA|Proteção contra perigos
+SOCIEDADE|Comunidade humana
+TABULEIRO|Superfície de jogo
+AEROPORTO|Terminal de aviões
+PRIMAVERA|Estação das flores
+TELEVISAO|Aparelho de ecrã e canais
+ESTUDANTE|Aluno de escola
+ELEFANTES|Paquidermes de tromba
+DIAMANTES|Pedras preciosas
+MORANGOS|Frutos vermelhos silvestres
+LARANJAS|Frutos cítricos
+CENOURAS|Raízes laranjas
+CAMAROES|Crustáceos marinhos
+TUBAROES|Predadores dos oceanos
+PINGUINS|Aves do polo sul
+CANGURUS|Marsupiais saltadores
+`;
+
+const BASE_DICT = [];
+const seenBase = new Set();
+RAW_WORDS.trim().split('\n').forEach(line => {
+  const parts = line.split('|');
+  const w = parts[0].trim().toUpperCase().replace(/[^A-Z]/g, '');
+  const t = (parts[1] || '').trim();
+  const e = (parts[2] || '').trim();
+  const aff = (parts[3] || '').trim();
+  if (w.length >= 2 && w.length <= 9 && !seenBase.has(w)) {
+    seenBase.add(w);
+    BASE_DICT.push({ w, t, e, aff, f: 0 });
+  }
+});
+
+// Pistas de completar 2 letras exatas ("CA__O" -> RR) para níveis avançados
+const FILL_DICT = [];
+const seenFill = new Set(seenBase);
+BASE_DICT.forEach(b => {
+  if (b.w.length >= 5 && b.w.length <= 7) {
+    const idx = b.w.length === 5 ? 1 : 2;
+    const sub2 = b.w.slice(idx, idx + 2);
+    const masked2 = b.w.slice(0, idx) + '__' + b.w.slice(idx + 2);
+    if (!seenFill.has(sub2)) {
+      seenFill.add(sub2);
+      FILL_DICT.push({ w: sub2, t: masked2, e: '', aff: '', f: 1 });
+    }
+  }
+});
+
+const ALL_WORDS = BASE_DICT.concat(FILL_DICT);
+const WORDS_BY_LEN = {};
+for (let l = 2; l <= 9; l++) WORDS_BY_LEN[l] = [];
+ALL_WORDS.forEach(item => WORDS_BY_LEN[item.w.length].push(item));
+
+// Topologias escandinavas 100% validadas (todas as palavras H e V têm >= 2 letras)
+const BASE_TEMPLATES = [
+  // Modelo 1
+  [
+    [0,0,0,0,0,0,0,0],
+    [0,1,1,1,0,1,1,1],
+    [0,1,1,1,1,1,1,1],
+    [0,1,1,0,1,1,1,1],
+    [0,1,1,1,1,1,0,0],
+    [0,1,1,1,1,0,1,1],
+    [0,0,0,1,1,1,1,1],
+    [0,1,1,1,0,1,1,1],
+    [0,1,1,1,1,1,1,1],
+    [0,1,1,0,1,1,1,1]
+  ],
+  // Modelo 2
+  [
+    [0,0,0,0,0,0,0,0],
+    [0,1,1,1,1,0,1,1],
+    [0,1,1,1,1,1,1,1],
+    [0,1,1,0,1,1,1,1],
+    [0,1,1,1,0,1,1,1],
+    [0,0,0,1,1,1,1,1],
+    [0,1,1,1,1,1,0,0],
+    [0,1,1,1,1,0,1,1],
+    [0,1,1,1,1,1,1,1],
+    [0,1,1,0,1,1,1,1]
+  ],
+  // Modelo 3
+  [
+    [0,0,0,0,0,0,0,0],
+    [0,1,1,1,1,1,0,0],
+    [0,1,1,1,1,1,1,1],
+    [0,1,1,0,1,1,1,1],
+    [0,1,1,1,1,0,1,1],
+    [0,0,1,1,1,1,1,1],
+    [0,1,1,1,0,1,1,1],
+    [0,1,1,1,1,1,1,0],
+    [0,1,1,1,1,1,1,1],
+    [0,1,1,0,1,1,1,1]
+  ],
+  // Modelo 4
+  [
+    [0,0,0,0,0,0,0,0],
+    [0,1,1,1,0,1,1,1],
+    [0,1,1,1,1,1,1,1],
+    [0,1,1,1,1,1,0,0],
+    [0,0,0,1,1,1,1,1],
+    [0,1,1,1,1,0,1,1],
+    [0,1,1,0,1,1,1,1],
+    [0,1,1,1,1,1,1,0],
+    [0,1,1,1,1,1,1,1],
+    [0,1,1,0,1,1,1,1]
+  ]
+];
+
+const rng = s => () => {
+  s |= 0; s = s + 0x6D2B79F5 | 0;
+  let t = Math.imul(s ^ s >>> 15, 1 | s);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+  return ((t ^ t >>> 14) >>> 0) / 4294967296;
+};
+
+function renderClueContent(b, lvl) {
+  const picChance = Math.max(0.24, 0.60 - (lvl * 0.0035));
+  const usePic = b.e && (((b.w.charCodeAt(0) * 11 + b.w.length * 17 + lvl * 7) % 100) < picChance * 100);
+  if (usePic) {
+    return `<div class="pc-wrap">${b.aff ? `<span class="pc-aff">${b.aff}</span>` : ''}<span class="pc">${b.e}</span></div>`;
+  }
+  return b.t;
+}
+
+function ck(q, r, c, lvl) {
+  if (r === 0 && c === 0) return '<div class="c k corner"></div>';
+  if (!q || (!q.a && !q.d)) return '<div class="c k corner"></div>';
+  if (q.a && q.d) {
+    return `<div class="c k s" data-kr="${r}" data-kc="${c}"><div>${renderClueContent(q.a, lvl)}<i class="r">▸</i></div><div>${renderClueContent(q.d, lvl)}<i class="b">▾</i></div></div>`;
+  }
+  return `<div class="c k" data-kr="${r}" data-kc="${c}">${renderClueContent(q.a || q.d, lvl)}<i class="${q.a ? 'r' : 'b'}">${q.a ? '▸' : '▾'}</i></div>`;
+}
+
+function extractSlots(g) {
+  const slots = [];
+  for (let r = 1; r < R; r++) {
+    let c = 1;
+    while (c < C) {
+      if (g[r][c] === 1) {
+        const c0 = c;
+        while (c < C && g[r][c] === 1) c++;
+        const len = c - c0;
+        const cells = [];
+        for (let i = 0; i < len; i++) cells.push([r, c0 + i]);
+        slots.push({ id: slots.length, r, c: c0, d: 0, len, clueR: r, clueC: c0 - 1, word: null, cells });
+      } else c++;
+    }
+  }
+  for (let c = 1; c < C; c++) {
+    let r = 1;
+    while (r < R) {
+      if (g[r][c] === 1) {
+        const r0 = r;
+        while (r < R && g[r][c] === 1) r++;
+        const len = r - r0;
+        const cells = [];
+        for (let i = 0; i < len; i++) cells.push([r0 + i, c]);
+        slots.push({ id: slots.length, r: r0, c, d: 1, len, clueR: r0 - 1, clueC: c, word: null, cells });
+      } else r++;
+    }
+  }
+  return slots;
+}
+
+function solveLayout(g, slots, rn, lvl, maxSteps = 25000) {
+  if (slots.some(s => !WORDS_BY_LEN[s.len] || WORDS_BY_LEN[s.len].length === 0)) return null;
+
+  const grid = Array.from({ length: R }, () => Array(C).fill(null));
+  const used = new Set();
+  const allowFill = lvl >= 4;
+  const pools = {};
+
+  for (let l = 2; l <= 9; l++) {
+    const arr = WORDS_BY_LEN[l].filter(w => allowFill || !w.f).slice();
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = (rn() * (i + 1)) | 0;
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    pools[l] = arr;
+  }
+
+  function getCandidates(s) {
+    const out = [];
+    const pool = pools[s.len] || [];
+    for (let k = 0; k < pool.length; k++) {
+      const item = pool[k];
+      if (used.has(item.w)) continue;
+      let match = true;
+      for (let i = 0; i < s.len; i++) {
+        const [y, x] = s.cells[i];
+        const ch = grid[y][x];
+        if (ch !== null && ch !== item.w[i]) { match = false; break; }
+      }
+      if (match) out.push(item);
+    }
+    return out;
+  }
+
+  let steps = 0;
+
+  function backtrack(assignedCount) {
+    if (assignedCount === slots.length) return true;
+    if (++steps > maxSteps) return false;
+
+    let bestSlot = null;
+    let bestCands = null;
+
+    for (let i = 0; i < slots.length; i++) {
+      const s = slots[i];
+      if (s.word !== null) continue;
+      const cands = getCandidates(s);
+      if (cands.length === 0) return false;
+      if (!bestCands || cands.length < bestCands.length) {
+        bestSlot = s;
+        bestCands = cands;
+        if (cands.length === 1) break;
+      }
+    }
+
+    for (let i = 0; i < bestCands.length; i++) {
+      const cand = bestCands[i];
+      bestSlot.word = cand;
+      used.add(cand.w);
+
+      const prevChars = bestSlot.cells.map(([y, x]) => grid[y][x]);
+      for (let cIdx = 0; cIdx < bestSlot.len; cIdx++) {
+        const [y, x] = bestSlot.cells[cIdx];
+        grid[y][x] = cand.w[cIdx];
+      }
+
+      if (backtrack(assignedCount + 1)) return true;
+
+      for (let cIdx = 0; cIdx < bestSlot.len; cIdx++) {
+        const [y, x] = bestSlot.cells[cIdx];
+        grid[y][x] = prevChars[cIdx];
+      }
+      used.delete(cand.w);
+      bestSlot.word = null;
+    }
+    return false;
+  }
+
+  if (backtrack(0)) return { g, slots, grid };
+  return null;
+}
+
+function generateBoard(lvl) {
+  const rn = rng(lvl * 9973 + 31337);
+  for (let attempt = 0; attempt < 80; attempt++) {
+    const base = BASE_TEMPLATES[(lvl + attempt) % BASE_TEMPLATES.length];
+    const flipV = ((lvl + attempt) >> 2) & 1;
+    const flipH = ((lvl + attempt) >> 3) & 1;
+    const g = Array.from({ length: R }, (_, r) =>
+      Array.from({ length: C }, (_, c) => {
+        if (r === 0 || c === 0) return 0;
+        const sr = flipV ? (R - r) : r;
+        const sc = flipH ? (C - c) : c;
+        return base[sr][sc];
+      })
+    );
+    const slots = extractSlots(g);
+    const solved = solveLayout(g, slots, rn, lvl, attempt < 40 ? 25000 : 80000);
+    if (solved) return solved;
+  }
+  throw new Error('Falha ao gerar tabuleiro');
+}
+
+let LN = 1, sol, clue, val, own, pend, W, W_INFO, rack, sel, me, op, hints, done, busy, hc, badges = [], hlCells = new Set(), hlClue = null;
+
+const HEADLINES = [
+  'Resolva palavras cruzadas',
+  'Amplie seu vocabulário',
+  'Vença seus oponentes'
+];
+
+let saveData = { won: {}, active: null };
+try {
+  const raw = JSON.parse(localStorage.getItem('pc_master_v3') || 'null');
+  if (raw) saveData = { won: raw.won || {}, active: raw.active || null };
+} catch (e) {}
+
+function persist() {
+  try { localStorage.setItem('pc_master_v3', JSON.stringify(saveData)); } catch (e) {}
+}
+
+function saveActiveGame() {
+  if (!sol || full()) {
+    saveData.active = null;
+  } else {
+    saveData.active = {
+      LN, sol, clue, val, own, pend, W, W_INFO,
+      rack, me, op, hints,
+      done: Array.from(done)
+    };
+  }
+  persist();
+}
+
+function startLevel(n, resumeObj = null) {
+  document.body.className = '';
+  LN = n;
+  $('lvl-tag').textContent = 'Nível ' + LN;
+  $('headline').textContent = HEADLINES[(LN - 1) % HEADLINES.length];
+  $('ov').hidden = true;
+  badges = [];
+  hlCells = new Set();
+  hlClue = null;
+  sel = null;
+  hc = null;
+  busy = 0;
+
+  if (resumeObj && Array.isArray(resumeObj.sol) && Array.isArray(resumeObj.W) && resumeObj.W.length > 0) {
+    sol = resumeObj.sol;
+    clue = resumeObj.clue;
+    val = resumeObj.val;
+    own = resumeObj.own;
+    pend = resumeObj.pend || M();
+    W = resumeObj.W;
+    W_INFO = resumeObj.W_INFO || [];
+    rack = resumeObj.rack;
+    me = resumeObj.me;
+    op = resumeObj.op;
+    hints = resumeObj.hints;
+    done = new Set(resumeObj.done);
+    msg('Partida retomada. Boa sorte!');
+  } else {
+    const solved = generateBoard(LN);
+    sol = M(); clue = M(() => ({})); val = M(); own = M(); pend = M(); W = []; W_INFO = [];
+
+    for (let r = 0; r < R; r++) {
+      for (let c = 0; c < C; c++) {
+        if (solved.grid[r][c] !== null) sol[r][c] = solved.grid[r][c];
+      }
+    }
+
+    solved.slots.forEach(s => {
+      clue[s.clueR][s.clueC][s.d === 0 ? 'a' : 'd'] = s.word;
+      W.push(s.cells);
+      W_INFO.push({
+        clueR: s.clueR,
+        clueC: s.clueC,
+        dir: s.d === 0 ? '▸' : '▾',
+        text: s.word.t + (s.word.e ? ' ' + s.word.e : '')
+      });
+    });
+
+    me = 0; op = 0;
+    hints = 3;
+    done = new Set();
+    rack = [null, null, null, null, null];
+    deal();
+    msg('Toca numa pista azul para ler ou arrasta as letras.');
+    saveActiveGame();
+  }
+  draw();
+}
+
+function showMenu() {
+  if (sol && !full() && !busy) saveActiveGame();
+  document.body.className = 'm';
+  const wonCount = Object.keys(saveData.won).length;
+  let nextLvl = 1;
+  for (let i = 1; i <= TOTAL_LEVELS; i++) {
+    if (!saveData.won[i]) { nextLvl = i; break; }
+  }
+
+  let html = `
+    <div class="m-head">
+      <h1>Palavras Cruzadas</h1>
+      <p>Desafia o oponente em tabuleiros escandinavos</p>
+    </div>
+    <div class="stats-card">
+      <div><b>${wonCount}/${TOTAL_LEVELS}</b><span>Níveis Vencidos</span></div>
+      <div><b>Nível ${nextLvl}</b><span>Próximo Desafio</span></div>
+    </div>
+  `;
+
+  if (saveData.active) {
+    const a = saveData.active;
+    html += `
+      <button id="resume-btn">
+        <div>
+          <strong>Continuar Nível ${a.LN}</strong>
+          <small>Pontuação atual: Você ${a.me} – ${a.op} Oponente</small>
+        </div>
+        <span class="arr">▶</span>
+      </button>
+    `;
+  }
+
+  html += `<div class="lv-grid">`;
+  for (let i = 1; i <= TOTAL_LEVELS; i++) {
+    const isWon = !!saveData.won[i];
+    const isCurr = i === nextLvl;
+    html += `<button class="lv-btn${isWon ? ' won' : ''}${isCurr ? ' curr' : ''}" data-n="${i}">
+      ${i}
+      ${isWon ? '<small>★</small>' : ''}
+    </button>`;
+  }
+  html += `</div>`;
+
+  $('mn').innerHTML = html;
+  if ($('resume-btn')) {
+    $('resume-btn').onclick = () => startLevel(saveData.active.LN, saveData.active);
+  }
+}
+
+function deal() {
+  const needed = {};
+  for (let r = 0; r < R; r++) {
+    for (let c = 0; c < C; c++) {
+      if (sol[r][c] && !val[r][c]) needed[sol[r][c]] = (needed[sol[r][c]] || 0) + 1;
+    }
+  }
+  for (let r = 0; r < R; r++) {
+    for (let c = 0; c < C; c++) {
+      if (pend[r][c] && needed[pend[r][c].l] > 0) needed[pend[r][c].l]--;
+    }
+  }
+  rack = rack.map(l => l && needed[l] > 0 ? (needed[l]--, l) : null);
+  const pool = [];
+  for (const l in needed) {
+    for (let i = 0; i < needed[l]; i++) pool.push(l);
+  }
+  shuf(pool);
+  rack = rack.map((l, idx) => {
+    const usedByPend = pend.some(row => row.some(p => p && p.s === idx));
+    if (usedByPend) return null;
+    return l || pool.pop() || null;
+  });
+}
+
+const msg = t => $('ms').textContent = t;
+const full = () => sol.every((row, r) => row.every((s, c) => !s || val[r][c]));
+const hasPend = () => pend.some(r => r.some(x => x));
+
+function checkCompletedWords() {
+  let pts = 0;
+  badges = [];
+  hlCells = new Set();
+  W.forEach((w, i) => {
+    if (!done.has(i) && w.every(([y, x]) => val[y][x])) {
+      done.add(i);
+      pts += w.length;
+      w.forEach(([y, x]) => hlCells.add(y + ',' + x));
+      const last = w[w.length - 1];
+      badges.push({ r: last[0], c: last[1], pts: '+' + w.length });
+    }
+  });
+  if (badges.length) {
+    setTimeout(() => { badges = []; hlCells = new Set(); draw(); }, 1800);
+  }
+  return pts;
+}
+
+function draw() {
+  let h = '';
+  for (let r = 0; r < R; r++) {
+    for (let c = 0; c < C; c++) {
+      const s = sol[r][c], q = clue[r][c];
+      if (!s) {
+        h += ck(q, r, c, LN);
+      } else {
+        const v = val[r][c], p = pend[r][c];
+        const isHl = hlCells.has(r + ',' + c);
+        const isClueHl = hlClue && hlClue.has(r + ',' + c);
+        const isHint = hc && hc[0] === r && hc[1] === c;
+        const isSel = p && sel && sel.type === 'board' && sel.r === r && sel.c === c;
+        const badge = badges.find(b => b.r === r && b.c === c);
+
+        let cls = 'c';
+        if (v) cls += ' ' + own[r][c];
+        else if (p) cls += ' pd' + (isSel ? ' sel' : '');
+        if (isHl) cls += ' hl-word';
+        else if (isClueHl) cls += ' hl-clue';
+        if (isHint) cls += ' hint';
+
+        h += `<div class="${cls}" data-r="${r}" data-c="${c}">
+          ${v || (p ? p.l : '')}
+          ${badge ? `<span class="badge">${badge.pts}</span>` : ''}
+        </div>`;
+      }
+    }
+  }
+  $('g').innerHTML = h;
+
+  $('rk').innerHTML = rack.map((l, i) => {
+    const isSel = sel && sel.type === 'rack' && sel.s === i;
+    return l
+      ? `<div class="t${isSel ? ' sel' : ''}" data-s="${i}">${l}</div>`
+      : `<div class="t e" data-s="${i}"></div>`;
+  }).join('');
+
+  $('a').textContent = me;
+  $('b').textContent = op;
+  $('hn').textContent = hints;
+  $('go').textContent = hasPend() ? 'Enviar' : 'Passar';
+  $('go').disabled = !!busy;
+  $('ht').disabled = !!busy || !hints;
+}
+
+function placeFromRack(s, r, c) {
+  if (busy || rack[s] == null || !sol[r][c] || val[r][c]) return;
+  if (pend[r][c]) {
+    const old = pend[r][c];
+    pend[r][c] = { l: rack[s], s };
+    rack[s] = old.l;
+  } else {
+    pend[r][c] = { l: rack[s], s };
+    rack[s] = null;
+  }
+  sel = null;
+  saveActiveGame();
+  draw();
+}
+
+function moveBoardTile(r1, c1, r2, c2) {
+  if (busy || (r1 === r2 && c1 === c2) || !pend[r1][c1] || !sol[r2][c2] || val[r2][c2]) return;
+  const moving = pend[r1][c1];
+  const target = pend[r2][c2];
+  pend[r2][c2] = moving;
+  pend[r1][c1] = target || null;
+  sel = null;
+  saveActiveGame();
+  draw();
+}
+
+function returnToRack(r, c, targetSlot = null) {
+  const p = pend[r][c];
+  if (!p) return;
+  if (targetSlot != null && rack[targetSlot] == null) {
+    rack[targetSlot] = p.l;
+  } else if (rack[p.s] == null) {
+    rack[p.s] = p.l;
+  } else {
+    const free = rack.indexOf(null);
+    if (free !== -1) rack[free] = p.l;
+  }
+  pend[r][c] = null;
+  sel = null;
+  saveActiveGame();
+  draw();
+}
+
+$('rk').addEventListener('pointerdown', e => {
+  const t = e.target.closest('.t[data-s]');
+  if (!t || busy) return;
+  const s = +t.dataset.s;
+  if (!rack[s]) {
+    if (sel && sel.type === 'board') returnToRack(sel.r, sel.c, s);
+    return;
+  }
+
+  const x0 = e.clientX, y0 = e.clientY;
+  let ghost = null;
+
+  const mv = ev => {
+    if (!ghost && Math.hypot(ev.clientX - x0, ev.clientY - y0) > 6) {
+      ghost = t.cloneNode(true);
+      ghost.className = 't gh';
+      document.body.append(ghost);
+    }
+    if (ghost) {
+      ghost.style.left = ev.clientX + 'px';
+      ghost.style.top = (ev.clientY - 36) + 'px';
+    }
+  };
+
+  const up = ev => {
+    removeEventListener('pointermove', mv);
+    removeEventListener('pointerup', up);
+    removeEventListener('pointercancel', up);
+    if (ghost) {
+      ghost.remove();
+      const el = document.elementFromPoint(ev.clientX, ev.clientY - 36);
+      const cell = el && el.closest('.c[data-r]');
+      const slot = el && el.closest('.t[data-s]');
+      if (cell) {
+        placeFromRack(s, +cell.dataset.r, +cell.dataset.c);
+      } else if (slot && +slot.dataset.s !== s) {
+        const s2 = +slot.dataset.s;
+        [rack[s], rack[s2]] = [rack[s2], rack[s]];
+        sel = null;
+        draw();
+      }
+    } else {
+      if (sel && sel.type === 'rack' && sel.s === s) sel = null;
+      else sel = { type: 'rack', s };
+      draw();
+    }
+  };
+
+  addEventListener('pointermove', mv);
+  addEventListener('pointerup', up);
+  addEventListener('pointercancel', up);
+});
+
+$('g').addEventListener('pointerdown', e => {
+  const clueCell = e.target.closest('.k[data-kr]');
+  if (clueCell) {
+    const kr = +clueCell.dataset.kr, kc = +clueCell.dataset.kc;
+    const infos = W_INFO.filter(w => w.clueR === kr && w.clueC === kc);
+    if (infos.length) {
+      msg(infos.map(i => `${i.dir} ${i.text}`).join('   |   '));
+      const set = new Set();
+      W.forEach((w, idx) => {
+        if (W_INFO[idx].clueR === kr && W_INFO[idx].clueC === kc) {
+          w.forEach(([y, x]) => set.add(y + ',' + x));
+        }
+      });
+      hlClue = set;
+      draw();
+      setTimeout(() => { if (hlClue === set) { hlClue = null; draw(); } }, 2200);
+    }
+    return;
+  }
+
+  const cell = e.target.closest('.c[data-r]');
+  if (!cell || busy) return;
+  const r = +cell.dataset.r, c = +cell.dataset.c;
+  const p = pend[r][c];
+
+  if (!p) {
+    if (!sol[r][c] || val[r][c]) return;
+    if (sel) {
+      if (sel.type === 'rack') placeFromRack(sel.s, r, c);
+      else if (sel.type === 'board') moveBoardTile(sel.r, sel.c, r, c);
+    }
+    return;
+  }
+
+  const x0 = e.clientX, y0 = e.clientY;
+  let ghost = null;
+
+  const mv = ev => {
+    if (!ghost && Math.hypot(ev.clientX - x0, ev.clientY - y0) > 6) {
+      ghost = document.createElement('div');
+      ghost.className = 't gh';
+      ghost.textContent = p.l;
+      document.body.append(ghost);
+      cell.style.opacity = '0.35';
+    }
+    if (ghost) {
+      ghost.style.left = ev.clientX + 'px';
+      ghost.style.top = (ev.clientY - 36) + 'px';
+    }
+  };
+
+  const up = ev => {
+    removeEventListener('pointermove', mv);
+    removeEventListener('pointerup', up);
+    removeEventListener('pointercancel', up);
+    cell.style.opacity = '1';
+
+    if (ghost) {
+      ghost.remove();
+      const el = document.elementFromPoint(ev.clientX, ev.clientY - 36);
+      const targetCell = el && el.closest('.c[data-r]');
+      const targetRack = el && el.closest('#rk');
+      if (targetCell) {
+        moveBoardTile(r, c, +targetCell.dataset.r, +targetCell.dataset.c);
+      } else if (targetRack) {
+        const slot = el.closest('.t[data-s]');
+        returnToRack(r, c, slot ? +slot.dataset.s : null);
+      }
+    } else {
+      returnToRack(r, c);
+    }
+  };
+
+  addEventListener('pointermove', mv);
+  addEventListener('pointerup', up);
+  addEventListener('pointercancel', up);
+});
+
+$('sh').onclick = () => {
+  if (busy) return;
+  shuf(rack);
+  sel = null;
+  draw();
+};
+
+$('ht').onclick = () => {
+  if (busy || !hints) return;
+  const ls = rack.filter(Boolean);
+  if (!ls.length) return;
+  for (const l of shuf(ls.slice())) {
+    const opts = [];
+    for (let r = 0; r < R; r++) {
+      for (let c = 0; c < C; c++) {
+        if (sol[r][c] === l && !val[r][c] && !pend[r][c]) opts.push([r, c]);
+      }
+    }
+    if (opts.length) {
+      hc = opts[Math.random() * opts.length | 0];
+      hints--;
+      msg(`Dica: a letra "${l}" encaixa na casa a piscar.`);
+      saveActiveGame();
+      draw();
+      setTimeout(() => { hc = null; draw(); }, 2000);
+      return;
+    }
+  }
+};
+
+$('go').onclick = () => {
+  if (busy) return;
+  busy = 1;
+  let right = 0, wrong = 0;
+  const lastRightCells = [];
+
+  for (let r = 0; r < R; r++) {
+    for (let c = 0; c < C; c++) {
+      const p = pend[r][c];
+      if (p) {
+        if (p.l === sol[r][c]) {
+          val[r][c] = p.l;
+          own[r][c] = 'me';
+          right++;
+          lastRightCells.push([r, c]);
+        } else {
+          rack[p.s] = p.l;
+          wrong++;
+        }
+        pend[r][c] = null;
+      }
+    }
+  }
+
+  const wordBonus = checkCompletedWords();
+  me += right + wordBonus;
+
+  if (right > 0 && wordBonus === 0) {
+    const last = lastRightCells[lastRightCells.length - 1];
+    badges = [{ r: last[0], c: last[1], pts: '+' + right }];
+    setTimeout(() => { badges = []; draw(); }, 1400);
+  }
+
+  if (right === 0 && wrong === 0) {
+    msg('Passaste a vez.');
+  } else {
+    msg((right ? `+${right} pt${right > 1 ? 's' : ''}` : '') +
+        (wordBonus ? ` +${wordBonus} bónus de palavra!` : '') +
+        (wrong ? ` (${wrong} letra${wrong > 1 ? 's' : ''} devolvida${wrong > 1 ? 's' : ''})` : ''));
+  }
+
+  sel = null;
+  draw();
+  if (full()) return endGame();
+  setTimeout(aiTurn, 950);
+};
+
+function aiTurn() {
+  const open = [];
+  for (let r = 0; r < R; r++) {
+    for (let c = 0; c < C; c++) {
+      if (sol[r][c] && !val[r][c]) open.push([r, c]);
+    }
+  }
+
+  const aiAccuracy = Math.min(0.96, 0.68 + (LN * 0.0028));
+  const maxTiles = LN > 35 ? 5 : 4;
+  let placed = 0;
+
+  shuf(open).slice(0, maxTiles).forEach(([r, c]) => {
+    if (Math.random() < aiAccuracy) {
+      val[r][c] = sol[r][c];
+      own[r][c] = 'ai';
+      placed++;
+    }
+  });
+
+  const wordBonus = checkCompletedWords();
+  op += placed + wordBonus;
+
+  msg(placed ? `Oponente marcou +${placed + wordBonus} pontos.` : 'O oponente passou a vez.');
+  if (full()) {
+    draw();
+    return endGame();
+  }
+
+  busy = 0;
+  deal();
+  saveActiveGame();
+  draw();
+}
+
+function endGame() {
+  busy = 1;
+  saveData.active = null;
+  if (me >= op) saveData.won[LN] = 1;
+  persist();
+  draw();
+
+  setTimeout(() => {
+    $('ot-title').textContent = me > op ? 'Vitória! 🎉' : me === op ? 'Empate! 🤝' : 'Derrota 😔';
+    $('ot').textContent = `Você ${me} – ${op} Oponente`;
+    $('nw').textContent = me >= op && LN < TOTAL_LEVELS ? `Nível ${LN + 1}` : 'Tentar de novo';
+    $('ov').hidden = false;
+  }, 750);
+}
+
+$('bk').onclick = showMenu;
+$('ov-m').onclick = showMenu;
+$('nw').onclick = () => {
+  const next = (me >= op && LN < TOTAL_LEVELS) ? LN + 1 : LN;
+  startLevel(next);
+};
+
+$('mn').addEventListener('click', e => {
+  const btn = e.target.closest('.lv-btn');
+  if (btn) startLevel(+btn.dataset.n);
+});
+
+showMenu();
+</script>
+</body></html>
