@@ -6,9 +6,9 @@
 <title>Palavras Cruzadas</title>
 <style>
 :root{
-  --bg:#ffffff;--tx:#363e52;--ct:#d6e6fa;--cl:#ffffff;--cb:#c5cddb;
-  --bl:#0a84ff;--me:#2b3346;--ai:#525b70;--ti:#f7e2c1;--tib:#d8b888;--tt:#2b3346;
-  --bar:#f1f3f8;--ok:#c8f2c2;--bd:#e2e6ef;
+  --bg:#ffffff;--tx:#2c3548;--ct:#d6e6fa;--cl:#ffffff;--cb:#c2cbd9;
+  --bl:#0a84ff;--me:#232b3d;--ai:#5c667d;--ti:#f7e2c1;--tib:#d6b585;--tt:#2c3548;
+  --bar:#f0f3f8;--ok:#c8f2c2;--bd:#e1e6f0;
   --cs:min(calc((100vw - 20px)/8),64px,calc((100dvh - 310px)/10));
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
@@ -30,19 +30,16 @@ body{
   overflow:hidden;
 }
 
-/* Top bar */
 #top{width:min(96vw,520px);display:flex;align-items:center;justify-content:space-between;padding:8px 4px 2px}
 #bk{height:38px;width:38px;border-radius:50%;background:var(--bar);color:var(--tx);font-size:18px;display:flex;align-items:center;justify-content:center}
 #lvl-tag{font-size:13px;font-weight:700;color:var(--ai);background:var(--bar);padding:4px 12px;border-radius:14px}
 h1{font-size:clamp(22px,6.5vw,30px);margin:2px 12px 8px;text-align:center;line-height:1.1;font-weight:800;letter-spacing:-.02em}
 
-/* Scoreboard */
 #sc{display:flex;gap:12px;align-items:center;font-weight:600;margin-bottom:8px;font-size:15px}
 #sc b{background:var(--bar);padding:4px 16px;border-radius:10px;font-size:20px;min-width:36px;text-align:center;transition:transform .2s}
 #sc b.y{color:var(--bl)}
 #sc b.ai-s{color:var(--ai)}
 
-/* Board */
 #g{display:grid;grid-template-columns:repeat(8,var(--cs));border:2px solid #7d8799;background:var(--cb);box-shadow:0 4px 16px #00000012}
 .c{
   width:var(--cs);height:var(--cs);
@@ -54,32 +51,29 @@ h1{font-size:clamp(22px,6.5vw,30px);margin:2px 12px 8px;text-align:center;line-h
 .c:nth-child(8n){border-right:0}
 .c:nth-child(n+73){border-bottom:0}
 
-/* Clue cells */
 .k{
   background:var(--ct);font-size:calc(var(--cs)*.175);font-weight:700;
-  text-align:center;line-height:1.05;padding:2px;text-transform:uppercase;
-  color:var(--tx);word-break:break-word;overflow:hidden;
+  text-align:center;line-height:1.06;padding:2px 3px;text-transform:uppercase;
+  color:var(--tx);overflow-wrap:break-word;word-break:normal;overflow:hidden;
+  cursor:pointer;
 }
-.k.corner{background:#c5d8f0}
+.k.corner{background:#c5d8f0;cursor:default}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .k.corner{background:#1b283d}}
 .k i{position:absolute;font-style:normal;font-size:calc(var(--cs)*.19);color:#5c7499;pointer-events:none}
 .k .r{right:1px;top:50%;transform:translateY(-50%)}
 .k .b{bottom:-1px;left:50%;transform:translateX(-50%)}
 
-/* Split clues */
 .s{flex-direction:column;padding:0}
-.s div{flex:1;width:100%;display:flex;align-items:center;justify-content:center;position:relative;font-size:calc(var(--cs)*.145);padding:0 2px;box-sizing:border-box}
+.s div{flex:1;width:100%;display:flex;align-items:center;justify-content:center;position:relative;font-size:calc(var(--cs)*.145);padding:0 3px;box-sizing:border-box;line-height:1.02}
 .s div:first-child{border-bottom:1px solid #aebfd9}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .s div:first-child{border-bottom-color:#34496b}}
 .s .b{bottom:-2px}
 
-/* Emoji clues */
 .pc-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
-.pc-aff{font-size:calc(var(--cs)*.19);font-weight:800;text-transform:none;margin-bottom:1px}
-.pc{font-size:calc(var(--cs)*.46);text-transform:none;line-height:1}
-.s .pc{font-size:calc(var(--cs)*.26)}
+.pc-aff{font-size:calc(var(--cs)*.18);font-weight:800;text-transform:none;margin-bottom:1px}
+.pc{font-size:calc(var(--cs)*.44);text-transform:none;line-height:1}
+.s .pc{font-size:calc(var(--cs)*.24)}
 
-/* Letters & states */
 .me{color:var(--me)}
 .ai{color:var(--ai)}
 .pd{
@@ -90,9 +84,10 @@ h1{font-size:clamp(22px,6.5vw,30px);margin:2px 12px 8px;text-align:center;line-h
 }
 .pd.sel{box-shadow:inset 0 0 0 2.5px var(--bl),0 2px 6px #0003}
 .hl-word{background:#fae6c3 !important;box-shadow:inset 0 0 0 2px var(--bl)}
+.hl-clue{background:#eef5ff !important}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hl-clue{background:#26334a !important}}
 .hint{animation:p .55s 3}@keyframes p{50%{background:var(--ok)}}
 
-/* Score badge (+5, +9) */
 .badge{
   position:absolute;top:-7px;right:-6px;
   background:var(--bl);color:#fff;font-size:11px;font-weight:800;
@@ -101,9 +96,8 @@ h1{font-size:clamp(22px,6.5vw,30px);margin:2px 12px 8px;text-align:center;line-h
 }
 @keyframes pop{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
 
-#ms{min-height:20px;margin:6px 12px 2px;font-size:13px;font-weight:600;color:var(--ai);text-align:center}
+#ms{min-height:20px;margin:6px 12px 2px;font-size:13px;font-weight:600;color:var(--ai);text-align:center;max-width:94vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-/* Rack */
 #rk{display:flex;gap:10px;margin:4px 0 6px;height:calc(var(--cs)*.92);align-items:center}
 .t{
   width:calc(var(--cs)*.9);height:calc(var(--cs)*.9);border-radius:8px;
@@ -116,7 +110,6 @@ h1{font-size:clamp(22px,6.5vw,30px);margin:2px 12px 8px;text-align:center;line-h
 .t.sel{outline:3px solid var(--bl);transform:translateY(-3px)}
 .gh{position:fixed;transform:translate(-50%,-50%) scale(1.08);pointer-events:none;z-index:50;opacity:.95;box-shadow:0 8px 18px #0004}
 
-/* Bottom controls */
 #bar{display:flex;gap:14px;align-items:center;width:min(92vw,440px);margin:4px 0 8px}
 button{font:inherit;border:0;border-radius:28px;height:52px;cursor:pointer;transition:transform .1s,opacity .15s}
 button:active:not(:disabled){transform:scale(.96)}
@@ -125,7 +118,6 @@ button:active:not(:disabled){transform:scale(.96)}
 #go:disabled{background:var(--bar);color:var(--ai);box-shadow:none;cursor:default}
 #ht em{position:absolute;top:-4px;right:-4px;background:var(--bl);color:#fff;border-radius:50%;width:21px;height:21px;font:700 12px/21px system-ui}
 
-/* Menu Screen */
 body.m>:not(#mn){display:none}
 body:not(.m) #mn{display:none}
 #mn{width:min(94vw,500px);flex:1;min-height:0;overflow-y:auto;padding:16px 4px 32px;display:flex;flex-direction:column;gap:14px}
@@ -159,7 +151,6 @@ body:not(.m) #mn{display:none}
 .lv-btn.won.curr{color:#fff}
 .lv-btn small{font-size:10px;font-weight:600;opacity:.85}
 
-/* Modal */
 #ov{position:fixed;inset:0;background:#0009;display:flex;align-items:center;justify-content:center;z-index:30;backdrop-filter:blur(2px)}
 #ov[hidden]{display:none}
 #ov .box{background:var(--bg);padding:26px 28px;border-radius:22px;text-align:center;width:min(84vw,340px);box-shadow:0 12px 32px #0005}
@@ -206,336 +197,1043 @@ R=10,C=8,TOTAL_LEVELS=100,
 M=(f=()=>null)=>Array.from({length:R},()=>Array.from({length:C},f)),
 shuf=a=>{for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
 
-// Dicionário rico estilo Crossword Master (definições, emojis, prefixos/sufixos e fragmentos)
 const RAW_WORDS = `
+AR|Atmosfera terrestre
+AS|Artigo definido pl.
+OS|Artigo definido pl.
+UM|Artigo indefinido
+DE|Preposição simples
+EM|Preposição de lugar
+NO|Contração em + o
+NA|Contração em + a
+DO|Contração de + o
+DA|Contração de + a
+AO|Contração a + o
+OU|Conjunção alternativa
+SE|Conjunção condicional
+EU|1.ª pessoa singular
+TU|2.ª pessoa singular
+JA|Neste momento
+LA|Nesse lugar
+CA|Neste lugar
+PE|Parte inferior da perna
+PO|Poeira fina
+SO|Apenas, somente
+MI|3.ª nota musical
+FA|4.ª nota musical
+SI|7.ª nota musical
+RE|2.ª nota musical
+IR|Deslocar-se
+VI|Verbo ver (passado)
+VA|Verbo ir (imperativo)
+VE|Verbo ver (presente)
+RI|Verbo rir (presente)
+LI|Verbo ler (passado)
+FE|Crença religiosa
+NU|Sem roupa
+EX|Prefixo de antigo
+OI|Saudação informal
+AI|Interjeição de dor
+UI|Interjeição de espanto
+EI|Chamamento informal
+HA|Verbo haver
+MA|Contrário de boa
+ME|Pronome pessoal
+MO|Pedra de moinho
+PA|Ferramenta de cavar
+PI|Constante 3,14
+SA|Feminino de são
+TA|Está (coloquial)
+TE|Pronome pessoal
+TI|Pronome oblíquo
+TO|Toma (coloquial)
+VO|Avó ou avô (coloquial)
 SOL|Astro-rei|☀️
-LUA|Satélite natural|🌙
+LUA|Satélite da Terra|🌙
 MAR|Água salgada|🌊
 RIO|Curso de água|🏞️
 UVA|Fruto da vinha|🍇|-va
 OVO|Da galinha|🥚
-PAO|Alimento de forno|🍞
+PAO|Alimento de trigo|🍞
 MAO|Cinco dedos|✋
 CAO|Melhor amigo|🐶
-GATO|Felino caseiro|🐱
-RATO|Roedor|🐭
-PATO|Ave aquática|🦆
-LOBO|Canídeo selvagem|🐺
-URSO|Gosta de mel|🐻
-VACA|Dá leite|🐄
-PORCO|Suíno|🐷
-CASA|Moradia|🏠
-BOLA|Esfera de jogo|⚽
-LIVRO|Tem páginas|📖
-CARRO|Automóvel|🚗
-NAVIO|Embarcação|🚢
-AVIAO|Transporte aéreo|✈️
-BARCO|Veículo marítimo|⛵
-FLOR|Tem pétalas|🌸
-ROSA|Flor espinhosa|🌹
-ARVORE|Tem copa e tronco|🌳
-MESA|Móvel de jantar
-CHAVE|Abre fechaduras|🔑
-SAPATO|Calçado|👞
-LUVA|Cobre a mão|🧤
-CHAPEU|Cobre a cabeça|🎩
-OLHO|Órgão da visão|👁️
-NARIZ|Órgão do olfato|👃
-BOCA|Cavidade oral|👄
-DENTE|Mastiga alimentos|🦷
-FOGO|Combustão|🔥
-AGUA|Líquido vital|💧
-NEVE|Precipitação branca|❄️
-CHUVA|Água das nuvens|🌧️
-VENTO|Ar em movimento
-NUVEM|Vapor no céu|☁️
-ESTRELA|Astro luminoso|⭐
-TERRA|Nosso planeta|🌍
-PRAIA|Areia e mar|🏖️
-MONTE|Elevação natural
-SERRA|Cadeia montanhosa
-LAGO|Massa de água
-ILHA|Terra cercada de água|🏝️
-PONTE|Liga duas margens|🌉
-TORRE|Construção alta|🗼
-CAFE|Bebida estimulante|☕
-LEITE|Líquido nutritivo|🥛
-QUEIJO|Laticínio|🧀
-MACA|Fruto da macieira|🍎
-PERA|Fruto doce|🍐
-LIMAO|Citrino azedo|🍋
-BANANA|Fruto tropical|🍌
-TOMATE|Fruto vermelho|🍅|-mate
-CENOURA|Raiz laranja|🥕
-MILHO|Cereal amarelo|🌽
-ARROZ|Cereal branco|🍚
-BOLO|Doce de festa|🎂
-FESTA|Celebração|🎉
-MUSICA|Arte dos sons|🎵
-CINEMA|Sétima arte|🎬
-CARTA|Correspondência|✉️
-OURO|Metal precioso|🥇
-FERRO|Metal resistente
-VIDRO|Material frágil
-PEDRA|Fragmento de rocha
-AREIA|Grãos minerais
-PAPEL|Folha de celulose
-TINTA|Pigmento líquido
-LETRA|Símbolo gráfico
-NOTA|Sinal musical
-TEMPO|Duração das coisas
-DIA|Período solar
-NOITE|Período lunar
-ANO|Doze meses
-MES|Divisão do ano
-HORA|Sessenta minutos
-VERAO|Estação quente|☀️
-INVERNO|Estação fria|❄️
-OUTONO|Estação das folhas|🍂
 REI|Monarca|👑
-RAINHA|Soberana|👸
-ANJO|Ser celestial|👼
-FADA|Ser mágico|🧚
-ESCOLA|Local de ensino|🏫
-ALUNO|Estudante
-LISBOA|Capital lusa
-PORTO|Cidade invicta
-BRAGA|Cidade dos arcebispos
-FARO|Capital algarvia
-TIGRE|Felino asiático|🐯
-LEAO|Rei da selva|🦁
-MACACO|Primata|🐒
-COBRA|Réptil ápode|🐍
-SAPO|Anfíbio|🐸
-PEIXE|Animal aquático|🐟
-BALEIA|Cetáceo gigante|🐋
-POLVO|Molusco de 8 braços|🐙
-ABELHA|Produz mel|🐝
-AMOR|Afeto profundo|❤️
-PAZ|Ausência de guerra|☮️
-SONO|Repouso|😴
-RISO|Gargalhada|😂|-iso
-CORACAO|Órgão vital|❤️
-AMIZADE|Laço fraterno
-ESTADO|Nação organizada
-GOVERNO|Poder executivo
-POVO|População
 LEI|Norma jurídica
-JUIZ|Magistrado
-PADEIRO|Faz pão
-MEDICO|Cuida da saúde
-ATOR|Intérprete teatral
-POETA|Autor de versos
-PINTOR|Artista plástico
-RADIO|Aparelho sonoro|📻|-adio
-COMBOIO|Transporte ferroviário|🚆
-ESTRADA|Via asfaltada
-CIDADE|Centro urbano
-ALDEIA|Pequena povoação
-DOURO|Rio vinhateiro
-TEJO|Maior rio ibérico
-MINHO|Rio fronteiriço
-ALGARVE|Sul de Portugal
-MADEIRA|Pérola do Atlântico
-ESPANHA|País ibérico
-FRANCA|País europeu
-ITALIA|Península europeia
-BRASIL|País sul-americano|🇧🇷
-CAMOES|Poeta épico
-PESSOA|Autor de Mensagem
-FADO|Canção de Lisboa
-FUTEBOL|Desporto rei|⚽
-TENIS|Jogo de raquete|🎾
-NATACAO|Desporto aquático
-CORRIDA|Prova atlética
-CAMPEAO|Vencedor
-TROFEU|Taça de vencedor|🏆
-CLIMA|Meteorologia
-TROVAO|Estrondo elétrico
-COZINHA|Divisão da casa
-JANELA|Abertura na parede
-PORTA|Acesso principal|🚪
-TELHADO|Cobertura da casa
-PAREDE|Divisória vertical
-PIANO|Instrumento de teclas|🎹
-VIOLINO|Instrumento de cordas|🎻
-TAMBOR|Percussão|🥁
-TEATRO|Arte cénica|🎭
-POEMA|Composição poética
-ROMANCE|Obra literária
-JORNAL|Imprensa diária|📰
-REVISTA|Publicação ilustrada
-BRUXA|Feiticeira|🧙
-GELO|Água sólida|🧊
-SAL|Cloreto de sódio
-ACUCAR|Adoçante natural
-MEL|Néctar das abelhas|🍯
-VINHO|Sumo fermentado|🍷
-CERVEJA|Bebida de lúpulo|🍺
-PIZZA|Especialidade italiana|🍕
-PRATO|Louça de mesa|🍽️
-FACA|Utensílio cortante
-GARFO|Talher de pontas
-COLHER|Talher côncavo|🥄
-SOPA|Caldo nutritivo|🍲
-IMÃ|Atrai metais|🧲|-mã
-TRATOR|Máquina agrícola|🚜
-ATOMO|Partícula química|⚛️
-LOTUS|Flor aquática|🪷|-tus
-COROA|Insígnia real|👑
-ESPADA|Arma branca|⚔️
-ESCUDO|Arma defensiva|🛡️
-MAPA|Representação geográfica|🗺️
-BUSSOLA|Indica o norte|🧭
-RELOGIO|Mede o tempo|⌚
-OCULOS|Lentes corretivas|👓
-CAMARA|Máquina fotográfica|📷
-TELEFONE|Aparelho de chamadas|☎️
-COMPUTADOR|Máquina digital|💻
-FOGUETE|Nave espacial|🚀
-PLANETA|Corpo celeste|🪐
-VULCAO|Montanha de lava|🌋
-DESERTO|Região árida|🏜️
-FLORESTA|Mata densa|🌲
-CACTO|Planta do deserto|🌵
-PALMEIRA|Árvore tropical|🌴
-COGUMELO|Fungo comestível|🍄
-MORANGO|Fruto silvestre|🍓
-CEREJA|Fruto vermelho|🍒
-MELANCIA|Fruto grande|🍉
-ANANAS|Fruto com coroa|🍍
-ABACATE|Fruto verde|🥑
-BROCOLOS|Vegetal verde|🥦
-ALHO|Bolbo aromático|🧄
-CEBOLA|Hortaliça em camadas|🧅
-BATATA|Tubérculo|🥔
-QUEIJO|Derivado lácteo|🧀
-OVO|Alimento proteico|🥚
-MEL|Doce natural|🍯
-BIFE|Fatia de carne|🥩
-FRANGO|Ave doméstica|🍗
-CAMARAO|Crustáceo|🦐
-TUBARAO|Predador marinho|🦈
-GOLFINHO|Mamífero marinho|🐬
-TARTARUGA|Réptil com carapaça|🐢
-CROCODILO|Réptil fluvial|🐊
-ELEFANTE|Paquiderme|🐘
-GIRAFA|Animal de pescoço longo|🦒
-ZEBRA|Equídeo riscado|🦓
-CAMELO|Animal com bossas|🐫
-CANGURU|Marsupial|🦘
-PINGUIM|Ave antártica|🐧
-CORUJA|Ave noturna|🦉
-AGUIA|Ave de rapina|🦅
-CISNE|Ave elegante|🦢
-FLAMINGO|Ave cor-de-rosa|🦩
-BORBOLETA|Inseto alado|🦋
-FORMIGA|Inseto trabalhador|🐜
-ARANHA|Aracnídeo|🕷️
-ESCORPIAO|Aracnídeo venenoso|🦂
-CARACOL|Molusco lento|🐌
-UM|Artigo indefinido
+SAL|Tempero do mar
+MEL|Doce das abelhas|🍯
+CHA|Infusão quente|🍵
+COR|Tonalidade visual
+DOR|Sofrimento físico
+VOZ|Som humano
+LUZ|Claridade
+PAZ|Sem guerra|☮️
+GAS|Estado fluido
+GIZ|Escreve no quadro
+GOL|Ponto no futebol|⚽
+LAR|Residência|🏠
+MAE|Progenitora
+PAI|Progenitor
+RIM|Órgão renal
+SOM|Onda acústica
+SUL|Ponto cardeal
+TIA|Irmã do pai
+TIO|Irmão da mãe
+VEZ|Ocasião
+ANO|Doze meses
+DIA|24 horas
+MES|Divisão do ano
+FIM|Término
+ERA|Época histórica
+ECO|Som refletido
+ELO|Argola de corrente
 UMA|Artigo indefinido
-OS|Artigo definido
-AS|Artigo definido
-DE|Preposição simples
-EM|Preposição de lugar
-AO|Contração a + o
-DO|Contração de + o
-DA|Contração de + a
-NO|Contração em + o
-NA|Contração em + a
 POR|Preposição
-COM|Preposição de companhia
-SEM|Preposição de ausência
-OU|Conjunção alternativa
+COM|Preposição
+SEM|Sem companhia
 MAS|Conjunção adversativa
-SE|Conjunção condicional
-QUE|Conjunção integrante
-POIS|Conjunção explicativa
-LOGO|Conjunção conclusiva
-EU|1.ª pessoa singular
-TU|2.ª pessoa singular
-ELE|3.ª pessoa singular
+QUE|Conjunção
+ELE|Pronome masculino
 ELA|Pronome feminino
-NOS|1.ª pessoa plural
-ALI|Advérbio de lugar
-AQUI|Neste lugar
-JA|Neste momento
-NAO|Advérbio de negação
-SIM|Advérbio de afirmação
-MAIS|Em maior quantidade
-MUITO|Em grande grau
+NOS|Pronome plural
+VOS|Pronome plural
+ALI|Naquele lugar
+NAO|Negação
+SIM|Afirmação
 BEM|De modo correto
 MAL|De modo incorreto
-IR|Deslocar-se
-SER|Verbo de estado
+SER|Existir
 TER|Possuir
 VER|Enxergar
 DAR|Oferecer
-LER|Decifrar escrita
-AR|Atmosfera terrestre
-MI|3.ª nota musical
-FA|4.ª nota musical
+LER|Ler um livro
 OLE|Grito taurino
 EIS|Aqui está
 TAL|Semelhante
 SUA|Pronome possessivo
-ANO|365 dias
-EIXO|Linha central
-ECO|Som refletido
-ELO|Argola de corrente
-ERA|Época histórica
-FIM|Término
-GAS|Estado fluido
-GEL|Substância viscosa
-GIZ|Escreve no quadro
-GOL|Ponto no futebol
-LAR|Residência
-LUZ|Claridade
-MAE|Progenitora
-PAI|Progenitor
-PAU|Pedaço de madeira
-PE|Extremidade inferior
-PO|Poeira fina
-RIM|Órgão renal
-REI|Soberano
-SAL|Tempero marinho
-SOL|Estrela central
-SOM|Onda acústica
-SUL|Ponto cardeal
 TEU|Pronome possessivo
-TIA|Irmã do pai
-TIO|Irmão da mãe
-UVA|Bago da videira
-VEZ|Ocasião
-VOZ|Som humano
+MEU|Pronome possessivo
+SEU|Pronome possessivo
+RUA|Via urbana
+CEU|Firmamento|☁️
+BOI|Touro castrado|🐂
+AVE|Animal com penas|🐦
+ASA|Membro de voo
+OCA|Habitação indígena
+OLA|Saudação
+OSO|Plantígrado (esp.)
+ATO|Ação ou cena
+AVO|Pai do pai
+BAR|Estabelecimento
+BAU|Arca de guardar
+BOM|De qualidade
+CAL|Óxido de cálcio
+CRU|Não cozinhado
+DEZ|Número 10
+DIZ|Verbo dizer
+DOM|Talento natural
+DUO|Par musical
+EGO|Amor-próprio
+EVA|Primeira mulher
+FAZ|Verbo fazer
+FEZ|Verbo fazer (passado)
+FIO|Linha fina
+FOZ|Foz do rio
+IRA|Raiva intensa
+MIL|Número 1000
+NOZ|Fruto seco
+NUA|Sem vestes
+NUM|Em + um
+OCO|Vazio por dentro
+PAR|Conjunto de dois
+PAU|Pedaço de madeira
+PIA|Lava-louças
+PIO|Som de ave
+PRO|A favor de
+RIR|Dar gargalhadas|😂
+ROA|Verbo roer
+SOU|Verbo ser
+TAO|Tão grande
+TOM|Tonalidade
+VAI|Verbo ir
+VAO|Verbo ir (plural)
+VEM|Verbo vir
+VEU|Tecido fino
+VIA|Estrada ou caminho
+VIM|Verbo vir (passado)
+VIR|Chegar
+VOO|Deslocamento aéreo|✈️
+IMA|Atrai metais|🧲|-mã
+GATO|Felino caseiro|🐱
+RATO|Roedor|🐭
+PATO|Ave de lagoa|🦆
+LOBO|Canídeo selvagem|🐺
+URSO|Gosta de mel|🐻
+VACA|Dá leite|🐄
+CASA|Moradia|🏠
+BOLA|Esfera de jogo|⚽
+FLOR|Tem pétalas|🌸
+ROSA|Flor com espinhos|🌹
+MESA|Onde se come
+LUVA|Cobre a mão|🧤
+OLHO|Órgão da vista|👁️
+BOCA|Cavidade oral|👄
+FOGO|Combustão|🔥
+AGUA|Líquido vital|💧
+NEVE|Cai no inverno|❄️
+LAGO|Água interior
+ILHA|Cercada de água|🏝️
+CAFE|Bebida matinal|☕
+MACA|Fruto da macieira|🍎
+PERA|Fruto doce|🍐
+BOLO|Doce de festa|🎂
+OURO|Metal precioso|🥇
+NOTA|Sinal musical
+HORA|60 minutos
+ANJO|Ser celestial|👼
+FADA|Tem varinha|🧚
+FARO|Capital algarvia
+LEAO|Rei da selva|🦁
+SAPO|Anfíbio saltador|🐸
+AMOR|Sentimento|❤️
+SONO|Descanso|😴
+RISO|Gargalhada|😂|-iso
+POVO|Cidadãos
+JUIZ|Magistrado
+ATOR|Interpreta em cena
+TEJO|Rio de Lisboa
+FADO|Canção de Lisboa
+GELO|Água congelada|🧊
+SOPA|Prato de colher|🍲
+FACA|Corta à mesa
+MAPA|Carta geográfica|🗺️
+ALHO|Bolbo aromático|🧄
+BIFE|Fatia de carne|🥩
+EIXO|Linha central
+ERRO|Equívoco
+FRIO|Baixa temperatura|🥶
+GRAU|Unidade angular
+JOGO|Atividade lúdica|🎮
+LIXO|Resíduos
+MITO|Lenda antiga
+MODA|Tendência
+MOLA|Peça elástica
+MURO|Parede exterior
+NAVE|Embarcação espacial|🚀
+NETO|Filho do filho
+NOME|Designação
+NOVO|Recente
+ODIO|Aversão profunda
+OITO|Número 8
+OLEO|Líquido gorduroso
+ONDA|Vaga do mar|🌊
+ONZE|Número 11
+PELE|Derme
+PENA|Pluma de ave
+PESO|Massa corporal
+PICO|Cume de montanha
+PINO|Árvore conífera
+PIPA|Papagaio de papel|🪁
+PISO|Pavimento
+POCO|Cavidade com água
+RABO|Cauda de animal
+RAIO|Descarga elétrica|⚡
+RAIZ|Base da planta
+RAMO|Galho de árvore
+REDE|Malha entrelaçada
+REMO|Pá de remar
+RETA|Linha sem curvas
+RICO|Abastado
+RODA|Peça circular
+ROMA|Capital italiana
+SACO|Recipiente flexível
+SAIA|Peça de vestuário
+SALA|Divisão da casa
+SECA|Falta de chuva
+SEDE|Vontade de beber
+SELO|Estampilha postal
+SETA|Indicador de direção
+SETE|Número 7
+SINO|Instrumento de bronze|🔔
+SOFA|Assento estofado|🛋️
+SOLO|Terreno
+SUCO|Sumo de fruta|🧃
+TACA|Troféu ou copo|🏆
+TATU|Mamífero com couraça
+TAXA|Tributo
+TAXI|Carro de aluguer|🚕
+TEIA|Rede de aranha|🕸️
+TELA|Superfície de pintura
+TEMA|Assunto
+TETO|Cobertura interior
+TIRO|Disparo
+TOLO|Ingénuo
+TOPO|Parte mais alta
+TREM|Comboio (BR)|🚆
+TRES|Número 3
+TUBO|Cilindro oco
+TUDO|Totalidade
+UNHA|Lâmina dos dedos
+VAGA|Onda ou lugar livre
+VALE|Depressão entre montes
+VASO|Recipiente de flores
+VEIA|Vaso sanguíneo
+VELA|Cera com pavio|🕯️
+VILA|Povoação
+VIVO|Com vida
+VOTO|Escolha eleitoral
+XALE|Manta de ombros
+ZERO|Número 0
+ZONA|Área ou região
+ALMA|Espírito
+ALTO|Elevado
+AREA|Superfície
+ARTE|Expressão criativa|🎨
+AULA|Lição escolar
+AUTO|Automóvel
+AZUL|Cor do céu|🔵
+BALA|Projétil
+BASE|Fundamento
+BEBE|Recém-nascido|👶
+BICO|Boca das aves
+BOBO|Palhaço da corte
+BOTA|Calçado alto|👢
+CABO|Ponta ou corda
+CAIS|Porto de embarque
+CAMA|Móvel de dormir|🛏️
+CANA|Haste vegetal
+CAPA|Manto protetor
+CARA|Rosto
+CEDO|Antes da hora
+CENA|Parte de peça
+CERA|Substância das abelhas
+CHAO|Solo
+CIMA|Parte superior
+COCO|Fruto tropical|🥥
+COLA|Adesivo
+COPO|Recipiente de beber|🥛
+CORO|Grupo vocal
+COXA|Parte da perna
+CRUZ|Símbolo cristão|✝️
+CUBO|Sólido de 6 faces|🧊
+DADO|Cubo de jogo|🎲
+DATA|Dia do calendário|📅
+DEDO|Parte da mão|👆
+DOCE|Açucarado|🍬
+DONO|Proprietário
+DOZE|Número 12
+DURO|Rígido
+ERVA|Planta rasteira|🌿
+FAMA|Celebridade
+FATO|Vestuário
+FEIO|Sem beleza
+FERA|Animal selvagem
+FILA|Sequência de pessoas
+FITA|Tira estreita
+FOFO|Macio
+FOME|Vontade de comer
+FORA|No exterior
+FOTO|Fotografia|📷
+FUGA|Evasão
+FURO|Buraco
+GEMA|Parte amarela do ovo
+GIRA|Bonita (coloquial)
+GOTA|Pingo de líquido|💧
+GUIA|Condutor ou manual
+JOIA|Adorno precioso|💎
+LADO|Face lateral
+LAMA|Terra molhada
+LATA|Recipiente metálico
+LEVE|Com pouco peso
+LIMA|Fruto cítrico
+LISO|Plano, sem rugas
+LOJA|Estabelecimento comercial
+LOTE|Parcela
+LUTA|Combate
+LUXO|Ostentação
+MALA|Bagagem|🧳
+MANO|Irmão (coloquial)
+MARA|Excelente
+MATO|Vegetação silvestre
+MEIA|Peça de calçar|🧦
+MEIO|Metade
+META|Objetivo
+MINA|Jazida subterrânea
+MOCO|Rapaz jovem
+MODO|Maneira
+MOFA|Zombaria
+MUDO|Sem fala
+MULA|Animal híbrido
+NADA|Coisa nenhuma
+NATA|Creme do leite
+NETA|Filha do filho
+NIVE|Neve (poético)
+NORA|Mulher do filho
+NUBE|Nuvem (poético)
+OBRA|Trabalho realizado
+ORLA|Margem
+OSSO|Parte do esqueleto|🦴
+PAGA|Pagamento
+PAIS|Nação
+PANO|Tecido
+PAPA|Sumo Pontífice
+PARE|Sinal de stop|🛑
+PATA|Pé de animal|🐾
+PECA|Fragmento
+PERU|Ave natalícia|🦃
+PILA|Pilha (esp.)
+PIOR|Mais mau
+POLO|Extremo terrestre
+PORTE|Tamanho
+POSTO|Lugar
+PRETO|Cor escura|⚫
+PROA|Frente do barco
+PULO|Salto
+PURO|Sem mistura
+RALO|Grelha de escoamento
+RAPA|Raspa
+RARO|Pouco comum
+REAL|Verdadeiro
+RUBI|Pedra vermelha
+GENTE|Pessoas
+PINTA|Mancha
+PISTA|Trilho
+PLANO|Projeto
+PLUMA|Pena leve
+PODER|Força
+POMBA|Ave da paz|🕊️
+PONTA|Extremidade
+PRATA|Metal branco
+PRIMA|Filha do tio
+QUASE|Por pouco
+RAIVA|Fúria
+RASTO|Pegada
+REGRA|Norma
+REINO|Território do rei
+RENDA|Tecido delicado
+RESTO|Sobra
+RITMO|Cadência
+ROCHA|Pedra grande
+ROLHA|Tampa de cortiça
+RONDA|Patrulha
+ROUPA|Vestuário
+RUGAS|Vincos na pele
+SABER|Conhecimento
+SABOR|Gosto
+SAIDA|Abertura
+SALAO|Sala grande
+SALDO|Diferença de conta
+SANTA|Sagrada
+SANTO|Sagrado
+SAUDE|Bem-estar físico
+SECAR|Tirar humidade
+SEITA|Grupo religioso
+SELVA|Floresta densa
+SENSO|Juízo
+SERIE|Sequência
+SERVO|Criado
+SEXTO|Depois do quinto
+SIGLA|Abreviatura
+SILVA|Arbusto espinhoso
+SOBRA|Resto
+SOCIO|Associado
+SOGRA|Mãe do cônjuge
+SOGRO|Pai do cônjuge
+SOLDA|União metálica
+SONDA|Aparelho explorador
+SOPRO|Ar soprado
+SURDO|Sem audição
+SUSTO|Sobressalto
+TABUA|Prancha de madeira
+TALCO|Pó mineral
+TARDE|Após o meio-dia
+TECLA|Botão de piano
+TELHA|Peça do telhado
+TENOR|Voz masculina
+TENSO|Esticado
+TERCO|Um terço
+TERRA|Planeta azul|🌍
+TESTO|Tampa de panela
+TEXTO|Escrito
+TIGRE|Felino às riscas|🐯
+TINTA|Pigmento colorido
+TOCHA|Archote
+TONEL|Barril grande
+TORRE|Edifício alto|🗼
+TORTA|Bolo enrolado
+TOURO|Bovino bravo|🐂
+TRACO|Linha
+TRAJE|Vestimenta
+TRAMA|Enredo
+TREVO|Planta de 4 folhas|🍀
+TRIBO|Grupo indígena
+TRIGO|Cereal do pão|🌾
+TRONO|Assento real
+TROPA|Soldados
+TRUFA|Fungo ou chocolate
+TURMA|Grupo de alunos
+UNIAO|Junção
+USINA|Fábrica
+VAGAO|Carruagem de comboio
+VALOR|Preço ou mérito
+VAPOR|Gás de água
+VARAL|Corda de roupa
+VAZIO|Sem nada
+VELHO|Idoso
+VENDA|Comércio
+VENTO|Ar em movimento
+VERAO|Estação quente|☀️
+VERBO|Classe gramatical
+VERDE|Cor da relva|🟢
+VERSO|Linha de poema
+VIGIA|Sentinela
+VINHO|Bebida da uva|🍷
+VIOLA|Instrumento de cordas
+VIRUS|Agente infeccioso
+VISTA|Visão
+VIUVA|Perdeu o marido
+ZEBRA|Equídeo riscado|🦓
+ZINCO|Metal químico
+PORCO|Suíno|🐷
+LIVRO|Tem páginas|📖
+CARRO|Automóvel|🚗
+NAVIO|Barco grande|🚢
+AVIAO|Voa nos céus|✈️
+BARCO|Embarcação|⛵
+CHAVE|Abre a porta|🔑
+NARIZ|Cheira|👃
+DENTE|Mastiga|🦷
+CHUVA|Cai das nuvens|🌧️
+NUVEM|Cobre o céu|☁️
+PRAIA|Areia e mar|🏖️
+MONTE|Pequeno cume
+SERRA|Cadeia de montes
+PONTE|Liga margens|🌉
+LEITE|Bebida branca|🥛
+LIMAO|Fruto azedo|🍋
+MILHO|Cereal em espiga|🌽
+ARROZ|Cereal em grão|🍚
+FESTA|Celebração|🎉
+CARTA|Vai no envelope|✉️
+FERRO|Metal resistente
+VIDRO|Material transparente
+PEDRA|Rocha pequena
+AREIA|Grãos da praia
+PAPEL|Folha de escrever
+LETRA|Parte da palavra
+TEMPO|Passa nas horas
+NOITE|Sem Sol
+ALUNO|Quem estuda
+PORTO|Cidade do Douro
+BRAGA|Cidade minhota
+COBRA|Réptil sem patas|🐍
+PEIXE|Vive na água|🐟
+POLVO|Tem oito braços|🐙
+POETA|Escreve versos
+RADIO|Transmite emissões|📻|-adio
+MINHO|Rio do norte
+TENIS|Desporto de raquete|🎾
+PIANO|Instrumento de teclas|🎹
+POEMA|Texto em versos
+BRUXA|Voa de vassoura|🧙
+PIZZA|Prato italiano|🍕
+PRATO|Onde se serve|🍽️
+GARFO|Talher de dentes
+LOTUS|Flor aquática|🪷|-tus
+ATOMO|Partícula química|⚛️
+COROA|Insígnia real|👑
+CACTO|Planta do deserto|🌵
+AGUIA|Ave de rapina|🦅
+CISNE|Ave elegante|🦢
+NORTE|Ponto cardeal
+PORTA|Entrada de casa|🚪
+PRECO|Valor monetário
+PRIMO|Filho do tio
+PULGA|Parasita saltador
+QUILO|Mil gramas
+ROSTO|Face humana
+ROUCO|Sem voz clara
+SABAO|Produto de limpeza|🧼
+SALTO|Pulo
+SENHA|Palavra-passe
+SEXTA|Dia da semana
+SINAL|Indicação
+SITIO|Lugar
+SONHO|Visão ao dormir
+SORTE|Boa fortuna
+SUMIR|Desaparecer
+TAMPA|Cobertura
+OVELHA|Animal de lã
+SECULO|Cem anos
+SAPATO|Calçado|👞
+CHAPEU|Cobre a cabeça|🎩
+QUEIJO|Derivado do leite|🧀
+BANANA|Fruto amarelo|🍌
+TOMATE|Fruto vermelho|🍅|-mate
+CINEMA|Sala de filmes|🎬
+MUSICA|Arte dos sons|🎵
+OUTONO|Caem as folhas|🍂
+RAINHA|Mulher do rei|👸
+ESCOLA|Onde se aprende|🏫
+LISBOA|Capital de Portugal
+MACACO|Primata|🐒
+BALEIA|Maior mamífero|🐋
+ABELHA|Faz mel|🐝
+ESTADO|Nação soberana
+MEDICO|Trata doentes
+PINTOR|Artista plástico
+CIDADE|Centro urbano
+ALDEIA|Povoação pequena
+BRASIL|País sul-americano|🇧🇷
+CAMOES|Autor de Os Lusíadas
+PESSOA|Autor de Mensagem
+TROFEU|Prémio desportivo|🏆
+JANELA|Deixa entrar luz
+PAREDE|Divide a sala
+TAMBOR|Percussão|🥁
+TEATRO|Palco e plateia|🎭
+JORNAL|Diário de notícias|📰
+ACUCAR|Adoça o café
+COLHER|Talher da sopa|🥄
+ESPADA|Arma branca|⚔️
+ESCUDO|Arma defensiva|🛡️
+ORELHA|Órgão da audição|👂
+CAMARA|Máquina fotográfica|📷
+VULCAO|Montanha de lava|🌋
+CEREJA|Fruto vermelho|🍒
+CEBOLA|Hortaliça em camadas|🧅
+FRANGO|Ave doméstica|🍗
+GIRAFA|Pescoço comprido|🦒
+CAMELO|Animal com bossas|🐫
+CORUJA|Ave noturna|🦉
+ARANHA|Aracnídeo|🕷️
+TIJOLO|Bloco de construção|🧱
+XADREZ|Jogo de tabuleiro|♟️
+XAROPE|Medicamento líquido
+TROVAO|Segue o relâmpago
+ABRACO|Gesto de carinho
+ACORDO|Entendimento
+ADULTO|Pessoa crescida
+ALEGRE|Contente
+ALFACE|Hortaliça de salada|🥬
+ALGUEM|Alguma pessoa
+ALTURA|Elevação
+AMARGO|Sabor acre
+AMIGOS|Companheiros
+ANIMAL|Ser vivo
+ANTIGO|Muito velho
+APENAS|Somente
+ARVORE|Tem copa e tronco|🌳
+ATAQUE|Ofensiva
+ATRASO|Demora
+AZEITE|Óleo de azeitona
+BAIRRO|Zona da cidade
+BARATA|Inseto doméstico|🪳
+BATATA|Tubérculo|🥔
+BEBIDA|Líquido para beber
+BELEZA|Formosura
+BIGODE|Pelos sobre o lábio
+BONECA|Brinquedo infantil
+BOSQUE|Pequena floresta
+BRANCO|Cor da neve|⚪
+BRILHO|Luminosidade
+CABECA|Parte superior do corpo
+CABELO|Fios na cabeça
+CADEIA|Prisão
+CAMISA|Peça de roupa|👕
+CANECA|Chávena grande
+CANETA|Instrumento de escrita|🖊️
+CAVALO|Equídeo|🐴
+CENTRO|Meio
+CHEIRO|Odor
+COELHO|Mamífero orelhudo|🐰
+COLEGA|Companheiro de trabalho
+COMIDA|Alimento
+CONCHA|Casca marinha|🐚
+COSTAS|Dorso
+DEPOIS|Mais tarde
+DESEJO|Vontade
+DIRETO|Sem desvios
+DOENCA|Enfermidade
+DUVIDA|Incerteza
+EFEITO|Resultado
+FEIJAO|Leguminosa
+FERIAS|Descanso anual
+FRENTE|Parte dianteira
+FUTURO|Tempo que virá
+GAVETA|Compartimento de móvel
+GUARDA|Vigilante
+GUERRA|Conflito armado
+IGREJA|Templo cristão|⛪
+IMAGEM|Representação visual
+INICIO|Começo
+INSETO|Pequeno artrópode
+JARDIM|Espaço com flores
+JOELHO|Articulação da perna
+LADRAO|Assaltante
+LINGUA|Órgão da fala
+MARIDO|Esposo
+MENINA|Rapariga jovem
+MENINO|Rapaz jovem
+METADE|Meia parte
+MINUTO|60 segundos
+NUMERO|Algarismo
+OBJETO|Coisa material
+OCEANO|Grande massa de água
+OFERTA|Dádiva
+ORIGEM|Princípio
+PAGINA|Folha de livro
+PANELA|Utensílio de cozinha
+PARQUE|Jardim público
+PATRAO|Empregador
+PEDIDO|Solicitação
+PERIGO|Risco
+PLANTA|Ser vegetal|🌱
+POESIA|Arte dos versos
+QUARTO|Divisão de dormir
+QUENTE|Com calor
+RECADO|Mensagem breve
+RELOGIO|Mede o tempo
+SANGUE|Líquido vital
+SEMANA|Sete dias
+SENTIR|Perceber
+SERVIR|Prestar serviço
+SOMBRA|Ausência de luz
+TAPETE|Alcatifa
+TAREFA|Trabalho a fazer
+TECIDO|Pano
+TEORIA|Conjunto de ideias
+TIGELA|Taça funda
+TOALHA|Pano de secar
+TOMADA|Ligação elétrica
+ULTIMO|Final
+VIAGEM|Deslocação
+XICARA|Chávena (BR)|☕
+ESTRELA|Brilha de noite|⭐
+CENOURA|Raiz laranja|🥕
+CORACAO|Bombeia sangue|❤️
+AMIZADE|Laço fraterno
+GOVERNO|Poder executivo
+PADEIRO|Faz pão
+COMBOIO|Anda sobre carris|🚆
+ESTRADA|Via de circulação
+ALGARVE|Sul de Portugal
+MADEIRA|Ilha do Funchal
+ESPANHA|Vizinha de Portugal
+FUTEBOL|Desporto rei|⚽
+NATACAO|Desporto aquático
+CORRIDA|Prova de velocidade
+CAMPEAO|Vencedor
+COZINHA|Onde se cozinha
+TELHADO|Cobre a casa
+VIOLINO|Instrumento de arco|🎻
+ROMANCE|Livro de ficção
+REVISTA|Publicação periódica
+CERVEJA|Bebida de cevada|🍺
+FOGUETE|Nave espacial|🚀
+PLANETA|Corpo celeste|🪐
+DESERTO|Região árida|🏜️
+MORANGO|Fruto silvestre|🍓
+ABACATE|Fruto verde|🥑
+CAMARAO|Crustáceo|🦐
+TUBARAO|Predador marinho|🦈
+FORMIGA|Inseto trabalhador|🐜
+CARACOL|Molusco lento|🐌
+BOLACHA|Biscoito doce|🍪
+CADERNO|Bloco de notas|📓
+CASTELO|Fortaleza medieval|🏰
+EXEMPLO|Modelo a seguir
+FABRICA|Unidade industrial
+FAMILIA|Pais e filhos
+GARRAFA|Recipiente de vidro|🍾
+GRAVATA|Adorno de pescoço|👔
+INVERNO|Estação fria|❄️
+LARANJA|Fruto cítrico|🍊
+MERCADO|Local de compras
+PISCINA|Tanque de natação
+QUINTAL|Pátio de casa
+SOLDADO|Militar
+SORRISO|Expressão alegre|😊
+SUCESSO|Êxito
+TESOURO|Riqueza escondida
+VERDADE|Opinião exata
+VIZINHO|Mora ao lado
+ABACAXI|Fruto tropical|🍍
+ALGODAO|Fibra branca
+ALIANCA|Anel de casamento|💍
+ARMARIO|Móvel de arrumação
+ASSUNTO|Tema
+ATITUDE|Postura
+BALANCA|Mede o peso
+BARULHO|Ruído
+BATERIA|Fonte de energia|🔋
+BILHETE|Ingresso
+CADEIRA|Assento com encosto|🪑
+CAMINHO|Trilho
+CAPITAO|Comandante
+CARINHO|Afeto
+CELULAR|Telemóvel (BR)|📱
+CHINELO|Calçado caseiro
+CINTURA|Meio do corpo
+COLCHAO|Base da cama
+CORAGEM|Bravura
+CORTINA|Pano de janela
+COSTUME|Hábito
+CRIANCA|Menino ou menina
+CUIDADO|Atenção
+CULTURA|Conhecimento
+DESENHO|Ilustração
+DESTINO|Fado ou rumo
+DIREITO|Justiça ou lado
+ELEICAO|Votação
+EMPREGO|Trabalho
+ENERGIA|Força ativa
+ENGENHO|Habilidade
+ENTRADA|Acesso
+ESCRITA|Texto escrito
+ESPELHO|Reflete a imagem|🪞
+ESPORTE|Desporto (BR)
+ESTACAO|Época ou paragem
+FACHADA|Frente de edifício
+FAZENDA|Quinta rural
+FERIADO|Dia festivo
+FORTUNA|Riqueza
+GALINHA|Ave de capoeira|🐔
+GARAGEM|Abrigo de carros
+GERENTE|Administrador
+HISTORIA|Narrativa do passado
+INFERNO|Submundo
+INIMIGO|Adversário
+JOGADOR|Atleta
+LAGRIMA|Gota de choro|😢
+LAMPADA|Fonte de luz|💡
+LEITURA|Ato de ler
+LIMPEZA|Higiene
+LOUCURA|Demência
+MAQUINA|Aparelho mecânico
+MARINHA|Força naval
+MATERIA|Substância
+MEDALHA|Condecoração|🏅
+MEMORIA|Recordação
+MENTIRA|Falsidade
+MILAGRE|Prodígio
+MOCHILA|Saco às costas|🎒
+MORADIA|Habitação
+NEGOCIO|Comércio
+NOTICIA|Informação atual
+OFICINA|Local de reparação
+OPINIAO|Parecer
+PALACIO|Residência real
+PALAVRA|Vocábulo
+PARENTE|Familiar
+PASSEIO|Caminhada
+PIMENTA|Especiaria picante|🌶️
+POLICIA|Força de segurança|🚓
+POPULAR|Do povo
+PROJETO|Plano
+QUANTIA|Montante
+QUARTEL|Base militar
+QUESTAO|Pergunta
+RECEITA|Fórmula culinária
+RECURSO|Meio disponível
+REFORMA|Aposentação
+RELACAO|Ligação
+REMEDIO|Medicamento|💊
+REPOUSO|Descanso
+REUNIAO|Encontro
+RIQUEZA|Abundância
+RODOVIA|Estrada principal
+SAUDADE|Nostalgia
+SEGREDO|Mistério
+SEMENTE|Grão de plantar
+SENTIDO|Direção ou significado
+SERVICO|Trabalho prestado
+SISTEMA|Conjunto organizado
+SOLUCAO|Resposta
+SORVETE|Gelado (BR)|🍨
+TALENTO|Aptidão
+TECLADO|Teclas de computador|⌨️
+TEMPERO|Condimento
+TESOURA|Instrumento de corte|✂️
+TURISMO|Viagens de lazer
+URGENTE|Imediato
+VARANDA|Sacada
+VESTIDO|Roupa feminina|👗
+VITORIA|Triunfo
+AVENTURA|Experiência emocionante
+BANDEIRA|Símbolo nacional
+BOMBEIRO|Apaga incêndios
+CACHORRO|Melhor amigo do homem
+CARTEIRA|Guarda dinheiro e cartões
+COBERTOR|Aquece na cama
+COMERCIO|Compra e venda
+CONSELHO|Recomendação útil
+CONTRATO|Acordo formal
+DENTISTA|Cuida dos dentes
+DIAMANTE|Pedra preciosa dura
+DINHEIRO|Moeda e notas
+DISCURSO|Fala em público
+ECONOMIA|Gestão financeira
+EDUCACAO|Ensino e formação
+EXERCITO|Forças armadas
+FANTASMA|Espírito assombrado
+FLORESTA|Mata com muitas árvores
+GASOLINA|Combustível de carro
+GUITARRA|Instrumento de 6 cordas
+HOSPITAL|Centro de saúde
+LANTERNA|Luz portátil
+MENSAGEM|Comunicação escrita
+MISTERIO|Enigma por resolver
+MONTANHA|Grande elevação
+NATUREZA|Mundo natural
+OLIVEIRA|Árvore da azeitona
+OPERACAO|Intervenção cirúrgica
+PAISAGEM|Vista panorâmica
+PARABENS|Felicitações
+PORTUGAL|País de Camões
+PRESENTE|Oferta ou tempo atual
+PRINCESA|Filha do rei
+PROBLEMA|Questão difícil
+PROCESSO|Sequência de atos
+PROMESSA|Compromisso verbal
+PROPOSTA|Sugestão apresentada
+RESPEITO|Consideração pelo outro
+RESPOSTA|Réplica a uma pergunta
+SILENCIO|Ausência de som
+SUSTENTO|Meio de vida
+TELEFONE|Aparelho de chamadas
+TRABALHO|Atividade profissional
+TRANSITO|Circulação de veículos
+TRIBUNAL|Local de julgamentos
+UNIVERSO|Todo o espaço sideral
+VANTAGEM|Benefício superior
+VASSOURA|Varre o chão
+ELEFANTE|Maior mamífero terrestre
+CROCODILO|Réptil de grandes mandíbulas
+TARTARUGA|Réptil com carapaça
+ESCORPIAO|Aracnídeo com ferrão
+GOLFINHO|Mamífero marinho inteligente
+FLAMINGO|Ave pernalta cor-de-rosa
+BORBOLETA|Inseto de asas coloridas
+CHOCOLATE|Doce feito de cacau
+BICICLETA|Veículo de duas rodas
+BRINQUEDO|Objeto infantil de jogo
+CAVALEIRO|Guerreiro a cavalo
+GINASTICA|Exercício físico
+INDUSTRIA|Produção fabril
+JUVENTUDE|Fase jovem da vida
+LIBERDADE|Direito de ser livre
+ORQUESTRA|Conjunto sinfónico
+PACIENCIA|Calma para esperar
+PROFESSOR|Quem ensina na escola
+QUALIDADE|Excelência de algo
+SEGURANCA|Proteção contra perigos
+SOCIEDADE|Comunidade humana
+TABULEIRO|Superfície de jogo
+AEROPORTO|Terminal de aviões
+PRIMAVERA|Estação das flores
+TELEVISAO|Aparelho de ecrã e canais
+ESTUDANTE|Aluno de escola
+ELEFANTES|Paquidermes de tromba
+DIAMANTES|Pedras preciosas
+MORANGOS|Frutos vermelhos silvestres
+LARANJAS|Frutos cítricos
+CENOURAS|Raízes laranjas
+CAMAROES|Crustáceos marinhos
+TUBAROES|Predadores dos oceanos
+PINGUINS|Aves do polo sul
+CANGURUS|Marsupiais saltadores
 `;
 
-const BASE_DICT = RAW_WORDS.trim().split('\n').map(line => {
-  const [w, t, e, aff] = line.split('|');
-  return { w: w.trim(), t: t.trim(), e: e ? e.trim() : '', aff: aff ? aff.trim() : '' };
+const BASE_DICT = [];
+const seenBase = new Set();
+RAW_WORDS.trim().split('\n').forEach(line => {
+  const parts = line.split('|');
+  const w = parts[0].trim().toUpperCase().replace(/[^A-Z]/g, '');
+  const t = (parts[1] || '').trim();
+  const e = (parts[2] || '').trim();
+  const aff = (parts[3] || '').trim();
+  if (w.length >= 2 && w.length <= 9 && !seenBase.has(w)) {
+    seenBase.add(w);
+    BASE_DICT.push({ w, t, e, aff, f: 0 });
+  }
 });
 
-// Gera fragmentos estilo Crossword Master (ex: "_TADO", "C_RRO")
-const FRAG_DICT = BASE_DICT.flatMap(b => {
-  const w = b.w, out = [];
-  if (w.length >= 5) {
-    for (let i = 1; i <= w.length - 3; i++) {
-      out.push({ w: w.slice(i, i + 2), t: w.slice(0, i) + '_' + w.slice(i + 2), f: 1 });
+// Pistas de completar 2 letras exatas ("CA__O" -> RR) para níveis avançados
+const FILL_DICT = [];
+const seenFill = new Set(seenBase);
+BASE_DICT.forEach(b => {
+  if (b.w.length >= 5 && b.w.length <= 7) {
+    const idx = b.w.length === 5 ? 1 : 2;
+    const sub2 = b.w.slice(idx, idx + 2);
+    const masked2 = b.w.slice(0, idx) + '__' + b.w.slice(idx + 2);
+    if (!seenFill.has(sub2)) {
+      seenFill.add(sub2);
+      FILL_DICT.push({ w: sub2, t: masked2, e: '', aff: '', f: 1 });
     }
   }
-  if (w.length >= 6) {
-    for (let i = 1; i <= w.length - 4; i++) {
-      out.push({ w: w.slice(i, i + 3), t: w.slice(0, i) + '_' + w.slice(i + 3), f: 1 });
-    }
-  }
-  return out;
 });
 
-const ALL_WORDS = BASE_DICT.concat(FRAG_DICT);
+const ALL_WORDS = BASE_DICT.concat(FILL_DICT);
+const WORDS_BY_LEN = {};
+for (let l = 2; l <= 9; l++) WORDS_BY_LEN[l] = [];
+ALL_WORDS.forEach(item => WORDS_BY_LEN[item.w.length].push(item));
 
-// PRNG determinístico para níveis únicos
+// Topologias escandinavas 100% validadas (0 = pista azul, 1 = letra branca, sem espaços mortos)
+const BASE_TEMPLATES = [
+  // Modelo 1
+  [
+    [0,0,0,0,0,0,0,0],
+    [0,1,1,1,1,1,1,1],
+    [0,1,1,1,1,1,1,1],
+    [0,1,1,1,0,1,1,1],
+    [0,1,1,1,1,0,1,1],
+    [0,1,1,0,1,1,1,1],
+    [0,1,1,1,1,1,0,0],
+    [0,1,1,1,0,1,1,1],
+    [0,1,1,1,1,1,1,1],
+    [0,1,1,0,1,1,1,1]
+  ],
+  // Modelo 2
+  [
+    [0,0,0,0,0,0,0,0],
+    [0,1,1,1,1,1,1,1],
+    [0,1,1,1,0,1,1,1],
+    [0,1,1,1,1,1,1,1],
+    [0,1,1,0,1,1,0,0],
+    [0,1,1,1,1,0,1,1],
+    [0,1,1,1,1,1,1,1],
+    [0,1,1,1,0,1,1,1],
+    [0,1,1,0,1,1,1,1],
+    [0,1,1,1,1,1,1,1]
+  ],
+  // Modelo 3
+  [
+    [0,0,0,0,0,0,0,0],
+    [0,1,1,1,1,1,1,1],
+    [0,1,1,1,1,1,0,0],
+    [0,1,1,1,0,1,1,1],
+    [0,1,1,1,1,1,1,1],
+    [0,1,1,0,1,1,1,1],
+    [0,1,1,1,1,0,1,1],
+    [0,1,1,1,1,1,1,1],
+    [0,1,1,1,0,1,1,1],
+    [0,1,1,0,1,1,1,1]
+  ],
+  // Modelo 4
+  [
+    [0,0,0,0,0,0,0,0],
+    [0,1,1,1,1,1,1,1],
+    [0,1,1,0,1,1,1,1],
+    [0,1,1,1,1,0,1,1],
+    [0,1,1,1,1,1,1,1],
+    [0,1,1,1,0,1,1,1],
+    [0,1,1,1,1,1,0,0],
+    [0,1,1,0,1,1,1,1],
+    [0,1,1,1,1,0,1,1],
+    [0,1,1,1,1,1,1,1]
+  ]
+];
+
 const rng = s => () => {
   s |= 0; s = s + 0x6D2B79F5 | 0;
   let t = Math.imul(s ^ s >>> 15, 1 | s);
@@ -543,11 +1241,8 @@ const rng = s => () => {
   return ((t ^ t >>> 14) >>> 0) / 4294967296;
 };
 
-const isL = (g, y, z) => typeof (g[y] || [])[z] === 'string';
-
 function renderClueContent(b, lvl) {
-  // Nos níveis mais altos, menos emojis e mais pistas textuais/fragmentos
-  const picChance = Math.max(0.18, 0.55 - (lvl * 0.0035));
+  const picChance = Math.max(0.24, 0.60 - (lvl * 0.0035));
   const usePic = b.e && (((b.w.charCodeAt(0) * 11 + b.w.length * 17 + lvl * 7) % 100) < picChance * 100);
   if (usePic) {
     return `<div class="pc-wrap">${b.aff ? `<span class="pc-aff">${b.aff}</span>` : ''}<span class="pc">${b.e}</span></div>`;
@@ -557,204 +1252,145 @@ function renderClueContent(b, lvl) {
 
 function ck(q, r, c, lvl) {
   if (r === 0 && c === 0) return '<div class="c k corner"></div>';
-  if (!q || (!q.a && !q.d)) return '<div class="c k"></div>';
+  if (!q || (!q.a && !q.d)) return '<div class="c k corner"></div>';
   if (q.a && q.d) {
-    return `<div class="c k s"><div>${renderClueContent(q.a, lvl)}<i class="r">▸</i></div><div>${renderClueContent(q.d, lvl)}<i class="b">▾</i></div></div>`;
+    return `<div class="c k s" data-kr="${r}" data-kc="${c}"><div>${renderClueContent(q.a, lvl)}<i class="r">▸</i></div><div>${renderClueContent(q.d, lvl)}<i class="b">▾</i></div></div>`;
   }
-  return `<div class="c k">${renderClueContent(q.a || q.d, lvl)}<i class="${q.a ? 'r' : 'b'}">${q.a ? '▸' : '▾'}</i></div>`;
+  return `<div class="c k" data-kr="${r}" data-kc="${c}">${renderClueContent(q.a || q.d, lvl)}<i class="${q.a ? 'r' : 'b'}">${q.a ? '▸' : '▾'}</i></div>`;
 }
 
-let EX, U, DS;
-
-function fit(g, w, r, c, d) {
-  EX = [];
-  const dr = d ? 1 : 0, dc = 1 - dr;
-  const prev = g[r - dr] && g[r - dr][c - dc];
-  if (r < 1 || c < 1) return -1;
-  // A célula imediatamente anterior tem de poder guardar uma pista nessa direção
-  if (!prev || typeof prev !== 'object' || prev[d ? 'd' : 'a']) return -1;
-
-  const er = r + dr * w.length, ec = c + dc * w.length;
-  if (er > R || ec > C) return -1;
-
-  // A célula logo após a palavra não pode ser uma letra solta (tem de ser borda ou célula de pista)
-  if (er < R && ec < C) {
-    const after = g[er][ec];
-    if (typeof after === 'string') return -1;
-  }
-
-  let cross = 0;
-  for (let i = 0; i < w.length; i++) {
-    const y = r + dr * i, z = c + dc * i, v = g[y][z];
-    if (v) {
-      if (typeof v !== 'string' || v !== w[i]) return -1;
-      cross++;
-    } else {
-      // Verifica palavras perpendiculares formadas acidentalmente
-      const a = dc, k = dr;
-      let s = w[i], y0 = y, z0 = z, y1 = y, z1 = z;
-      while (isL(g, y0 - a, z0 - k)) { y0 -= a; z0 -= k; s = g[y0][z0] + s; }
-      while (isL(g, y1 + a, z1 + k)) { y1 += a; z1 += k; s += g[y1][z1]; }
-      if (s.length > 1) {
-        const q = g[y0 - a] && g[y0 - a][z0 - k];
-        if (!DS[s] || U.has(s) || EX.some(t => t.b.w === s)) return -1;
-        if (y0 - a < 0 || z0 - k < 0 || !q || typeof q !== 'object' || q[d ? 'a' : 'd']) return -1;
-        EX.push({ b: DS[s], r: y0, c: z0, d: 1 - d });
-      }
+function extractSlots(g) {
+  const slots = [];
+  for (let r = 1; r < R; r++) {
+    let c = 1;
+    while (c < C) {
+      if (g[r][c] === 1) {
+        const c0 = c;
+        while (c < C && g[r][c] === 1) c++;
+        const len = c - c0;
+        const cells = [];
+        for (let i = 0; i < len; i++) cells.push([r, c0 + i]);
+        slots.push({ id: slots.length, r, c: c0, d: 0, len, clueR: r, clueC: c0 - 1, word: null, cells });
+      } else c++;
     }
   }
-  if (cross === w.length) return -1;
-  return cross + EX.length;
+  for (let c = 1; c < C; c++) {
+    let r = 1;
+    while (r < R) {
+      if (g[r][c] === 1) {
+        const r0 = r;
+        while (r < R && g[r][c] === 1) r++;
+        const len = r - r0;
+        const cells = [];
+        for (let i = 0; i < len; i++) cells.push([r0 + i, c]);
+        slots.push({ id: slots.length, r: r0, c, d: 1, len, clueR: r0 - 1, clueC: c, word: null, cells });
+      } else r++;
+    }
+  }
+  return slots;
 }
 
-function plc(g, b, r, c, d, ws) {
-  const dr = d ? 1 : 0, dc = 1 - dr, n = b.w.length;
-  for (let i = 0; i < n; i++) g[r + dr * i][c + dc * i] = b.w[i];
-  const q = g[r - dr][c - dc];
-  q[d ? 'd' : 'a'] = b;
-  const er = r + dr * n, ec = c + dc * n;
-  if (er < R && ec < C && !g[er][ec]) g[er][ec] = {};
-  ws.push({ r, c, d, n });
+function solveLayout(g, slots, rn, lvl) {
+  const grid = Array.from({ length: R }, () => Array(C).fill(null));
+  const used = new Set();
+  const allowFill = lvl >= 4;
+  const pools = {};
+
+  for (let l = 2; l <= 9; l++) {
+    const arr = WORDS_BY_LEN[l].filter(w => allowFill || !w.f).slice();
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = (rn() * (i + 1)) | 0;
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    pools[l] = arr;
+  }
+
+  function getCandidates(s) {
+    const out = [];
+    const pool = pools[s.len];
+    for (let k = 0; k < pool.length; k++) {
+      const item = pool[k];
+      if (used.has(item.w)) continue;
+      let match = true;
+      for (let i = 0; i < s.len; i++) {
+        const [y, x] = s.cells[i];
+        const ch = grid[y][x];
+        if (ch !== null && ch !== item.w[i]) { match = false; break; }
+      }
+      if (match) out.push(item);
+    }
+    return out;
+  }
+
+  let steps = 0;
+  const MAX_STEPS = 4500;
+
+  function backtrack(assignedCount) {
+    if (assignedCount === slots.length) return true;
+    if (++steps > MAX_STEPS) return false;
+
+    let bestSlot = null;
+    let bestCands = null;
+
+    for (let i = 0; i < slots.length; i++) {
+      const s = slots[i];
+      if (s.word !== null) continue;
+      const cands = getCandidates(s);
+      if (cands.length === 0) return false;
+      if (!bestCands || cands.length < bestCands.length) {
+        bestSlot = s;
+        bestCands = cands;
+        if (cands.length === 1) break;
+      }
+    }
+
+    for (let i = 0; i < bestCands.length; i++) {
+      const cand = bestCands[i];
+      bestSlot.word = cand;
+      used.add(cand.w);
+
+      const prevChars = bestSlot.cells.map(([y, x]) => grid[y][x]);
+      for (let cIdx = 0; cIdx < bestSlot.len; cIdx++) {
+        const [y, x] = bestSlot.cells[cIdx];
+        grid[y][x] = cand.w[cIdx];
+      }
+
+      if (backtrack(assignedCount + 1)) return true;
+
+      for (let cIdx = 0; cIdx < bestSlot.len; cIdx++) {
+        const [y, x] = bestSlot.cells[cIdx];
+        grid[y][x] = prevChars[cIdx];
+      }
+      used.delete(cand.w);
+      bestSlot.word = null;
+    }
+    return false;
+  }
+
+  if (backtrack(0)) return { g, slots, grid };
+  return null;
 }
 
-// Gera tabuleiros densos sem casas mortas no interior
 function generateBoard(lvl) {
-  DS = {};
-  ALL_WORDS.forEach(b => { if (b.w.length <= 7 && !DS[b.w]) DS[b.w] = b; });
-  const rn = rng(lvl * 7919 + 104729);
-  const fragRatio = Math.min(0.65, 0.22 + lvl * 0.0045);
-  const pool = ALL_WORDS.filter(b => b.w.length <= 7 && (!b.f || rn() < fragRatio));
-
-  let best = null;
-
-  for (let attempt = 0; attempt < 45; attempt++) {
-    const g = Array.from({ length: R }, () => Array(C).fill(0));
-    // Bordas superior e esquerda são sempre células de pista
-    for (let c = 0; c < C; c++) g[0][c] = {};
-    for (let r = 0; r < R; r++) g[r][0] = {};
-
-    const ws = [], used = U = new Set();
-    const q = pool.slice().sort(() => rn() - 0.5);
-
-    // Primeira palavra na linha 1
-    const first = q.find(b => b.w.length >= 6) || q[0];
-    plc(g, first, 1, 1, 0, ws);
-    used.add(first.w);
-
-    const indexLetters = () => {
-      const m = {};
-      for (let y = 1; y < R; y++) {
-        for (let z = 1; z < C; z++) {
-          if (isL(g, y, z)) (m[g[y][z]] = m[g[y][z]] || []).push([y, z]);
-        }
-      }
-      return m;
-    };
-
-    let m = indexLetters();
-
-    // Preenche cruzamentos
-    for (let pass = 0; pass < 8; pass++) {
-      for (const b of q) {
-        if (used.has(b.w) || (pass < 2 && b.w.length < 4)) continue;
-        let candidates = [], bestScore = 0;
-        for (let i = 0; i < b.w.length; i++) {
-          for (const [y, z] of m[b.w[i]] || []) {
-            for (let d = 0; d < 2; d++) {
-              const r = y - d * i, c = z - (1 - d) * i;
-              const sc = fit(g, b.w, r, c, d);
-              if (sc > 0 && sc >= bestScore) {
-                if (sc > bestScore) candidates = [];
-                bestScore = sc;
-                candidates.push([r, c, d]);
-              }
-            }
-          }
-        }
-        if (candidates.length) {
-          const [r, c, d] = candidates[rn() * candidates.length | 0];
-          fit(g, b.w, r, c, d);
-          plc(g, b, r, c, d, ws);
-          used.add(b.w);
-          EX.forEach(e => { plc(g, e.b, e.r, e.c, e.d, ws); used.add(e.b.w); });
-          m = indexLetters();
-        }
-      }
-    }
-
-    // Garante que NÃO existem casas vazias (0) nem células de pista sem setas (exceto [0,0])
-    let emptyCells = 0, deadClues = 0;
-    for (let r = 0; r < R; r++) {
-      for (let c = 0; c < C; c++) {
-        if (r === 0 && c === 0) continue;
-        const v = g[r][c];
-        if (v === 0) emptyCells++;
-        else if (typeof v === 'object' && !v.a && !v.d) deadClues++;
-      }
-    }
-
-    // Tenta tapar buracos isolados de 2-3 letras
-    if (emptyCells > 0) {
-      for (let r = 1; r < R; r++) {
-        for (let c = 1; c < C; c++) {
-          if (g[r][c] === 0) {
-            for (let d = 0; d < 2; d++) {
-              for (const b of q) {
-                if (used.has(b.w)) continue;
-                for (let off = 0; off < b.w.length; off++) {
-                  const sr = r - (d ? off : 0), sc = c - (d ? 0 : off);
-                  if (fit(g, b.w, sr, sc, d) >= 0) {
-                    fit(g, b.w, sr, sc, d);
-                    plc(g, b, sr, sc, d, ws);
-                    used.add(b.w);
-                    EX.forEach(e => { plc(g, e.b, e.r, e.c, e.d, ws); used.add(e.b.w); });
-                    break;
-                  }
-                }
-                if (g[r][c] !== 0) break;
-              }
-            }
-          }
-        }
-      }
-    }
-
-    emptyCells = 0; deadClues = 0;
-    let letterCount = 0;
-    for (let r = 0; r < R; r++) {
-      for (let c = 0; c < C; c++) {
-        if (r === 0 && c === 0) continue;
-        const v = g[r][c];
-        if (v === 0) emptyCells++;
-        else if (typeof v === 'object' && !v.a && !v.d) deadClues++;
-        else if (typeof v === 'string') letterCount++;
-      }
-    }
-
-    const penalty = emptyCells * 100 + deadClues * 40;
-    const score = letterCount - penalty;
-    if (!best || score > best.score) best = { g, ws, score, emptyCells, deadClues };
-    if (emptyCells === 0 && deadClues === 0) break;
+  const rn = rng(lvl * 9973 + 31337);
+  for (let attempt = 0; attempt < 40; attempt++) {
+    const base = BASE_TEMPLATES[(lvl + attempt) % BASE_TEMPLATES.length];
+    const flipV = ((lvl + attempt) >> 2) & 1;
+    const g = Array.from({ length: R }, (_, r) =>
+      Array.from({ length: C }, (_, c) => {
+        if (r === 0 || c === 0) return 0;
+        const sr = flipV ? (R - r) : r;
+        return base[sr][c];
+      })
+    );
+    const slots = extractSlots(g);
+    const solved = solveLayout(g, slots, rn, lvl);
+    if (solved) return solved;
   }
-
-  // Limpeza final: converte eventuais 0 residuais em células de pista válidas ou palavras curtas
-  for (let r = 0; r < R; r++) {
-    for (let c = 0; c < C; c++) {
-      if (r === 0 && c === 0) continue;
-      if (best.g[r][c] === 0) best.g[r][c] = {};
-      if (typeof best.g[r][c] === 'object' && !best.g[r][c].a && !best.g[r][c].d) {
-        // Atribui uma definição visual fallback se sobrar alguma borda sem palavra
-        const fb = BASE_DICT[(r * 7 + c * 13 + lvl) % 120];
-        best.g[r][c].d = fb;
-      }
-    }
-  }
-
-  return best;
+  throw new Error('Falha ao gerar tabuleiro');
 }
 
-// Estado do jogo
-let LN = 1, sol, clue, val, own, pend, W, rack, sel, me, op, hints, done, busy, hc, badges = [], hlCells = new Set();
+let LN = 1, sol, clue, val, own, pend, W, W_INFO, rack, sel, me, op, hints, done, busy, hc, badges = [], hlCells = new Set(), hlClue = null;
 
 const HEADLINES = [
   'Resolva palavras cruzadas',
@@ -762,33 +1398,23 @@ const HEADLINES = [
   'Vença seus oponentes'
 ];
 
-// Persistência (Progresso + Jogo Guardado)
 let saveData = { won: {}, active: null };
 try {
-  const raw = JSON.parse(localStorage.getItem('pc_master_v1') || 'null');
+  const raw = JSON.parse(localStorage.getItem('pc_master_v3') || 'null');
   if (raw) saveData = { won: raw.won || {}, active: raw.active || null };
 } catch (e) {}
 
 function persist() {
-  try { localStorage.setItem('pc_master_v1', JSON.stringify(saveData)); } catch (e) {}
+  try { localStorage.setItem('pc_master_v3', JSON.stringify(saveData)); } catch (e) {}
 }
 
 function saveActiveGame() {
   if (!sol || full()) {
     saveData.active = null;
   } else {
-    // Devolve letras pendentes ao rack ao guardar para não haver estados inconsistentes
-    const cleanRack = rack.slice();
-    for (let r = 0; r < R; r++) {
-      for (let c = 0; c < C; c++) {
-        if (pend[r][c]) {
-          cleanRack[pend[r][c].s] = pend[r][c].l;
-        }
-      }
-    }
     saveData.active = {
-      LN, sol, clue, val, own, W,
-      rack: cleanRack, me, op, hints,
+      LN, sol, clue, val, own, pend, W, W_INFO,
+      rack, me, op, hints,
       done: Array.from(done)
     };
   }
@@ -803,6 +1429,7 @@ function startLevel(n, resumeObj = null) {
   $('ov').hidden = true;
   badges = [];
   hlCells = new Set();
+  hlClue = null;
   sel = null;
   hc = null;
   busy = 0;
@@ -812,35 +1439,42 @@ function startLevel(n, resumeObj = null) {
     clue = resumeObj.clue;
     val = resumeObj.val;
     own = resumeObj.own;
+    pend = resumeObj.pend || M();
     W = resumeObj.W;
+    W_INFO = resumeObj.W_INFO || [];
     rack = resumeObj.rack;
     me = resumeObj.me;
     op = resumeObj.op;
     hints = resumeObj.hints;
     done = new Set(resumeObj.done);
-    pend = M();
     msg('Partida retomada. Boa sorte!');
   } else {
-    const board = generateBoard(LN);
-    sol = M(); clue = M(); val = M(); own = M(); pend = M(); W = [];
+    const solved = generateBoard(LN);
+    sol = M(); clue = M(() => ({})); val = M(); own = M(); pend = M(); W = []; W_INFO = [];
+
     for (let r = 0; r < R; r++) {
       for (let c = 0; c < C; c++) {
-        const v = board.g[r][c];
-        if (typeof v === 'string') sol[r][c] = v;
-        else clue[r][c] = v || {};
+        if (solved.grid[r][c] !== null) sol[r][c] = solved.grid[r][c];
       }
     }
-    board.ws.forEach(({ r, c, d, n }) => {
-      const arr = [];
-      for (let i = 0; i < n; i++) arr.push(d ? [r + i, c] : [r, c + i]);
-      W.push(arr);
+
+    solved.slots.forEach(s => {
+      clue[s.clueR][s.clueC][s.d === 0 ? 'a' : 'd'] = s.word;
+      W.push(s.cells);
+      W_INFO.push({
+        clueR: s.clueR,
+        clueC: s.clueC,
+        dir: s.d === 0 ? '▸' : '▾',
+        text: s.word.t + (s.word.e ? ' ' + s.word.e : '')
+      });
     });
+
     me = 0; op = 0;
     hints = 3;
     done = new Set();
     rack = [null, null, null, null, null];
     deal();
-    msg('Arrasta as letras para o tabuleiro e carrega em Enviar.');
+    msg('Toca numa pista azul para ler ou arrasta as letras.');
     saveActiveGame();
   }
   draw();
@@ -903,13 +1537,22 @@ function deal() {
       if (sol[r][c] && !val[r][c]) needed[sol[r][c]] = (needed[sol[r][c]] || 0) + 1;
     }
   }
+  for (let r = 0; r < R; r++) {
+    for (let c = 0; c < C; c++) {
+      if (pend[r][c] && needed[pend[r][c].l] > 0) needed[pend[r][c].l]--;
+    }
+  }
   rack = rack.map(l => l && needed[l] > 0 ? (needed[l]--, l) : null);
   const pool = [];
   for (const l in needed) {
     for (let i = 0; i < needed[l]; i++) pool.push(l);
   }
   shuf(pool);
-  rack = rack.map(l => l || pool.pop() || null);
+  rack = rack.map((l, idx) => {
+    const usedByPend = pend.some(row => row.some(p => p && p.s === idx));
+    if (usedByPend) return null;
+    return l || pool.pop() || null;
+  });
 }
 
 const msg = t => $('ms').textContent = t;
@@ -945,6 +1588,7 @@ function draw() {
       } else {
         const v = val[r][c], p = pend[r][c];
         const isHl = hlCells.has(r + ',' + c);
+        const isClueHl = hlClue && hlClue.has(r + ',' + c);
         const isHint = hc && hc[0] === r && hc[1] === c;
         const isSel = p && sel && sel.type === 'board' && sel.r === r && sel.c === c;
         const badge = badges.find(b => b.r === r && b.c === c);
@@ -953,6 +1597,7 @@ function draw() {
         if (v) cls += ' ' + own[r][c];
         else if (p) cls += ' pd' + (isSel ? ' sel' : '');
         if (isHl) cls += ' hl-word';
+        else if (isClueHl) cls += ' hl-clue';
         if (isHint) cls += ' hint';
 
         h += `<div class="${cls}" data-r="${r}" data-c="${c}">
@@ -979,11 +1624,9 @@ function draw() {
   $('ht').disabled = !!busy || !hints;
 }
 
-// Lógica unificada de movimento (Rack <-> Tabuleiro e Tabuleiro <-> Tabuleiro)
 function placeFromRack(s, r, c) {
   if (busy || rack[s] == null || !sol[r][c] || val[r][c]) return;
   if (pend[r][c]) {
-    // Troca a letra que estava na casa pela do rack
     const old = pend[r][c];
     pend[r][c] = { l: rack[s], s };
     rack[s] = old.l;
@@ -992,6 +1635,7 @@ function placeFromRack(s, r, c) {
     rack[s] = null;
   }
   sel = null;
+  saveActiveGame();
   draw();
 }
 
@@ -1002,6 +1646,7 @@ function moveBoardTile(r1, c1, r2, c2) {
   pend[r2][c2] = moving;
   pend[r1][c1] = target || null;
   sel = null;
+  saveActiveGame();
   draw();
 }
 
@@ -1018,10 +1663,10 @@ function returnToRack(r, c, targetSlot = null) {
   }
   pend[r][c] = null;
   sel = null;
+  saveActiveGame();
   draw();
 }
 
-// Drag & Drop + Tap no Rack
 $('rk').addEventListener('pointerdown', e => {
   const t = e.target.closest('.t[data-s]');
   if (!t || busy) return;
@@ -1075,14 +1720,31 @@ $('rk').addEventListener('pointerdown', e => {
   addEventListener('pointercancel', up);
 });
 
-// Drag & Drop + Tap dentro do Tabuleiro (para letras pendentes não bloqueadas)
 $('g').addEventListener('pointerdown', e => {
+  const clueCell = e.target.closest('.k[data-kr]');
+  if (clueCell) {
+    const kr = +clueCell.dataset.kr, kc = +clueCell.dataset.kc;
+    const infos = W_INFO.filter(w => w.clueR === kr && w.clueC === kc);
+    if (infos.length) {
+      msg(infos.map(i => `${i.dir} ${i.text}`).join('   |   '));
+      const set = new Set();
+      W.forEach((w, idx) => {
+        if (W_INFO[idx].clueR === kr && W_INFO[idx].clueC === kc) {
+          w.forEach(([y, x]) => set.add(y + ',' + x));
+        }
+      });
+      hlClue = set;
+      draw();
+      setTimeout(() => { if (hlClue === set) { hlClue = null; draw(); } }, 2200);
+    }
+    return;
+  }
+
   const cell = e.target.closest('.c[data-r]');
   if (!cell || busy) return;
   const r = +cell.dataset.r, c = +cell.dataset.c;
   const p = pend[r][c];
 
-  // Se não tem letra pendente nesta casa
   if (!p) {
     if (!sol[r][c] || val[r][c]) return;
     if (sel) {
@@ -1092,7 +1754,6 @@ $('g').addEventListener('pointerdown', e => {
     return;
   }
 
-  // Tem letra pendente: permite arrastar para outra casa ou de volta ao rack!
   const x0 = e.clientX, y0 = e.clientY;
   let ghost = null;
 
@@ -1128,7 +1789,6 @@ $('g').addEventListener('pointerdown', e => {
         returnToRack(r, c, slot ? +slot.dataset.s : null);
       }
     } else {
-      // Toque simples devolve a letra ao suporte
       returnToRack(r, c);
     }
   };
@@ -1223,7 +1883,6 @@ function aiTurn() {
     }
   }
 
-  // Dificuldade do oponente escala com o nível (de ~68% até 96%)
   const aiAccuracy = Math.min(0.96, 0.68 + (LN * 0.0028));
   const maxTiles = LN > 35 ? 5 : 4;
   let placed = 0;
