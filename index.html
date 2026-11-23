@@ -5,414 +5,1279 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Palavras Cruzadas</title>
 <style>
-:root{--bg:#fff;--tx:#2b3350;--ct:#cfe3fa;--cl:#f1f2f5;--cb:#c9cfdb;--bl:#0a84ff;--me:#1a73e8;--ai:#8a8f9c;--ti:#f6dcb4;--tt:#333;--bar:#eef1f6;--res:#fff1b8;--ok:#bfeab8;--cs:min(calc((100vw - 24px)/6),76px,calc((100dvh - 360px)/6));box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121418;--tx:#dfe4f2;--ct:#24344d;--cl:#23262e;--cb:#3a3f4b;--ai:#9aa0ae;--ti:#d2ae74;--bar:#23262e;--res:#4a4220;--ok:#2f5a2c;--me:#6ab0ff}}
-:root[data-theme="dark"]{--bg:#121418;--tx:#dfe4f2;--ct:#24344d;--cl:#23262e;--cb:#3a3f4b;--ai:#9aa0ae;--ti:#d2ae74;--bar:#23262e;--res:#4a4220;--ok:#2f5a2c;--me:#6ab0ff}
+:root{
+  --bg:#ffffff;--tx:#363e52;--ct:#d6e6fa;--cl:#ffffff;--cb:#c5cddb;
+  --bl:#0a84ff;--me:#2b3346;--ai:#525b70;--ti:#f7e2c1;--tib:#d8b888;--tt:#2b3346;
+  --bar:#f1f3f8;--ok:#c8f2c2;--bd:#e2e6ef;
+  --cs:min(calc((100vw - 20px)/8),64px,calc((100dvh - 310px)/10));
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#13161c;--tx:#e4e8f2;--ct:#22334d;--cl:#1c2029;--cb:#363d4d;
+    --me:#eef2fa;--ai:#9aa3b8;--ti:#d8b57d;--tib:#9e7e4c;--tt:#1a1e26;
+    --bar:#222733;--ok:#2a5427;--bd:#2d3342;
+  }
+}
 html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;height:100%;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column;align-items:center;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;overflow:hidden}
-h1{font-size:clamp(22px,7vw,32px);margin:8px 12px 6px;text-align:center;line-height:1.1}
-#sc{display:flex;gap:10px;align-items:center;font-weight:600;margin-bottom:8px}
-#sc b{background:var(--bar);padding:3px 14px;border-radius:12px;font-size:22px;min-width:34px;text-align:center}
+body{
+  margin:0;height:100%;background:var(--bg);color:var(--tx);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  display:flex;flex-direction:column;align-items:center;
+  user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;
+  overflow:hidden;
+}
+
+/* Top bar */
+#top{width:min(96vw,520px);display:flex;align-items:center;justify-content:space-between;padding:8px 4px 2px}
+#bk{height:38px;width:38px;border-radius:50%;background:var(--bar);color:var(--tx);font-size:18px;display:flex;align-items:center;justify-content:center}
+#lvl-tag{font-size:13px;font-weight:700;color:var(--ai);background:var(--bar);padding:4px 12px;border-radius:14px}
+h1{font-size:clamp(22px,6.5vw,30px);margin:2px 12px 8px;text-align:center;line-height:1.1;font-weight:800;letter-spacing:-.02em}
+
+/* Scoreboard */
+#sc{display:flex;gap:12px;align-items:center;font-weight:600;margin-bottom:8px;font-size:15px}
+#sc b{background:var(--bar);padding:4px 16px;border-radius:10px;font-size:20px;min-width:36px;text-align:center;transition:transform .2s}
 #sc b.y{color:var(--bl)}
-#g{display:grid;grid-template-columns:repeat(var(--C),var(--cs));border:2px solid var(--cb)}
-.c{width:var(--cs);height:var(--cs);border:1px solid var(--cb);box-sizing:border-box;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:calc(var(--cs)*.5);background:var(--cl);position:relative}
-.k{background:var(--ct);font-size:calc(var(--cs)*.17);font-weight:600;text-align:center;line-height:1.05;padding:2px;text-transform:uppercase;overflow:hidden}
-.k i{position:absolute;font-style:normal;font-size:calc(var(--cs)*.2);color:var(--ai)}
-.k .r{right:1px;top:50%;transform:translateY(-50%)}.k .b{bottom:-1px;left:50%;transform:translateX(-50%)}
-.s{flex-direction:column;padding:0}.s div{flex:1;width:100%;display:flex;align-items:center;justify-content:center;position:relative;font-size:calc(var(--cs)*.14)}.s div:first-child{border-bottom:1px solid var(--cb)}.s .b{bottom:-3px}
-.pc{font-size:calc(var(--cs)*.55);text-transform:none}
-body.m>:not(#mn){display:none}body:not(.m) #mn{display:none}#mn{width:min(94vw,520px);flex:1;min-height:0;overflow-y:auto;padding-bottom:24px}
-#mn h2{margin:16px 0 8px;font-size:18px}#mn small{color:var(--ai);font-weight:400;font-size:13px}
-.lv{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.lv button{height:46px;border-radius:12px;background:var(--bar);color:var(--tx);font-weight:700;font-size:16px}.lv .w{background:var(--bl);color:#fff}
-#bk{height:36px;width:36px;border-radius:50%;background:var(--bar);color:var(--tx);margin-right:10px;font-size:18px;vertical-align:middle}
-.me{color:var(--me)}.ai{color:var(--ai)}
-.pd{background:var(--ti);color:var(--tt);border-radius:4px;box-shadow:inset 0 0 0 2px var(--bl)}
-.res{background:var(--res)}
-.hint{animation:p .6s 3}@keyframes p{50%{background:var(--ok)}}
-#ms{min-height:20px;margin:8px 12px 0;font-size:14px;text-align:center}
-#rk{display:flex;gap:8px;margin:8px 0}
-.t{width:calc(var(--cs)*.9);height:calc(var(--cs)*.9);border-radius:7px;background:var(--ti);color:var(--tt);box-shadow:0 2px 4px #0004;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:calc(var(--cs)*.5);touch-action:none}
-.t.e{background:none;box-shadow:none}.t.sel{outline:3px solid var(--bl)}
-.gh{position:fixed;transform:translate(-50%,-50%);pointer-events:none;z-index:9;opacity:.9}
-#bar{display:flex;gap:12px;align-items:center;width:min(92vw,520px);margin:4px 0}
-button{font:inherit;border:0;border-radius:30px;height:56px;cursor:pointer}
-#sh,#ht{width:56px;background:var(--bar);color:var(--bl);font-size:24px;position:relative;flex:none}
-#go{flex:1;background:var(--bl);color:#fff;font-weight:700;font-size:20px}
-#go:disabled{background:var(--bar);color:var(--ai)}
-#ht em{position:absolute;top:-6px;right:-4px;background:var(--bl);color:#fff;border-radius:50%;width:22px;height:22px;font:700 13px/22px system-ui}
-#lg{font-size:12px;color:var(--ai);margin:6px 16px;text-align:center}
-#ov{position:fixed;inset:0;background:#000a;display:flex;align-items:center;justify-content:center;z-index:20}
+#sc b.ai-s{color:var(--ai)}
+
+/* Board */
+#g{display:grid;grid-template-columns:repeat(8,var(--cs));border:2px solid #7d8799;background:var(--cb);box-shadow:0 4px 16px #00000012}
+.c{
+  width:var(--cs);height:var(--cs);
+  border-right:1px solid var(--cb);border-bottom:1px solid var(--cb);
+  box-sizing:border-box;display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:calc(var(--cs)*.54);background:var(--cl);
+  position:relative;transition:background .15s;
+}
+.c:nth-child(8n){border-right:0}
+.c:nth-child(n+73){border-bottom:0}
+
+/* Clue cells */
+.k{
+  background:var(--ct);font-size:calc(var(--cs)*.175);font-weight:700;
+  text-align:center;line-height:1.05;padding:2px;text-transform:uppercase;
+  color:var(--tx);word-break:break-word;overflow:hidden;
+}
+.k.corner{background:#c5d8f0}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .k.corner{background:#1b283d}}
+.k i{position:absolute;font-style:normal;font-size:calc(var(--cs)*.19);color:#5c7499;pointer-events:none}
+.k .r{right:1px;top:50%;transform:translateY(-50%)}
+.k .b{bottom:-1px;left:50%;transform:translateX(-50%)}
+
+/* Split clues */
+.s{flex-direction:column;padding:0}
+.s div{flex:1;width:100%;display:flex;align-items:center;justify-content:center;position:relative;font-size:calc(var(--cs)*.145);padding:0 2px;box-sizing:border-box}
+.s div:first-child{border-bottom:1px solid #aebfd9}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .s div:first-child{border-bottom-color:#34496b}}
+.s .b{bottom:-2px}
+
+/* Emoji clues */
+.pc-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.pc-aff{font-size:calc(var(--cs)*.19);font-weight:800;text-transform:none;margin-bottom:1px}
+.pc{font-size:calc(var(--cs)*.46);text-transform:none;line-height:1}
+.s .pc{font-size:calc(var(--cs)*.26)}
+
+/* Letters & states */
+.me{color:var(--me)}
+.ai{color:var(--ai)}
+.pd{
+  background:linear-gradient(180deg,#fdf1dc,var(--ti));
+  color:var(--tt);border-radius:4px;
+  box-shadow:inset 0 0 0 1.5px var(--tib),0 2px 4px #0002;
+  cursor:grab;z-index:2;
+}
+.pd.sel{box-shadow:inset 0 0 0 2.5px var(--bl),0 2px 6px #0003}
+.hl-word{background:#fae6c3 !important;box-shadow:inset 0 0 0 2px var(--bl)}
+.hint{animation:p .55s 3}@keyframes p{50%{background:var(--ok)}}
+
+/* Score badge (+5, +9) */
+.badge{
+  position:absolute;top:-7px;right:-6px;
+  background:var(--bl);color:#fff;font-size:11px;font-weight:800;
+  padding:1px 5px;border-radius:8px;z-index:10;line-height:1.2;
+  box-shadow:0 2px 4px #0004;animation:pop .35s ease-out;
+}
+@keyframes pop{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+
+#ms{min-height:20px;margin:6px 12px 2px;font-size:13px;font-weight:600;color:var(--ai);text-align:center}
+
+/* Rack */
+#rk{display:flex;gap:10px;margin:4px 0 6px;height:calc(var(--cs)*.92);align-items:center}
+.t{
+  width:calc(var(--cs)*.9);height:calc(var(--cs)*.9);border-radius:8px;
+  background:linear-gradient(180deg,#fdf1dc,var(--ti));color:var(--tt);
+  border:1.5px solid var(--tib);box-shadow:0 3px 0 #c9a673,0 4px 6px #0002;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:calc(var(--cs)*.52);touch-action:none;cursor:grab;
+}
+.t.e{background:var(--bar);border:1.5px dashed var(--cb);box-shadow:none;cursor:default}
+.t.sel{outline:3px solid var(--bl);transform:translateY(-3px)}
+.gh{position:fixed;transform:translate(-50%,-50%) scale(1.08);pointer-events:none;z-index:50;opacity:.95;box-shadow:0 8px 18px #0004}
+
+/* Bottom controls */
+#bar{display:flex;gap:14px;align-items:center;width:min(92vw,440px);margin:4px 0 8px}
+button{font:inherit;border:0;border-radius:28px;height:52px;cursor:pointer;transition:transform .1s,opacity .15s}
+button:active:not(:disabled){transform:scale(.96)}
+#sh,#ht{width:52px;background:var(--bar);color:var(--bl);font-size:22px;position:relative;flex:none;display:flex;align-items:center;justify-content:center}
+#go{flex:1;background:var(--bl);color:#fff;font-weight:700;font-size:18px;box-shadow:0 4px 12px #0a84ff40}
+#go:disabled{background:var(--bar);color:var(--ai);box-shadow:none;cursor:default}
+#ht em{position:absolute;top:-4px;right:-4px;background:var(--bl);color:#fff;border-radius:50%;width:21px;height:21px;font:700 12px/21px system-ui}
+
+/* Menu Screen */
+body.m>:not(#mn){display:none}
+body:not(.m) #mn{display:none}
+#mn{width:min(94vw,500px);flex:1;min-height:0;overflow-y:auto;padding:16px 4px 32px;display:flex;flex-direction:column;gap:14px}
+.m-head{text-align:center;padding:8px 0 4px}
+.m-head h1{margin:0 0 4px;font-size:30px}
+.m-head p{margin:0;color:var(--ai);font-size:14px}
+.stats-card{
+  display:flex;justify-content:space-around;background:var(--bar);
+  padding:12px;border-radius:16px;text-align:center;
+}
+.stats-card div b{display:block;font-size:20px;color:var(--bl)}
+.stats-card div span{font-size:12px;color:var(--ai);font-weight:600}
+#resume-btn{
+  background:linear-gradient(135deg,#0a84ff,#0066cc);color:#fff;
+  border-radius:16px;height:auto;padding:14px 18px;
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 6px 16px #0a84ff35;text-align:left;
+}
+#resume-btn strong{display:block;font-size:17px}
+#resume-btn small{font-size:13px;opacity:.9}
+#resume-btn span.arr{font-size:22px;font-weight:800}
+
+.lv-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.lv-btn{
+  height:52px;border-radius:14px;background:var(--bar);color:var(--tx);
+  font-weight:800;font-size:16px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;position:relative;
+}
+.lv-btn.won{background:var(--bl);color:#fff}
+.lv-btn.curr{outline:2.5px solid var(--bl);color:var(--bl)}
+.lv-btn.won.curr{color:#fff}
+.lv-btn small{font-size:10px;font-weight:600;opacity:.85}
+
+/* Modal */
+#ov{position:fixed;inset:0;background:#0009;display:flex;align-items:center;justify-content:center;z-index:30;backdrop-filter:blur(2px)}
 #ov[hidden]{display:none}
-#ov div{background:var(--bg);padding:24px 28px;border-radius:20px;text-align:center}
-#ov p{font-size:24px;font-weight:700;margin:0 0 16px;white-space:pre-line}
-#nw{background:var(--bl);color:#fff;padding:0 28px;font-weight:700}
+#ov .box{background:var(--bg);padding:26px 28px;border-radius:22px;text-align:center;width:min(84vw,340px);box-shadow:0 12px 32px #0005}
+#ov h2{margin:0 0 8px;font-size:26px}
+#ov p{font-size:18px;font-weight:600;color:var(--ai);margin:0 0 20px;white-space:pre-line}
+#ov .btns{display:flex;gap:10px}
+#ov .btns button{flex:1;font-weight:700;font-size:16px}
+#ov-m{background:var(--bar);color:var(--tx)}
+#nw{background:var(--bl);color:#fff}
 </style></head><body>
+
 <div id="mn"></div>
-<h1><button id="bk" aria-label="Menu">←</button><span id="tt"></span></h1>
-<div id="sc"><span>Tu</span><b class="y" id="a">0</b>–<b id="b">0</b><span>Oponente</span></div>
+
+<div id="top">
+  <button id="bk" aria-label="Menu">←</button>
+  <span id="lvl-tag">Nível 1</span>
+  <div style="width:38px"></div>
+</div>
+<h1 id="headline">Resolva palavras cruzadas</h1>
+<div id="sc"><span>Você</span><b class="y" id="a">0</b><span>-</span><b class="ai-s" id="b">0</b><span>Oponente</span></div>
 <div id="g"></div>
 <div id="ms"></div>
 <div id="rk"></div>
-<div id="bar"><button id="sh" aria-label="Baralhar letras">⇄</button><button id="go"></button><button id="ht" aria-label="Dica">💡<em id="hn">3</em></button></div>
-<p id="lg">As casas amarelas pertencem a palavras que começaste: o oponente não lhes toca.</p>
-<div id="ov" hidden><div><p id="ot"></p><button id="nw">Continuar</button></div></div>
+<div id="bar">
+  <button id="sh" aria-label="Baralhar letras">⇄</button>
+  <button id="go">Passar</button>
+  <button id="ht" aria-label="Dica">💡<em id="hn">3</em></button>
+</div>
+
+<div id="ov" hidden>
+  <div class="box">
+    <h2 id="ot-title">Vitória! 🎉</h2>
+    <p id="ot"></p>
+    <div class="btns">
+      <button id="ov-m">Menu</button>
+      <button id="nw">Próximo</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const $=id=>document.getElementById(id),
+R=10,C=8,TOTAL_LEVELS=100,
 M=(f=()=>null)=>Array.from({length:R},()=>Array.from({length:C},f)),
-shuf=a=>{for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a},
-BK=`SOL|Astro-rei|☀️
-LUA|Satélite da Terra|🌙
+shuf=a=>{for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+
+// Dicionário rico estilo Crossword Master (definições, emojis, prefixos/sufixos e fragmentos)
+const RAW_WORDS = `
+SOL|Astro-rei|☀️
+LUA|Satélite natural|🌙
 MAR|Água salgada|🌊
 RIO|Curso de água|🏞️
-UVA|Fruto da vinha|🍇
+UVA|Fruto da vinha|🍇|-va
 OVO|Da galinha|🥚
-PAO|Alimento de trigo|🍞
-MAO|Tem cinco dedos|✋
+PAO|Alimento de forno|🍞
+MAO|Cinco dedos|✋
 CAO|Melhor amigo|🐶
 GATO|Felino caseiro|🐱
 RATO|Roedor|🐭
-PATO|Ave de lagoa|🦆
-LOBO|Canídeo que uiva|🐺
+PATO|Ave aquática|🦆
+LOBO|Canídeo selvagem|🐺
 URSO|Gosta de mel|🐻
 VACA|Dá leite|🐄
 PORCO|Suíno|🐷
-CASA|Lar|🏠
-BOLA|Joga-se aos pontapés|⚽
+CASA|Moradia|🏠
+BOLA|Esfera de jogo|⚽
 LIVRO|Tem páginas|📖
 CARRO|Automóvel|🚗
-NAVIO|Barco grande|🚢
-AVIAO|Voa nos céus|✈️
-BARCO|Embarcação|⛵
+NAVIO|Embarcação|🚢
+AVIAO|Transporte aéreo|✈️
+BARCO|Veículo marítimo|⛵
 FLOR|Tem pétalas|🌸
-ROSA|Flor com espinhos|🌹
-ARVORE|Tem copa|🌳
-MESA|Onde se come
-CHAVE|Abre a porta|🔑
+ROSA|Flor espinhosa|🌹
+ARVORE|Tem copa e tronco|🌳
+MESA|Móvel de jantar
+CHAVE|Abre fechaduras|🔑
 SAPATO|Calçado|👞
 LUVA|Cobre a mão|🧤
 CHAPEU|Cobre a cabeça|🎩
-OLHO|Órgão da vista|👁️
-NARIZ|Cheira|👃
-BOCA|Tem dentes|👄
-DENTE|Mastiga|🦷
-FOGO|Queima|🔥
+OLHO|Órgão da visão|👁️
+NARIZ|Órgão do olfato|👃
+BOCA|Cavidade oral|👄
+DENTE|Mastiga alimentos|🦷
+FOGO|Combustão|🔥
 AGUA|Líquido vital|💧
-NEVE|Cai no inverno|❄️
-CHUVA|Cai das nuvens|🌧️
+NEVE|Precipitação branca|❄️
+CHUVA|Água das nuvens|🌧️
 VENTO|Ar em movimento
-NUVEM|Cobre o céu|☁️
-ESTRELA|Brilha de noite|⭐
-TERRA|Planeta azul|🌍
+NUVEM|Vapor no céu|☁️
+ESTRELA|Astro luminoso|⭐
+TERRA|Nosso planeta|🌍
 PRAIA|Areia e mar|🏖️
-MONTE|Pequeno cume
-SERRA|Cadeia de montes
-LAGO|Água interior
-ILHA|Cercada de água|🏝️
-PONTE|Liga margens|🌉
-TORRE|Edifício alto|🗼
-CAFE|Bebida da manhã|☕
-LEITE|Bebida branca|🥛
-QUEIJO|Derivado do leite|🧀
-MACA|Fruto de Newton|🍎
-PERA|Fruto da pereira|🍐
-LIMAO|Fruto azedo|🍋
-BANANA|Fruto amarelo|🍌
-TOMATE|Fruto de salada|🍅
+MONTE|Elevação natural
+SERRA|Cadeia montanhosa
+LAGO|Massa de água
+ILHA|Terra cercada de água|🏝️
+PONTE|Liga duas margens|🌉
+TORRE|Construção alta|🗼
+CAFE|Bebida estimulante|☕
+LEITE|Líquido nutritivo|🥛
+QUEIJO|Laticínio|🧀
+MACA|Fruto da macieira|🍎
+PERA|Fruto doce|🍐
+LIMAO|Citrino azedo|🍋
+BANANA|Fruto tropical|🍌
+TOMATE|Fruto vermelho|🍅|-mate
 CENOURA|Raiz laranja|🥕
-MILHO|Cereal em espiga|🌽
-ARROZ|Cereal em grão|🍚
+MILHO|Cereal amarelo|🌽
+ARROZ|Cereal branco|🍚
 BOLO|Doce de festa|🎂
 FESTA|Celebração|🎉
 MUSICA|Arte dos sons|🎵
-CINEMA|Sala de filmes|🎬
-CARTA|Vai no envelope|✉️
-OURO|Metal amarelo|🥇
-FERRO|Metal de ferramenta
-VIDRO|Material transparente
-PEDRA|Rocha pequena
-AREIA|Grãos da praia
-PAPEL|Folha de escrever
-TINTA|Dá cor
-LETRA|Parte da palavra
+CINEMA|Sétima arte|🎬
+CARTA|Correspondência|✉️
+OURO|Metal precioso|🥇
+FERRO|Metal resistente
+VIDRO|Material frágil
+PEDRA|Fragmento de rocha
+AREIA|Grãos minerais
+PAPEL|Folha de celulose
+TINTA|Pigmento líquido
+LETRA|Símbolo gráfico
 NOTA|Sinal musical
-TEMPO|Passa nas horas
-DIA|Tem 24 horas
-NOITE|Sem Sol
+TEMPO|Duração das coisas
+DIA|Período solar
+NOITE|Período lunar
 ANO|Doze meses
-MES|Janeiro, por ex.
-HORA|60 minutos
-VERAO|Estação quente
-INVERNO|Estação fria
-OUTONO|Caem as folhas|🍂
-REI|Governa um reino|👑
-RAINHA|Mulher do rei
-ANJO|Ser alado|👼
-FADA|Tem varinha|🧚
-ESCOLA|Onde se aprende|🏫
-ALUNO|Quem estuda
-LISBOA|Capital de Portugal
-PORTO|Cidade do Douro
-BRAGA|Cidade minhota
+MES|Divisão do ano
+HORA|Sessenta minutos
+VERAO|Estação quente|☀️
+INVERNO|Estação fria|❄️
+OUTONO|Estação das folhas|🍂
+REI|Monarca|👑
+RAINHA|Soberana|👸
+ANJO|Ser celestial|👼
+FADA|Ser mágico|🧚
+ESCOLA|Local de ensino|🏫
+ALUNO|Estudante
+LISBOA|Capital lusa
+PORTO|Cidade invicta
+BRAGA|Cidade dos arcebispos
 FARO|Capital algarvia
-TIGRE|Felino às riscas|🐯
+TIGRE|Felino asiático|🐯
 LEAO|Rei da selva|🦁
 MACACO|Primata|🐒
-COBRA|Réptil sem patas|🐍
-SAPO|Anfíbio saltador|🐸
-PEIXE|Vive na água|🐟
-BALEIA|Maior mamífero|🐋
-POLVO|Tem oito braços|🐙
-ABELHA|Faz mel|🐝
-AMOR|Sentimento|❤️
-PAZ|Sem guerra|☮️
-SONO|Descanso|😴
-RISO|Gargalhada|😂
-CORACAO|Bombeia sangue|❤️`.split('\n').map(x=>{const[w,t,e]=x.split('|');return{w,t,e}}),
-LV=[{n:'Fácil',C:7,R:9,max:6,pic:1,fr:.15,acc:.65,h:5},{n:'Médio',C:8,R:10,max:7,pic:.7,fr:.4,acc:.8,h:3},{n:'Difícil',C:8,R:10,max:7,pic:.3,fr:.7,acc:.9,h:2},{n:'Perito',C:8,R:10,max:7,pic:0,fr:1,acc:.97,h:1}],
-P_=x=>x.split('\n').map(l=>{const[w,t,e]=l.split('|');return{w,t,e}}),
-XW=P_(`AMIZADE|Valor entre amigos
-ESTADO|Nação soberana
+COBRA|Réptil ápode|🐍
+SAPO|Anfíbio|🐸
+PEIXE|Animal aquático|🐟
+BALEIA|Cetáceo gigante|🐋
+POLVO|Molusco de 8 braços|🐙
+ABELHA|Produz mel|🐝
+AMOR|Afeto profundo|❤️
+PAZ|Ausência de guerra|☮️
+SONO|Repouso|😴
+RISO|Gargalhada|😂|-iso
+CORACAO|Órgão vital|❤️
+AMIZADE|Laço fraterno
+ESTADO|Nação organizada
 GOVERNO|Poder executivo
-POVO|Conjunto de cidadãos
+POVO|População
 LEI|Norma jurídica
-JUIZ|Preside ao julgamento
+JUIZ|Magistrado
 PADEIRO|Faz pão
-MEDICO|Trata doentes
-ATOR|Representa em cena
-POETA|Escreve versos
-PINTOR|Artista de telas
-RADIO|Transmite emissões|📻
-COMBOIO|Anda sobre carris|🚆
-ESTRADA|Via de circulação
-CIDADE|Maior que a vila
-ALDEIA|Povoação pequena
-DOURO|Rio do Porto
-TEJO|Rio de Lisboa
-MINHO|Rio do norte
-ALGARVE|Região do sul
-MADEIRA|Ilha do Funchal
-ESPANHA|Vizinha de Portugal
-FRANCA|País de Paris
-ITALIA|País da bota
-BRASIL|País de Brasília
-CAMOES|Autor de Os Lusíadas
-PESSOA|Poeta dos heterónimos
-FADO|Canção de Amália
-FUTEBOL|Desporto de golos
-TENIS|Desporto de raquete|🎾
+MEDICO|Cuida da saúde
+ATOR|Intérprete teatral
+POETA|Autor de versos
+PINTOR|Artista plástico
+RADIO|Aparelho sonoro|📻|-adio
+COMBOIO|Transporte ferroviário|🚆
+ESTRADA|Via asfaltada
+CIDADE|Centro urbano
+ALDEIA|Pequena povoação
+DOURO|Rio vinhateiro
+TEJO|Maior rio ibérico
+MINHO|Rio fronteiriço
+ALGARVE|Sul de Portugal
+MADEIRA|Pérola do Atlântico
+ESPANHA|País ibérico
+FRANCA|País europeu
+ITALIA|Península europeia
+BRASIL|País sul-americano|🇧🇷
+CAMOES|Poeta épico
+PESSOA|Autor de Mensagem
+FADO|Canção de Lisboa
+FUTEBOL|Desporto rei|⚽
+TENIS|Jogo de raquete|🎾
 NATACAO|Desporto aquático
-CORRIDA|Prova de velocidade
+CORRIDA|Prova atlética
 CAMPEAO|Vencedor
-TROFEU|Prémio desportivo|🏆
-CLIMA|Condições do tempo
-TROVAO|Segue o relâmpago
-COZINHA|Onde se cozinha
-JANELA|Deixa entrar luz
-PORTA|Entrada de casa|🚪
-TELHADO|Cobre a casa
-PAREDE|Divide a sala
+TROFEU|Taça de vencedor|🏆
+CLIMA|Meteorologia
+TROVAO|Estrondo elétrico
+COZINHA|Divisão da casa
+JANELA|Abertura na parede
+PORTA|Acesso principal|🚪
+TELHADO|Cobertura da casa
+PAREDE|Divisória vertical
 PIANO|Instrumento de teclas|🎹
-VIOLINO|Instrumento de arco|🎻
-TAMBOR|Instrumento de percussão|🥁
-TEATRO|Palco e plateia|🎭
-POEMA|Texto em versos
-ROMANCE|Livro de ficção
-JORNAL|Diário de notícias|📰
-REVISTA|Publicação periódica
-BRUXA|Voa de vassoura|🧙
-GELO|Água congelada|🧊
-SAL|Tempera o mar
-ACUCAR|Adoça o café
-MEL|Doce das abelhas|🍯
-VINHO|Bebida da uva|🍷
-CERVEJA|Bebida de cevada|🍺
-PIZZA|Prato italiano|🍕
-PRATO|Onde se serve|🍽️
-FACA|Corta à mesa
-GARFO|Talher de dentes
-COLHER|Talher da sopa|🥄
-SOPA|Prato quente de colher|🍲`),
-FW=P_(`UM|Artigo indefinido
+VIOLINO|Instrumento de cordas|🎻
+TAMBOR|Percussão|🥁
+TEATRO|Arte cénica|🎭
+POEMA|Composição poética
+ROMANCE|Obra literária
+JORNAL|Imprensa diária|📰
+REVISTA|Publicação ilustrada
+BRUXA|Feiticeira|🧙
+GELO|Água sólida|🧊
+SAL|Cloreto de sódio
+ACUCAR|Adoçante natural
+MEL|Néctar das abelhas|🍯
+VINHO|Sumo fermentado|🍷
+CERVEJA|Bebida de lúpulo|🍺
+PIZZA|Especialidade italiana|🍕
+PRATO|Louça de mesa|🍽️
+FACA|Utensílio cortante
+GARFO|Talher de pontas
+COLHER|Talher côncavo|🥄
+SOPA|Caldo nutritivo|🍲
+IMÃ|Atrai metais|🧲|-mã
+TRATOR|Máquina agrícola|🚜
+ATOMO|Partícula química|⚛️
+LOTUS|Flor aquática|🪷|-tus
+COROA|Insígnia real|👑
+ESPADA|Arma branca|⚔️
+ESCUDO|Arma defensiva|🛡️
+MAPA|Representação geográfica|🗺️
+BUSSOLA|Indica o norte|🧭
+RELOGIO|Mede o tempo|⌚
+OCULOS|Lentes corretivas|👓
+CAMARA|Máquina fotográfica|📷
+TELEFONE|Aparelho de chamadas|☎️
+COMPUTADOR|Máquina digital|💻
+FOGUETE|Nave espacial|🚀
+PLANETA|Corpo celeste|🪐
+VULCAO|Montanha de lava|🌋
+DESERTO|Região árida|🏜️
+FLORESTA|Mata densa|🌲
+CACTO|Planta do deserto|🌵
+PALMEIRA|Árvore tropical|🌴
+COGUMELO|Fungo comestível|🍄
+MORANGO|Fruto silvestre|🍓
+CEREJA|Fruto vermelho|🍒
+MELANCIA|Fruto grande|🍉
+ANANAS|Fruto com coroa|🍍
+ABACATE|Fruto verde|🥑
+BROCOLOS|Vegetal verde|🥦
+ALHO|Bolbo aromático|🧄
+CEBOLA|Hortaliça em camadas|🧅
+BATATA|Tubérculo|🥔
+QUEIJO|Derivado lácteo|🧀
+OVO|Alimento proteico|🥚
+MEL|Doce natural|🍯
+BIFE|Fatia de carne|🥩
+FRANGO|Ave doméstica|🍗
+CAMARAO|Crustáceo|🦐
+TUBARAO|Predador marinho|🦈
+GOLFINHO|Mamífero marinho|🐬
+TARTARUGA|Réptil com carapaça|🐢
+CROCODILO|Réptil fluvial|🐊
+ELEFANTE|Paquiderme|🐘
+GIRAFA|Animal de pescoço longo|🦒
+ZEBRA|Equídeo riscado|🦓
+CAMELO|Animal com bossas|🐫
+CANGURU|Marsupial|🦘
+PINGUIM|Ave antártica|🐧
+CORUJA|Ave noturna|🦉
+AGUIA|Ave de rapina|🦅
+CISNE|Ave elegante|🦢
+FLAMINGO|Ave cor-de-rosa|🦩
+BORBOLETA|Inseto alado|🦋
+FORMIGA|Inseto trabalhador|🐜
+ARANHA|Aracnídeo|🕷️
+ESCORPIAO|Aracnídeo venenoso|🦂
+CARACOL|Molusco lento|🐌
+UM|Artigo indefinido
 UMA|Artigo indefinido
 OS|Artigo definido
 AS|Artigo definido
-DE|Preposição
-EM|Preposição
-AO|A + o
-DO|De + o
-DA|De + a
-NO|Em + o
-NA|Em + a
+DE|Preposição simples
+EM|Preposição de lugar
+AO|Contração a + o
+DO|Contração de + o
+DA|Contração de + a
+NO|Contração em + o
+NA|Contração em + a
 POR|Preposição
-COM|Preposição
-SEM|Preposição
-OU|Conjunção
-MAS|Conjunção
-SE|Conjunção
-QUE|Conjunção
-POIS|Conjunção
-LOGO|Conjunção
-EU|Pronome pessoal
-TU|Pronome pessoal
-ELE|Pronome pessoal
-ELA|Pronome pessoal
-NOS|Pronome pessoal
+COM|Preposição de companhia
+SEM|Preposição de ausência
+OU|Conjunção alternativa
+MAS|Conjunção adversativa
+SE|Conjunção condicional
+QUE|Conjunção integrante
+POIS|Conjunção explicativa
+LOGO|Conjunção conclusiva
+EU|1.ª pessoa singular
+TU|2.ª pessoa singular
+ELE|3.ª pessoa singular
+ELA|Pronome feminino
+NOS|1.ª pessoa plural
 ALI|Advérbio de lugar
-AQUI|Advérbio de lugar
-JA|Advérbio de tempo
+AQUI|Neste lugar
+JA|Neste momento
 NAO|Advérbio de negação
 SIM|Advérbio de afirmação
-MAIS|Advérbio de quantidade
-MUITO|Advérbio de quantidade
-BEM|Contrário de mal
-MAL|Contrário de bem
-IR|Verbo de movimento
-SER|Verbo de existência
-TER|Verbo de posse
-VER|Olhar
+MAIS|Em maior quantidade
+MUITO|Em grande grau
+BEM|De modo correto
+MAL|De modo incorreto
+IR|Deslocar-se
+SER|Verbo de estado
+TER|Possuir
+VER|Enxergar
 DAR|Oferecer
-LER|Percorrer um texto
-AR|Atmosfera
-MI|Nota musical
-FA|Nota musical
-OLE|Grito de toureiro
-EIS|Eis aqui
-TAL|Igual
-SUA|Pronome possessivo`),
-FR=BK.concat(XW).flatMap(b=>{const w=b.w,o=[];if(w.length>4)for(let i=1;i<w.length-2;i++)o.push({w:w.slice(i,i+2),t:w.slice(0,i)+'_'+w.slice(i+2),f:1});if(w.length>5)for(let i=1;i<w.length-3;i++)o.push({w:w.slice(i,i+3),t:w.slice(0,i)+'_'+w.slice(i+3),f:1});return o}),
-ALL=BK.concat(XW,FW,FR),
-rng=s=>()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296},
-isL=(g,y,z)=>typeof(g[y]||[])[z]==='string',
-pic=b=>b.e&&((b.w.charCodeAt(0)*7+b.w.length*13+LN*5)%10)<L.pic*10,
-tx=b=>pic(b)?`<span class="pc">${b.e}</span>`:b.t,
-ck=q=>!q||(!q.a&&!q.d)?'<div class="c k"></div>':q.a&&q.d?`<div class="c k s"><div>${tx(q.a)}<i class="r">▸</i></div><div>${tx(q.d)}<i class="b">▾</i></div></div>`:`<div class="c k">${tx(q.a||q.d)}<i class="${q.a?'r':'b'}">${q.a?'▸':'▾'}</i></div>`;
-let sol,clue,val,own,pend,cw,W,rack,sel,me,op,hints,done,busy,hc;
-let prog={},R,C,L,DI,LN,EX,U,DS;try{prog=JSON.parse(localStorage.getItem('pc')||'{}')}catch(e){}
-function fit(g,w,r,c,d){
- EX=[];const dr=d?1:0,dc=1-dr,e=g[r-dr]&&g[r-dr][c-dc];
- if(r<1||c<1||(e&&(typeof e!=='object'||e[d?'d':'a'])))return -1;
- const er=r+dr*w.length,ec=c+dc*w.length;if(er>R||ec>C)return -1;
- let x=0;
- for(let i=0;i<w.length;i++){const y=r+dr*i,z=c+dc*i,v=g[y][z];
-  if(v){if(v!==w[i])return -1;x++}else{const a=dc,k=dr;let s=w[i],y0=y,z0=z,y1=y,z1=z;
-   while(isL(g,y0-a,z0-k)){y0-=a;z0-=k;s=g[y0][z0]+s}
-   while(isL(g,y1+a,z1+k)){y1+=a;z1+=k;s+=g[y1][z1]}
-   if(s.length>1){const q=g[y0-a]&&g[y0-a][z0-k];
-    if(!DS[s]||U.has(s)||EX.some(t=>t.b.w===s)||y0-a<0||z0-k<0||(q&&(typeof q!=='object'||q[d?'a':'d'])))return -1;
-    EX.push({b:DS[s],r:y0,c:z0,d:1-d})}}}
- return x===w.length||(er<R&&ec<C&&isL(g,er,ec))?-1:x+EX.length}
-function plc(g,b,r,c,d,ws){
- const dr=d?1:0,dc=1-dr,n=b.w.length;
- for(let i=0;i<n;i++)g[r+dr*i][c+dc*i]=b.w[i];
- const q=g[r-dr][c-dc]=g[r-dr][c-dc]||{};q[d?'d':'a']=b;
- const er=r+dr*n,ec=c+dc*n;if(er<R&&ec<C&&!g[er][ec])g[er][ec]={};
- ws.push({r,c,d,n})}
-function gen(l,seed){
- DS={};ALL.forEach(b=>{if(b.w.length<=l.max&&!DS[b.w])DS[b.w]=b});const rn=rng(seed),pool=ALL.filter(b=>b.w.length<=l.max&&(!b.f||rn()<l.fr));let best;
- for(let at=0;at<24;at++){
-  const g=Array.from({length:R},()=>Array(C).fill(0)),ws=[],used=U=new Set,q=pool.slice().sort(()=>rn()-.5);
-  const f=q.find(b=>b.w.length>=C-2)||q[0];plc(g,f,1,1,0,ws);used.add(f.w);
-  const ix=()=>{const m={};for(let y=1;y<R;y++)for(let z=1;z<C;z++)if(isL(g,y,z))(m[g[y][z]]=m[g[y][z]]||[]).push([y,z]);return m};
-  let m=ix();
-  for(let p=0;p<6;p++)for(const b of q){if(used.has(b.w)||(p<2&&b.w.length<4))continue;let k=[],bx=0;
-   for(let i=0;i<b.w.length;i++)for(const[y,z]of m[b.w[i]]||[])for(let d=0;d<2;d++){
-    const r=y-d*i,c=z-(1-d)*i,x=fit(g,b.w,r,c,d);if(x>0&&x>=bx){if(x>bx)k=[];bx=x;k.push([r,c,d])}}
-   if(k.length){const[r,c,d]=k[rn()*k.length|0];fit(g,b.w,r,c,d);plc(g,b,r,c,d,ws);used.add(b.w);EX.forEach(e=>{plc(g,e.b,e.r,e.c,e.d,ws);used.add(e.b.w)});m=ix()}}
-  const n=g.flat().filter(v=>typeof v==='string').length;
-  if(!best||n>best.n)best={g,ws,n}}
- return best}
-function start(di,n){
- DI=di;LN=n;L=LV[di];R=L.R;C=L.C;
- const g=gen(L,di*1000+n+7),st=document.documentElement.style;
- st.setProperty('--C',C);st.setProperty('--cs',`min(calc((100vw - 24px)/${C}),76px,calc((100dvh - 380px)/${R}))`);
- sol=M();clue=M();val=M();own=M();pend=M();cw=M(()=>[]);W=[];
- for(let r=0;r<R;r++)for(let c=0;c<C;c++){const v=g.g[r][c];if(typeof v==='string')sol[r][c]=v;else clue[r][c]=v||{}}
- g.ws.forEach(({r,c,d,n})=>{const A=[];for(let i=0;i<n;i++)A.push(d?[r+i,c]:[r,c+i]);W.push(A)});
- W.forEach((w,i)=>w.forEach(([y,x])=>cw[y][x].push(i)));
- me=op=0;hints=L.h;done=new Set;busy=0;sel=null;hc=null;rack=[null,null,null,null,null];
- $('tt').textContent=L.n+' · Nível '+n;$('ov').hidden=true;msg('Arrasta ou toca numa letra e depois na casa.');deal();draw()}
-function menu(){
- document.body.className='m';
- $('mn').innerHTML='<h1>Palavras Cruzadas</h1>'+LV.map((l,i)=>`<section><h2>${l.n} <small>${C_(l)}</small></h2><div class="lv">${Array.from({length:10},(_,n)=>{const w=prog[i+'-'+(n+1)];return`<button data-d="${i}" data-n="${n+1}"${w?' class="w"':''}>${w?'★':n+1}</button>`}).join('')}</div></section>`).join('')}
-const C_=l=>(l.C-1)+'×'+(l.R-1)+' · '+l.h+' dicas';
+LER|Decifrar escrita
+AR|Atmosfera terrestre
+MI|3.ª nota musical
+FA|4.ª nota musical
+OLE|Grito taurino
+EIS|Aqui está
+TAL|Semelhante
+SUA|Pronome possessivo
+ANO|365 dias
+EIXO|Linha central
+ECO|Som refletido
+ELO|Argola de corrente
+ERA|Época histórica
+FIM|Término
+GAS|Estado fluido
+GEL|Substância viscosa
+GIZ|Escreve no quadro
+GOL|Ponto no futebol
+LAR|Residência
+LUZ|Claridade
+MAE|Progenitora
+PAI|Progenitor
+PAU|Pedaço de madeira
+PE|Extremidade inferior
+PO|Poeira fina
+RIM|Órgão renal
+REI|Soberano
+SAL|Tempero marinho
+SOL|Estrela central
+SOM|Onda acústica
+SUL|Ponto cardeal
+TEU|Pronome possessivo
+TIA|Irmã do pai
+TIO|Irmão da mãe
+UVA|Bago da videira
+VEZ|Ocasião
+VOZ|Som humano
+`;
 
+const BASE_DICT = RAW_WORDS.trim().split('\n').map(line => {
+  const [w, t, e, aff] = line.split('|');
+  return { w: w.trim(), t: t.trim(), e: e ? e.trim() : '', aff: aff ? aff.trim() : '' };
+});
 
-function deal(){
- const n={};for(let r=0;r<R;r++)for(let c=0;c<C;c++)if(sol[r][c]&&!val[r][c])n[sol[r][c]]=(n[sol[r][c]]||0)+1;
- rack=rack.map(l=>l&&n[l]>0?(n[l]--,l):null);
- const pool=[];for(const l in n)for(let i=0;i<n[l];i++)pool.push(l);shuf(pool);
- rack=rack.map(l=>l||pool.pop()||null)}
+// Gera fragmentos estilo Crossword Master (ex: "_TADO", "C_RRO")
+const FRAG_DICT = BASE_DICT.flatMap(b => {
+  const w = b.w, out = [];
+  if (w.length >= 5) {
+    for (let i = 1; i <= w.length - 3; i++) {
+      out.push({ w: w.slice(i, i + 2), t: w.slice(0, i) + '_' + w.slice(i + 2), f: 1 });
+    }
+  }
+  if (w.length >= 6) {
+    for (let i = 1; i <= w.length - 4; i++) {
+      out.push({ w: w.slice(i, i + 3), t: w.slice(0, i) + '_' + w.slice(i + 3), f: 1 });
+    }
+  }
+  return out;
+});
 
-const msg=t=>$('ms').textContent=t,
-full=()=>sol.every((row,r)=>row.every((s,c)=>!s||val[r][c])),
-hasPend=()=>pend.some(r=>r.some(x=>x)),
-blocked=(r,c)=>cw[r][c].some(w=>W[w].some(([y,x])=>own[y][x]==='me'||pend[y][x]));
+const ALL_WORDS = BASE_DICT.concat(FRAG_DICT);
 
-function bonus(){let b=0;W.forEach((w,i)=>{if(!done.has(i)&&w.every(([y,x])=>val[y][x])){done.add(i);b+=w.length}});return b}
+// PRNG determinístico para níveis únicos
+const rng = s => () => {
+  s |= 0; s = s + 0x6D2B79F5 | 0;
+  let t = Math.imul(s ^ s >>> 15, 1 | s);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+  return ((t ^ t >>> 14) >>> 0) / 4294967296;
+};
 
-function draw(){
- let h='';
- for(let r=0;r<R;r++)for(let c=0;c<C;c++){
-  const s=sol[r][c],q=clue[r][c];
-  if(!s)h+=ck(q);
-  else{const v=val[r][c],p=pend[r][c];
-   h+=`<div class="c ${v?own[r][c]:p?'pd':blocked(r,c)?'res':''}${hc&&hc[0]===r&&hc[1]===c?' hint':''}" data-r="${r}" data-c="${c}">${v||(p?p.l:'')}</div>`}}
- $('g').innerHTML=h;
- $('rk').innerHTML=rack.map((l,i)=>l?`<div class="t${sel===i?' sel':''}" data-s="${i}">${l}</div>`:'<div class="t e"></div>').join('');
- $('a').textContent=me;$('b').textContent=op;$('hn').textContent=hints;
- $('go').textContent=hasPend()?'Enviar':'Passar';$('go').disabled=!!busy;$('ht').disabled=!!busy||!hints}
+const isL = (g, y, z) => typeof (g[y] || [])[z] === 'string';
 
-function put(s,r,c){
- if(busy||rack[s]==null||!sol[r][c]||val[r][c]||pend[r][c])return;
- pend[r][c]={l:rack[s],s};rack[s]=null;sel=null;draw()}
+function renderClueContent(b, lvl) {
+  // Nos níveis mais altos, menos emojis e mais pistas textuais/fragmentos
+  const picChance = Math.max(0.18, 0.55 - (lvl * 0.0035));
+  const usePic = b.e && (((b.w.charCodeAt(0) * 11 + b.w.length * 17 + lvl * 7) % 100) < picChance * 100);
+  if (usePic) {
+    return `<div class="pc-wrap">${b.aff ? `<span class="pc-aff">${b.aff}</span>` : ''}<span class="pc">${b.e}</span></div>`;
+  }
+  return b.t;
+}
 
-$('g').addEventListener('click',e=>{
- const c=e.target.closest('.c[data-r]');if(!c||busy)return;
- const r=+c.dataset.r,k=+c.dataset.c,p=pend[r][k];
- if(p){rack[p.s]=p.l;pend[r][k]=null;draw()}else if(sel!=null)put(sel,r,k)});
+function ck(q, r, c, lvl) {
+  if (r === 0 && c === 0) return '<div class="c k corner"></div>';
+  if (!q || (!q.a && !q.d)) return '<div class="c k"></div>';
+  if (q.a && q.d) {
+    return `<div class="c k s"><div>${renderClueContent(q.a, lvl)}<i class="r">▸</i></div><div>${renderClueContent(q.d, lvl)}<i class="b">▾</i></div></div>`;
+  }
+  return `<div class="c k">${renderClueContent(q.a || q.d, lvl)}<i class="${q.a ? 'r' : 'b'}">${q.a ? '▸' : '▾'}</i></div>`;
+}
 
-$('rk').addEventListener('pointerdown',e=>{
- const t=e.target.closest('.t[data-s]');if(!t||busy)return;
- const s=+t.dataset.s,x0=e.clientX,y0=e.clientY;let g=null;
- const mv=ev=>{if(!g&&Math.hypot(ev.clientX-x0,ev.clientY-y0)>8){g=t.cloneNode(true);g.className='t gh';document.body.append(g)}
-  if(g){g.style.left=ev.clientX+'px';g.style.top=ev.clientY-40+'px'}},
- up=ev=>{removeEventListener('pointermove',mv);removeEventListener('pointerup',up);removeEventListener('pointercancel',up);
-  if(g){g.remove();const c=document.elementFromPoint(ev.clientX,ev.clientY-40);const q=c&&c.closest('.c[data-r]');if(q)put(s,+q.dataset.r,+q.dataset.c)}
-  else{sel=sel===s?null:s;draw()}};
- addEventListener('pointermove',mv);addEventListener('pointerup',up);addEventListener('pointercancel',up)});
+let EX, U, DS;
 
-$('sh').onclick=()=>{if(busy)return;shuf(rack);draw()};
+function fit(g, w, r, c, d) {
+  EX = [];
+  const dr = d ? 1 : 0, dc = 1 - dr;
+  const prev = g[r - dr] && g[r - dr][c - dc];
+  if (r < 1 || c < 1) return -1;
+  // A célula imediatamente anterior tem de poder guardar uma pista nessa direção
+  if (!prev || typeof prev !== 'object' || prev[d ? 'd' : 'a']) return -1;
 
-$('ht').onclick=()=>{
- if(busy||!hints)return;
- const ls=rack.filter(Boolean);if(!ls.length)return;
- for(const l of shuf(ls.slice())){const o=[];
-  for(let r=0;r<R;r++)for(let c=0;c<C;c++)if(sol[r][c]===l&&!val[r][c]&&!pend[r][c])o.push([r,c]);
-  if(o.length){hc=o[Math.random()*o.length|0];hints--;msg('A letra '+l+' encaixa na casa a piscar.');draw();setTimeout(()=>{hc=null;draw()},2000);return}}};
+  const er = r + dr * w.length, ec = c + dc * w.length;
+  if (er > R || ec > C) return -1;
 
-$('go').onclick=()=>{
- if(busy)return;busy=1;let n=0,bad=0;
- for(let r=0;r<R;r++)for(let c=0;c<C;c++){const p=pend[r][c];
-  if(p){if(p.l===sol[r][c]){val[r][c]=p.l;own[r][c]='me';n++}else{rack[p.s]=p.l;bad++}pend[r][c]=null}}
- const b=bonus();me+=n+b;
- msg((n?'+'+n+(b?' e palavra completa +'+b:''):'Passaste a vez')+(bad?' · '+bad+' fora do sítio':''));
- sel=null;draw();
- if(full())return end();
- setTimeout(aiTurn,1000)};
+  // A célula logo após a palavra não pode ser uma letra solta (tem de ser borda ou célula de pista)
+  if (er < R && ec < C) {
+    const after = g[er][ec];
+    if (typeof after === 'string') return -1;
+  }
 
-function aiTurn(){
- const c=[];for(let r=0;r<R;r++)for(let k=0;k<C;k++)if(sol[r][k]&&!val[r][k]&&!blocked(r,k))c.push([r,k]);
- let n=0;shuf(c).slice(0,5).forEach(([r,k])=>{if(Math.random()<L.acc){val[r][k]=sol[r][k];own[r][k]='ai';n++}});
- const b=bonus();op+=n+b;
- msg(n?'Oponente: +'+(n+b)+(b?' (palavra completa)':''):'O oponente passou a vez');
- if(full()){draw();return end()}
- busy=0;deal();draw()}
+  let cross = 0;
+  for (let i = 0; i < w.length; i++) {
+    const y = r + dr * i, z = c + dc * i, v = g[y][z];
+    if (v) {
+      if (typeof v !== 'string' || v !== w[i]) return -1;
+      cross++;
+    } else {
+      // Verifica palavras perpendiculares formadas acidentalmente
+      const a = dc, k = dr;
+      let s = w[i], y0 = y, z0 = z, y1 = y, z1 = z;
+      while (isL(g, y0 - a, z0 - k)) { y0 -= a; z0 -= k; s = g[y0][z0] + s; }
+      while (isL(g, y1 + a, z1 + k)) { y1 += a; z1 += k; s += g[y1][z1]; }
+      if (s.length > 1) {
+        const q = g[y0 - a] && g[y0 - a][z0 - k];
+        if (!DS[s] || U.has(s) || EX.some(t => t.b.w === s)) return -1;
+        if (y0 - a < 0 || z0 - k < 0 || !q || typeof q !== 'object' || q[d ? 'a' : 'd']) return -1;
+        EX.push({ b: DS[s], r: y0, c: z0, d: 1 - d });
+      }
+    }
+  }
+  if (cross === w.length) return -1;
+  return cross + EX.length;
+}
 
-function end(){
- busy=1;draw();if(me>op){prog[DI+'-'+LN]=1;try{localStorage.setItem('pc',JSON.stringify(prog))}catch(e){}}
- setTimeout(()=>{$('ot').textContent=(me>op?'Ganhaste! 🎉':me<op?'Perdeste.':'Empate!')+'\n'+me+' – '+op;$('ov').hidden=false},700)}
+function plc(g, b, r, c, d, ws) {
+  const dr = d ? 1 : 0, dc = 1 - dr, n = b.w.length;
+  for (let i = 0; i < n; i++) g[r + dr * i][c + dc * i] = b.w[i];
+  const q = g[r - dr][c - dc];
+  q[d ? 'd' : 'a'] = b;
+  const er = r + dr * n, ec = c + dc * n;
+  if (er < R && ec < C && !g[er][ec]) g[er][ec] = {};
+  ws.push({ r, c, d, n });
+}
 
-$('nw').onclick=menu;$('bk').onclick=menu;
-$('mn').onclick=e=>{const b=e.target.closest('button[data-d]');if(b){document.body.className='';start(+b.dataset.d,+b.dataset.n)}};
-menu();
-</script></body></html>
+// Gera tabuleiros densos sem casas mortas no interior
+function generateBoard(lvl) {
+  DS = {};
+  ALL_WORDS.forEach(b => { if (b.w.length <= 7 && !DS[b.w]) DS[b.w] = b; });
+  const rn = rng(lvl * 7919 + 104729);
+  const fragRatio = Math.min(0.65, 0.22 + lvl * 0.0045);
+  const pool = ALL_WORDS.filter(b => b.w.length <= 7 && (!b.f || rn() < fragRatio));
+
+  let best = null;
+
+  for (let attempt = 0; attempt < 45; attempt++) {
+    const g = Array.from({ length: R }, () => Array(C).fill(0));
+    // Bordas superior e esquerda são sempre células de pista
+    for (let c = 0; c < C; c++) g[0][c] = {};
+    for (let r = 0; r < R; r++) g[r][0] = {};
+
+    const ws = [], used = U = new Set();
+    const q = pool.slice().sort(() => rn() - 0.5);
+
+    // Primeira palavra na linha 1
+    const first = q.find(b => b.w.length >= 6) || q[0];
+    plc(g, first, 1, 1, 0, ws);
+    used.add(first.w);
+
+    const indexLetters = () => {
+      const m = {};
+      for (let y = 1; y < R; y++) {
+        for (let z = 1; z < C; z++) {
+          if (isL(g, y, z)) (m[g[y][z]] = m[g[y][z]] || []).push([y, z]);
+        }
+      }
+      return m;
+    };
+
+    let m = indexLetters();
+
+    // Preenche cruzamentos
+    for (let pass = 0; pass < 8; pass++) {
+      for (const b of q) {
+        if (used.has(b.w) || (pass < 2 && b.w.length < 4)) continue;
+        let candidates = [], bestScore = 0;
+        for (let i = 0; i < b.w.length; i++) {
+          for (const [y, z] of m[b.w[i]] || []) {
+            for (let d = 0; d < 2; d++) {
+              const r = y - d * i, c = z - (1 - d) * i;
+              const sc = fit(g, b.w, r, c, d);
+              if (sc > 0 && sc >= bestScore) {
+                if (sc > bestScore) candidates = [];
+                bestScore = sc;
+                candidates.push([r, c, d]);
+              }
+            }
+          }
+        }
+        if (candidates.length) {
+          const [r, c, d] = candidates[rn() * candidates.length | 0];
+          fit(g, b.w, r, c, d);
+          plc(g, b, r, c, d, ws);
+          used.add(b.w);
+          EX.forEach(e => { plc(g, e.b, e.r, e.c, e.d, ws); used.add(e.b.w); });
+          m = indexLetters();
+        }
+      }
+    }
+
+    // Garante que NÃO existem casas vazias (0) nem células de pista sem setas (exceto [0,0])
+    let emptyCells = 0, deadClues = 0;
+    for (let r = 0; r < R; r++) {
+      for (let c = 0; c < C; c++) {
+        if (r === 0 && c === 0) continue;
+        const v = g[r][c];
+        if (v === 0) emptyCells++;
+        else if (typeof v === 'object' && !v.a && !v.d) deadClues++;
+      }
+    }
+
+    // Tenta tapar buracos isolados de 2-3 letras
+    if (emptyCells > 0) {
+      for (let r = 1; r < R; r++) {
+        for (let c = 1; c < C; c++) {
+          if (g[r][c] === 0) {
+            for (let d = 0; d < 2; d++) {
+              for (const b of q) {
+                if (used.has(b.w)) continue;
+                for (let off = 0; off < b.w.length; off++) {
+                  const sr = r - (d ? off : 0), sc = c - (d ? 0 : off);
+                  if (fit(g, b.w, sr, sc, d) >= 0) {
+                    fit(g, b.w, sr, sc, d);
+                    plc(g, b, sr, sc, d, ws);
+                    used.add(b.w);
+                    EX.forEach(e => { plc(g, e.b, e.r, e.c, e.d, ws); used.add(e.b.w); });
+                    break;
+                  }
+                }
+                if (g[r][c] !== 0) break;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    emptyCells = 0; deadClues = 0;
+    let letterCount = 0;
+    for (let r = 0; r < R; r++) {
+      for (let c = 0; c < C; c++) {
+        if (r === 0 && c === 0) continue;
+        const v = g[r][c];
+        if (v === 0) emptyCells++;
+        else if (typeof v === 'object' && !v.a && !v.d) deadClues++;
+        else if (typeof v === 'string') letterCount++;
+      }
+    }
+
+    const penalty = emptyCells * 100 + deadClues * 40;
+    const score = letterCount - penalty;
+    if (!best || score > best.score) best = { g, ws, score, emptyCells, deadClues };
+    if (emptyCells === 0 && deadClues === 0) break;
+  }
+
+  // Limpeza final: converte eventuais 0 residuais em células de pista válidas ou palavras curtas
+  for (let r = 0; r < R; r++) {
+    for (let c = 0; c < C; c++) {
+      if (r === 0 && c === 0) continue;
+      if (best.g[r][c] === 0) best.g[r][c] = {};
+      if (typeof best.g[r][c] === 'object' && !best.g[r][c].a && !best.g[r][c].d) {
+        // Atribui uma definição visual fallback se sobrar alguma borda sem palavra
+        const fb = BASE_DICT[(r * 7 + c * 13 + lvl) % 120];
+        best.g[r][c].d = fb;
+      }
+    }
+  }
+
+  return best;
+}
+
+// Estado do jogo
+let LN = 1, sol, clue, val, own, pend, W, rack, sel, me, op, hints, done, busy, hc, badges = [], hlCells = new Set();
+
+const HEADLINES = [
+  'Resolva palavras cruzadas',
+  'Amplie seu vocabulário',
+  'Vença seus oponentes'
+];
+
+// Persistência (Progresso + Jogo Guardado)
+let saveData = { won: {}, active: null };
+try {
+  const raw = JSON.parse(localStorage.getItem('pc_master_v1') || 'null');
+  if (raw) saveData = { won: raw.won || {}, active: raw.active || null };
+} catch (e) {}
+
+function persist() {
+  try { localStorage.setItem('pc_master_v1', JSON.stringify(saveData)); } catch (e) {}
+}
+
+function saveActiveGame() {
+  if (!sol || full()) {
+    saveData.active = null;
+  } else {
+    // Devolve letras pendentes ao rack ao guardar para não haver estados inconsistentes
+    const cleanRack = rack.slice();
+    for (let r = 0; r < R; r++) {
+      for (let c = 0; c < C; c++) {
+        if (pend[r][c]) {
+          cleanRack[pend[r][c].s] = pend[r][c].l;
+        }
+      }
+    }
+    saveData.active = {
+      LN, sol, clue, val, own, W,
+      rack: cleanRack, me, op, hints,
+      done: Array.from(done)
+    };
+  }
+  persist();
+}
+
+function startLevel(n, resumeObj = null) {
+  document.body.className = '';
+  LN = n;
+  $('lvl-tag').textContent = 'Nível ' + LN;
+  $('headline').textContent = HEADLINES[(LN - 1) % HEADLINES.length];
+  $('ov').hidden = true;
+  badges = [];
+  hlCells = new Set();
+  sel = null;
+  hc = null;
+  busy = 0;
+
+  if (resumeObj) {
+    sol = resumeObj.sol;
+    clue = resumeObj.clue;
+    val = resumeObj.val;
+    own = resumeObj.own;
+    W = resumeObj.W;
+    rack = resumeObj.rack;
+    me = resumeObj.me;
+    op = resumeObj.op;
+    hints = resumeObj.hints;
+    done = new Set(resumeObj.done);
+    pend = M();
+    msg('Partida retomada. Boa sorte!');
+  } else {
+    const board = generateBoard(LN);
+    sol = M(); clue = M(); val = M(); own = M(); pend = M(); W = [];
+    for (let r = 0; r < R; r++) {
+      for (let c = 0; c < C; c++) {
+        const v = board.g[r][c];
+        if (typeof v === 'string') sol[r][c] = v;
+        else clue[r][c] = v || {};
+      }
+    }
+    board.ws.forEach(({ r, c, d, n }) => {
+      const arr = [];
+      for (let i = 0; i < n; i++) arr.push(d ? [r + i, c] : [r, c + i]);
+      W.push(arr);
+    });
+    me = 0; op = 0;
+    hints = 3;
+    done = new Set();
+    rack = [null, null, null, null, null];
+    deal();
+    msg('Arrasta as letras para o tabuleiro e carrega em Enviar.');
+    saveActiveGame();
+  }
+  draw();
+}
+
+function showMenu() {
+  if (sol && !full() && !busy) saveActiveGame();
+  document.body.className = 'm';
+  const wonCount = Object.keys(saveData.won).length;
+  let nextLvl = 1;
+  for (let i = 1; i <= TOTAL_LEVELS; i++) {
+    if (!saveData.won[i]) { nextLvl = i; break; }
+  }
+
+  let html = `
+    <div class="m-head">
+      <h1>Palavras Cruzadas</h1>
+      <p>Desafia o oponente em tabuleiros escandinavos</p>
+    </div>
+    <div class="stats-card">
+      <div><b>${wonCount}/${TOTAL_LEVELS}</b><span>Níveis Vencidos</span></div>
+      <div><b>Nível ${nextLvl}</b><span>Próximo Desafio</span></div>
+    </div>
+  `;
+
+  if (saveData.active) {
+    const a = saveData.active;
+    html += `
+      <button id="resume-btn">
+        <div>
+          <strong>Continuar Nível ${a.LN}</strong>
+          <small>Pontuação atual: Você ${a.me} – ${a.op} Oponente</small>
+        </div>
+        <span class="arr">▶</span>
+      </button>
+    `;
+  }
+
+  html += `<div class="lv-grid">`;
+  for (let i = 1; i <= TOTAL_LEVELS; i++) {
+    const isWon = !!saveData.won[i];
+    const isCurr = i === nextLvl;
+    html += `<button class="lv-btn${isWon ? ' won' : ''}${isCurr ? ' curr' : ''}" data-n="${i}">
+      ${i}
+      ${isWon ? '<small>★</small>' : ''}
+    </button>`;
+  }
+  html += `</div>`;
+
+  $('mn').innerHTML = html;
+  if ($('resume-btn')) {
+    $('resume-btn').onclick = () => startLevel(saveData.active.LN, saveData.active);
+  }
+}
+
+function deal() {
+  const needed = {};
+  for (let r = 0; r < R; r++) {
+    for (let c = 0; c < C; c++) {
+      if (sol[r][c] && !val[r][c]) needed[sol[r][c]] = (needed[sol[r][c]] || 0) + 1;
+    }
+  }
+  rack = rack.map(l => l && needed[l] > 0 ? (needed[l]--, l) : null);
+  const pool = [];
+  for (const l in needed) {
+    for (let i = 0; i < needed[l]; i++) pool.push(l);
+  }
+  shuf(pool);
+  rack = rack.map(l => l || pool.pop() || null);
+}
+
+const msg = t => $('ms').textContent = t;
+const full = () => sol.every((row, r) => row.every((s, c) => !s || val[r][c]));
+const hasPend = () => pend.some(r => r.some(x => x));
+
+function checkCompletedWords() {
+  let pts = 0;
+  badges = [];
+  hlCells = new Set();
+  W.forEach((w, i) => {
+    if (!done.has(i) && w.every(([y, x]) => val[y][x])) {
+      done.add(i);
+      pts += w.length;
+      w.forEach(([y, x]) => hlCells.add(y + ',' + x));
+      const last = w[w.length - 1];
+      badges.push({ r: last[0], c: last[1], pts: '+' + w.length });
+    }
+  });
+  if (badges.length) {
+    setTimeout(() => { badges = []; hlCells = new Set(); draw(); }, 1800);
+  }
+  return pts;
+}
+
+function draw() {
+  let h = '';
+  for (let r = 0; r < R; r++) {
+    for (let c = 0; c < C; c++) {
+      const s = sol[r][c], q = clue[r][c];
+      if (!s) {
+        h += ck(q, r, c, LN);
+      } else {
+        const v = val[r][c], p = pend[r][c];
+        const isHl = hlCells.has(r + ',' + c);
+        const isHint = hc && hc[0] === r && hc[1] === c;
+        const isSel = p && sel && sel.type === 'board' && sel.r === r && sel.c === c;
+        const badge = badges.find(b => b.r === r && b.c === c);
+
+        let cls = 'c';
+        if (v) cls += ' ' + own[r][c];
+        else if (p) cls += ' pd' + (isSel ? ' sel' : '');
+        if (isHl) cls += ' hl-word';
+        if (isHint) cls += ' hint';
+
+        h += `<div class="${cls}" data-r="${r}" data-c="${c}">
+          ${v || (p ? p.l : '')}
+          ${badge ? `<span class="badge">${badge.pts}</span>` : ''}
+        </div>`;
+      }
+    }
+  }
+  $('g').innerHTML = h;
+
+  $('rk').innerHTML = rack.map((l, i) => {
+    const isSel = sel && sel.type === 'rack' && sel.s === i;
+    return l
+      ? `<div class="t${isSel ? ' sel' : ''}" data-s="${i}">${l}</div>`
+      : `<div class="t e" data-s="${i}"></div>`;
+  }).join('');
+
+  $('a').textContent = me;
+  $('b').textContent = op;
+  $('hn').textContent = hints;
+  $('go').textContent = hasPend() ? 'Enviar' : 'Passar';
+  $('go').disabled = !!busy;
+  $('ht').disabled = !!busy || !hints;
+}
+
+// Lógica unificada de movimento (Rack <-> Tabuleiro e Tabuleiro <-> Tabuleiro)
+function placeFromRack(s, r, c) {
+  if (busy || rack[s] == null || !sol[r][c] || val[r][c]) return;
+  if (pend[r][c]) {
+    // Troca a letra que estava na casa pela do rack
+    const old = pend[r][c];
+    pend[r][c] = { l: rack[s], s };
+    rack[s] = old.l;
+  } else {
+    pend[r][c] = { l: rack[s], s };
+    rack[s] = null;
+  }
+  sel = null;
+  draw();
+}
+
+function moveBoardTile(r1, c1, r2, c2) {
+  if (busy || (r1 === r2 && c1 === c2) || !pend[r1][c1] || !sol[r2][c2] || val[r2][c2]) return;
+  const moving = pend[r1][c1];
+  const target = pend[r2][c2];
+  pend[r2][c2] = moving;
+  pend[r1][c1] = target || null;
+  sel = null;
+  draw();
+}
+
+function returnToRack(r, c, targetSlot = null) {
+  const p = pend[r][c];
+  if (!p) return;
+  if (targetSlot != null && rack[targetSlot] == null) {
+    rack[targetSlot] = p.l;
+  } else if (rack[p.s] == null) {
+    rack[p.s] = p.l;
+  } else {
+    const free = rack.indexOf(null);
+    if (free !== -1) rack[free] = p.l;
+  }
+  pend[r][c] = null;
+  sel = null;
+  draw();
+}
+
+// Drag & Drop + Tap no Rack
+$('rk').addEventListener('pointerdown', e => {
+  const t = e.target.closest('.t[data-s]');
+  if (!t || busy) return;
+  const s = +t.dataset.s;
+  if (!rack[s]) {
+    if (sel && sel.type === 'board') returnToRack(sel.r, sel.c, s);
+    return;
+  }
+
+  const x0 = e.clientX, y0 = e.clientY;
+  let ghost = null;
+
+  const mv = ev => {
+    if (!ghost && Math.hypot(ev.clientX - x0, ev.clientY - y0) > 6) {
+      ghost = t.cloneNode(true);
+      ghost.className = 't gh';
+      document.body.append(ghost);
+    }
+    if (ghost) {
+      ghost.style.left = ev.clientX + 'px';
+      ghost.style.top = (ev.clientY - 36) + 'px';
+    }
+  };
+
+  const up = ev => {
+    removeEventListener('pointermove', mv);
+    removeEventListener('pointerup', up);
+    removeEventListener('pointercancel', up);
+    if (ghost) {
+      ghost.remove();
+      const el = document.elementFromPoint(ev.clientX, ev.clientY - 36);
+      const cell = el && el.closest('.c[data-r]');
+      const slot = el && el.closest('.t[data-s]');
+      if (cell) {
+        placeFromRack(s, +cell.dataset.r, +cell.dataset.c);
+      } else if (slot && +slot.dataset.s !== s) {
+        const s2 = +slot.dataset.s;
+        [rack[s], rack[s2]] = [rack[s2], rack[s]];
+        sel = null;
+        draw();
+      }
+    } else {
+      if (sel && sel.type === 'rack' && sel.s === s) sel = null;
+      else sel = { type: 'rack', s };
+      draw();
+    }
+  };
+
+  addEventListener('pointermove', mv);
+  addEventListener('pointerup', up);
+  addEventListener('pointercancel', up);
+});
+
+// Drag & Drop + Tap dentro do Tabuleiro (para letras pendentes não bloqueadas)
+$('g').addEventListener('pointerdown', e => {
+  const cell = e.target.closest('.c[data-r]');
+  if (!cell || busy) return;
+  const r = +cell.dataset.r, c = +cell.dataset.c;
+  const p = pend[r][c];
+
+  // Se não tem letra pendente nesta casa
+  if (!p) {
+    if (!sol[r][c] || val[r][c]) return;
+    if (sel) {
+      if (sel.type === 'rack') placeFromRack(sel.s, r, c);
+      else if (sel.type === 'board') moveBoardTile(sel.r, sel.c, r, c);
+    }
+    return;
+  }
+
+  // Tem letra pendente: permite arrastar para outra casa ou de volta ao rack!
+  const x0 = e.clientX, y0 = e.clientY;
+  let ghost = null;
+
+  const mv = ev => {
+    if (!ghost && Math.hypot(ev.clientX - x0, ev.clientY - y0) > 6) {
+      ghost = document.createElement('div');
+      ghost.className = 't gh';
+      ghost.textContent = p.l;
+      document.body.append(ghost);
+      cell.style.opacity = '0.35';
+    }
+    if (ghost) {
+      ghost.style.left = ev.clientX + 'px';
+      ghost.style.top = (ev.clientY - 36) + 'px';
+    }
+  };
+
+  const up = ev => {
+    removeEventListener('pointermove', mv);
+    removeEventListener('pointerup', up);
+    removeEventListener('pointercancel', up);
+    cell.style.opacity = '1';
+
+    if (ghost) {
+      ghost.remove();
+      const el = document.elementFromPoint(ev.clientX, ev.clientY - 36);
+      const targetCell = el && el.closest('.c[data-r]');
+      const targetRack = el && el.closest('#rk');
+      if (targetCell) {
+        moveBoardTile(r, c, +targetCell.dataset.r, +targetCell.dataset.c);
+      } else if (targetRack) {
+        const slot = el.closest('.t[data-s]');
+        returnToRack(r, c, slot ? +slot.dataset.s : null);
+      }
+    } else {
+      // Toque simples devolve a letra ao suporte
+      returnToRack(r, c);
+    }
+  };
+
+  addEventListener('pointermove', mv);
+  addEventListener('pointerup', up);
+  addEventListener('pointercancel', up);
+});
+
+$('sh').onclick = () => {
+  if (busy) return;
+  shuf(rack);
+  sel = null;
+  draw();
+};
+
+$('ht').onclick = () => {
+  if (busy || !hints) return;
+  const ls = rack.filter(Boolean);
+  if (!ls.length) return;
+  for (const l of shuf(ls.slice())) {
+    const opts = [];
+    for (let r = 0; r < R; r++) {
+      for (let c = 0; c < C; c++) {
+        if (sol[r][c] === l && !val[r][c] && !pend[r][c]) opts.push([r, c]);
+      }
+    }
+    if (opts.length) {
+      hc = opts[Math.random() * opts.length | 0];
+      hints--;
+      msg(`Dica: a letra "${l}" encaixa na casa a piscar.`);
+      saveActiveGame();
+      draw();
+      setTimeout(() => { hc = null; draw(); }, 2000);
+      return;
+    }
+  }
+};
+
+$('go').onclick = () => {
+  if (busy) return;
+  busy = 1;
+  let right = 0, wrong = 0;
+  const lastRightCells = [];
+
+  for (let r = 0; r < R; r++) {
+    for (let c = 0; c < C; c++) {
+      const p = pend[r][c];
+      if (p) {
+        if (p.l === sol[r][c]) {
+          val[r][c] = p.l;
+          own[r][c] = 'me';
+          right++;
+          lastRightCells.push([r, c]);
+        } else {
+          rack[p.s] = p.l;
+          wrong++;
+        }
+        pend[r][c] = null;
+      }
+    }
+  }
+
+  const wordBonus = checkCompletedWords();
+  me += right + wordBonus;
+
+  if (right > 0 && wordBonus === 0) {
+    const last = lastRightCells[lastRightCells.length - 1];
+    badges = [{ r: last[0], c: last[1], pts: '+' + right }];
+    setTimeout(() => { badges = []; draw(); }, 1400);
+  }
+
+  if (right === 0 && wrong === 0) {
+    msg('Passaste a vez.');
+  } else {
+    msg((right ? `+${right} pt${right > 1 ? 's' : ''}` : '') +
+        (wordBonus ? ` +${wordBonus} bónus de palavra!` : '') +
+        (wrong ? ` (${wrong} letra${wrong > 1 ? 's' : ''} devolvida${wrong > 1 ? 's' : ''})` : ''));
+  }
+
+  sel = null;
+  draw();
+  if (full()) return endGame();
+  setTimeout(aiTurn, 950);
+};
+
+function aiTurn() {
+  const open = [];
+  for (let r = 0; r < R; r++) {
+    for (let c = 0; c < C; c++) {
+      if (sol[r][c] && !val[r][c]) open.push([r, c]);
+    }
+  }
+
+  // Dificuldade do oponente escala com o nível (de ~68% até 96%)
+  const aiAccuracy = Math.min(0.96, 0.68 + (LN * 0.0028));
+  const maxTiles = LN > 35 ? 5 : 4;
+  let placed = 0;
+
+  shuf(open).slice(0, maxTiles).forEach(([r, c]) => {
+    if (Math.random() < aiAccuracy) {
+      val[r][c] = sol[r][c];
+      own[r][c] = 'ai';
+      placed++;
+    }
+  });
+
+  const wordBonus = checkCompletedWords();
+  op += placed + wordBonus;
+
+  msg(placed ? `Oponente marcou +${placed + wordBonus} pontos.` : 'O oponente passou a vez.');
+  if (full()) {
+    draw();
+    return endGame();
+  }
+
+  busy = 0;
+  deal();
+  saveActiveGame();
+  draw();
+}
+
+function endGame() {
+  busy = 1;
+  saveData.active = null;
+  if (me >= op) saveData.won[LN] = 1;
+  persist();
+  draw();
+
+  setTimeout(() => {
+    $('ot-title').textContent = me > op ? 'Vitória! 🎉' : me === op ? 'Empate! 🤝' : 'Derrota 😔';
+    $('ot').textContent = `Você ${me} – ${op} Oponente`;
+    $('nw').textContent = me >= op && LN < TOTAL_LEVELS ? `Nível ${LN + 1}` : 'Tentar de novo';
+    $('ov').hidden = false;
+  }, 750);
+}
+
+$('bk').onclick = showMenu;
+$('ov-m').onclick = showMenu;
+$('nw').onclick = () => {
+  const next = (me >= op && LN < TOTAL_LEVELS) ? LN + 1 : LN;
+  startLevel(next);
+};
+
+$('mn').addEventListener('click', e => {
+  const btn = e.target.closest('.lv-btn');
+  if (btn) startLevel(+btn.dataset.n);
+});
+
+showMenu();
+</script>
+</body></html>
