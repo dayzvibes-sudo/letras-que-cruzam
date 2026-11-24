@@ -80,6 +80,12 @@ h1{font-size:clamp(22px,6.5vw,30px);margin:2px 12px 8px;text-align:center;line-h
   cursor:grab;z-index:2;
 }
 .pd.sel{box-shadow:inset 0 0 0 2.5px var(--bl),0 2px 6px #0003}
+.c.wrong{
+  background:#fde2e0;color:#d93025;border-radius:4px;z-index:2;
+  box-shadow:inset 0 0 0 2px #e5534b,0 2px 6px #e5534b55;
+  animation:shake .45s;
+}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
 .hl-word{background:#fae6c3 !important;box-shadow:inset 0 0 0 2px var(--bl)}
 .hl-clue{background:#eef5ff !important}
 .hint{animation:p .55s 3}@keyframes p{50%{background:var(--ok)}}
@@ -1201,7 +1207,7 @@ function generateBoard(lvl) {
   return BOARD_CACHE[lvl];
 }
 
-let LN = 1, sol, clue, val, own, pend, W, W_INFO, rack, sel, me, op, hints, done, busy, hc, badges = [], hlCells = new Set(), hlClue = null;
+let LN = 1, sol, clue, val, own, pend, W, W_INFO, rack, sel, me, op, hints, done, busy, hc, badges = [], hlCells = new Set(), hlClue = null, wrongCells = new Map();
 
 const HEADLINES = [
   'Resolva palavras cruzadas',
@@ -1244,6 +1250,7 @@ function startLevel(n, resumeObj = null) {
   $('headline').textContent = HEADLINES[(LN - 1) % HEADLINES.length];
   $('ov').hidden = true;
   badges = [];
+  wrongCells = new Map();
   hlCells = new Set();
   hlClue = null;
   sel = null;
@@ -1416,8 +1423,10 @@ function draw() {
         const isHint = hc && hc[0] === r && hc[1] === c;
         const isSel = p && sel && sel.type === 'board' && sel.r === r && sel.c === c;
         const badge = badges.find(b => b.r === r && b.c === c);
+        const wl = (!v && !p) ? wrongCells.get(r + ',' + c) : null;   // letra errada que acabou de ser devolvida
 
         let cls = 'c';
+        if (wl) cls += ' wrong';
         if (v) cls += ' ' + own[r][c];
         else if (p) cls += ' pd' + (isSel ? ' sel' : '');
         if (isHl) cls += ' hl-word';
@@ -1425,7 +1434,7 @@ function draw() {
         if (isHint) cls += ' hint';
 
         h += `<div class="${cls}" data-r="${r}" data-c="${c}">
-          ${v || (p ? p.l : '')}
+          ${v || (p ? p.l : '') || wl || ''}
           ${badge ? `<span class="badge">${badge.pts}</span>` : ''}
         </div>`;
       }
@@ -1657,6 +1666,7 @@ $('go').onclick = () => {
   busy = 1;
   let right = 0, wrong = 0;
   const lastRightCells = [];
+  wrongCells = new Map();
 
   for (let r = 0; r < R; r++) {
     for (let c = 0; c < C; c++) {
@@ -1669,6 +1679,7 @@ $('go').onclick = () => {
           lastRightCells.push([r, c]);
         } else {
           rack[p.s] = p.l;
+          wrongCells.set(r + ',' + c, p.l);
           wrong++;
         }
         pend[r][c] = null;
@@ -1679,6 +1690,11 @@ $('go').onclick = () => {
   const wordBonus = checkCompletedWords();
   const totalTurn = right + wordBonus;
   me += totalTurn;
+
+  if (wrongCells.size) {
+    const wc = wrongCells;
+    setTimeout(() => { if (wrongCells === wc) { wrongCells = new Map(); draw(); } }, 1600);
+  }
 
   if (totalTurn > 0 && wordBonus === 0) {
     const last = lastRightCells[lastRightCells.length - 1];
@@ -1691,7 +1707,7 @@ $('go').onclick = () => {
   } else {
     msg((totalTurn ? `+${totalTurn} pt${totalTurn > 1 ? 's' : ''}` : '') +
         (wordBonus ? ` (inclui +${wordBonus} bónus de palavra!)` : '') +
-        (wrong ? ` (${wrong} letra${wrong > 1 ? 's' : ''} devolvida${wrong > 1 ? 's' : ''})` : ''));
+        (wrong ? ` ❌ ${wrong} letra${wrong > 1 ? 's' : ''} errada${wrong > 1 ? 's' : ''}, devolvida${wrong > 1 ? 's' : ''}` : ''));
   }
 
   sel = null;
