@@ -8,7 +8,7 @@
 :root{
   --bg:#ffffff;--tx:#2c3548;--ct:#d6e6fa;--cl:#ffffff;--cb:#c2cbd9;
   --bl:#0a84ff;--me:#232b3d;--ai:#5c667d;--ti:#f7e2c1;--tib:#d6b585;--tt:#2c3548;
-  --bar:#f0f3f8;--ok:#c8f2c2;--bd:#e1e6f0;
+  --bar:#f0f3f8;--ok:#c8f2c2;--bd:#e1e6f0;--op:#7b3fe4;--op-bg:#efe6ff;
   --cs:min(calc((100vw - 20px)/8),64px,calc((100dvh - 310px)/10));
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
@@ -31,7 +31,7 @@ h1{font-size:clamp(22px,6.5vw,30px);margin:2px 12px 8px;text-align:center;line-h
 #sc{display:flex;gap:12px;align-items:center;font-weight:600;margin-bottom:8px;font-size:15px}
 #sc b{background:var(--bar);padding:4px 16px;border-radius:10px;font-size:20px;min-width:36px;text-align:center;transition:transform .2s}
 #sc b.y{color:var(--bl)}
-#sc b.ai-s{color:var(--ai)}
+#sc b.ai-s{color:var(--op)}
 
 #g{display:grid;grid-template-columns:repeat(8,var(--cs));border:2px solid #7d8799;background:var(--cb);box-shadow:0 4px 16px #00000012}
 .c{
@@ -72,7 +72,25 @@ h1{font-size:clamp(22px,6.5vw,30px);margin:2px 12px 8px;text-align:center;line-h
 .s .pc{font-size:calc(var(--cs)*.23)}
 
 .me{color:var(--me)}
-.ai{color:var(--ai)}
+/* Letras do oponente: roxo + fundo lilás + pontinho no canto (também distingue sem depender da cor) */
+.c.ai{color:var(--op);background:var(--op-bg)}
+.c.ai::after{content:'';position:absolute;top:calc(var(--cs)*.07);left:calc(var(--cs)*.07);width:calc(var(--cs)*.13);height:calc(var(--cs)*.13);border-radius:50%;background:var(--op);opacity:.85}
+/* Animação quando o oponente coloca uma letra (--d = atraso, escalonado letra a letra) */
+.c.ai-new{z-index:3;animation:aiCell 1s ease-out both;animation-delay:var(--d)}
+.c.ai-new::after{animation:aiDot 1s ease-out both;animation-delay:var(--d)}
+.c.ai-new .L{display:inline-block;animation:aiLetter .8s cubic-bezier(.25,.8,.3,1) both;animation-delay:var(--d)}
+@keyframes aiCell{
+  0%{background:var(--cl);box-shadow:none;transform:none}
+  30%{background:#cdb3ff;box-shadow:0 0 0 3px #7b3fe466,0 4px 12px #7b3fe455;transform:scale(1.14)}
+  100%{background:var(--op-bg);box-shadow:none;transform:none}
+}
+@keyframes aiLetter{
+  0%{opacity:0;transform:translateY(calc(var(--cs)*-.6)) scale(.5) rotate(-10deg)}
+  40%{opacity:1;transform:translateY(0) scale(1.25) rotate(3deg)}
+  65%{transform:scale(.92)}
+  100%{opacity:1;transform:none}
+}
+@keyframes aiDot{0%,60%{opacity:0;transform:scale(0)}100%{opacity:.85;transform:scale(1)}}
 .pd{
   background:linear-gradient(180deg,#fdf1dc,var(--ti));
   color:var(--tt);border-radius:4px;
@@ -1207,7 +1225,8 @@ function generateBoard(lvl) {
   return BOARD_CACHE[lvl];
 }
 
-let LN = 1, sol, clue, val, own, pend, W, W_INFO, rack, sel, me, op, hints, done, busy, hc, badges = [], hlCells = new Set(), hlClue = null, wrongCells = new Map();
+let LN = 1, sol, clue, val, own, pend, W, W_INFO, rack, sel, me, op, hints, done, busy, hc, badges = [], hlCells = new Set(), hlClue = null, wrongCells = new Map(), aiNew = new Map(), review = false;
+const AI_STAGGER = 230, AI_DUR = 1000;   // animação das letras do oponente
 
 const HEADLINES = [
   'Resolva palavras cruzadas',
@@ -1230,6 +1249,13 @@ function persist() {
   try { localStorage.setItem('pc_master_v9', JSON.stringify(saveData)); } catch (e) {}
 }
 
+// 80 caracteres (uma grelha 10x8): m = letra minha, a = do oponente, - = casa de pista
+function encodeOwn() {
+  let s = '';
+  for (let r = 0; r < R; r++) for (let c = 0; c < C; c++) s += !sol[r][c] ? '-' : own[r][c] === 'ai' ? 'a' : 'm';
+  return s;
+}
+
 function saveActiveGame() {
   if (!sol || full()) {
     saveData.active = null;
@@ -1243,7 +1269,7 @@ function saveActiveGame() {
   persist();
 }
 
-function startLevel(n, resumeObj = null) {
+function startLevel(n, resumeObj = null, forceNew = false) {
   document.body.className = '';
   LN = n;
   $('lvl-tag').textContent = 'Nível ' + LN;
@@ -1256,6 +1282,14 @@ function startLevel(n, resumeObj = null) {
   sel = null;
   hc = null;
   busy = 0;
+  review = false;
+  aiNew = new Map();
+
+  // Nível já vencido (e sem forçar jogo novo): mostra-o completo
+  if (!resumeObj && !forceNew && saveData.won[n]) {
+    openReview(n);
+    return;
+  }
 
   let loaded = false;
   if (resumeObj && Array.isArray(resumeObj.sol) && Array.isArray(resumeObj.W) && resumeObj.W.length > 0) {
@@ -1308,6 +1342,37 @@ function startLevel(n, resumeObj = null) {
     msg('Toca numa pista azul para ler ou arrasta as letras.');
     saveActiveGame();
   }
+  draw();
+  fitGrid();
+}
+
+function openReview(n) {
+  const info = saveData.won[n];
+  const solved = generateBoard(n);
+  sol = M(); clue = M(() => ({})); val = M(); own = M(); pend = M(); W = []; W_INFO = [];
+  for (let r = 0; r < R; r++) {
+    for (let c = 0; c < C; c++) {
+      if (solved.grid[r][c] !== null) { sol[r][c] = val[r][c] = solved.grid[r][c]; own[r][c] = 'me'; }
+    }
+  }
+  solved.slots.forEach(s => {
+    clue[s.clueR][s.clueC][s.d === 0 ? 'a' : 'd'] = s.word;
+    W.push(s.cells);
+    W_INFO.push({ clueR: s.clueR, clueC: s.clueC, dir: s.d === 0 ? '▸' : '▾', text: s.word.t + (s.word.e ? ' ' + s.word.e : '') });
+  });
+  // vitórias antigas guardavam só "1" (sem saber quem pôs cada letra): ficam todas como minhas
+  const saved = info && typeof info === 'object' && typeof info.own === 'string' && info.own.length === R * C;
+  if (saved) {
+    for (let r = 0; r < R; r++) for (let c = 0; c < C; c++) if (sol[r][c]) own[r][c] = info.own[r * C + c] === 'a' ? 'ai' : 'me';
+  }
+  me = saved ? info.me : null;
+  op = saved ? info.op : null;
+  hints = 0;
+  rack = [null, null, null, null, null];
+  done = new Set(W.map((_, i) => i));
+  review = true;
+  busy = 1;
+  msg(saved ? `Nível concluído! Você ${me} – ${op} Oponente` : 'Nível concluído! Toca em "Jogar de novo" para repetir.');
   draw();
   fitGrid();
 }
@@ -1411,6 +1476,7 @@ function checkCompletedWords() {
 }
 
 function draw() {
+  const now = performance.now();
   let h = '';
   for (let r = 0; r < R; r++) {
     for (let c = 0; c < C; c++) {
@@ -1426,16 +1492,18 @@ function draw() {
         const badge = badges.find(b => b.r === r && b.c === c);
         const wl = (!v && !p) ? wrongCells.get(r + ',' + c) : null;   // letra errada que acabou de ser devolvida
 
+        // atraso (ms) da animação desta letra do oponente; negativo = já vai a meio (assim um redesenho não a reinicia)
+        const aiAt = v && own[r][c] === 'ai' && aiNew.has(r + ',' + c) ? Math.round(aiNew.get(r + ',' + c) - now) : null;
         let cls = 'c';
         if (wl) cls += ' wrong';
-        if (v) cls += ' ' + own[r][c];
+        if (v) cls += ' ' + own[r][c] + (aiAt !== null ? ' ai-new' : '');
         else if (p) cls += ' pd' + (isSel ? ' sel' : '');
         if (isHl) cls += ' hl-word';
         else if (isClueHl) cls += ' hl-clue';
         if (isHint) cls += ' hint';
 
-        h += `<div class="${cls}" data-r="${r}" data-c="${c}">
-          ${v || (p ? p.l : '') || wl || ''}
+        h += `<div class="${cls}" data-r="${r}" data-c="${c}"${aiAt !== null ? ` style="--d:${aiAt}ms"` : ''}>
+          ${aiAt !== null ? `<span class="L">${v}</span>` : (v || (p ? p.l : '') || wl || '')}
           ${badge ? `<span class="badge">${badge.pts}</span>` : ''}
         </div>`;
       }
@@ -1450,11 +1518,12 @@ function draw() {
       : `<div class="t e" data-s="${i}"></div>`;
   }).join('');
 
-  $('a').textContent = me;
-  $('b').textContent = op;
+  $('rk').style.visibility = review ? 'hidden' : '';
+  $('a').textContent = me ?? '–';
+  $('b').textContent = op ?? '–';
   $('hn').textContent = hints;
-  $('go').textContent = hasPend() ? 'Enviar' : 'Passar';
-  $('go').disabled = !!busy;
+  $('go').textContent = review ? 'Jogar de novo' : hasPend() ? 'Enviar' : 'Passar';
+  $('go').disabled = !!busy && !review;
   $('ht').disabled = !!busy || !hints;
 }
 
@@ -1663,6 +1732,7 @@ $('ht').onclick = () => {
 };
 
 $('go').onclick = () => {
+  if (review) { startLevel(LN, null, true); return; }
   if (busy) return;
   busy = 1;
   let right = 0, wrong = 0;
@@ -1729,13 +1799,17 @@ function aiTurn() {
   const maxTiles = LN > 35 ? 5 : 4;
   let placed = 0;
 
+  const t0 = performance.now() + 150;
+  const mine = aiNew = new Map();
   shuf(open).slice(0, maxTiles).forEach(([r, c]) => {
     if (Math.random() < aiAccuracy) {
       val[r][c] = sol[r][c];
       own[r][c] = 'ai';
+      aiNew.set(r + ',' + c, t0 + placed * AI_STAGGER);   // as letras entram uma a uma
       placed++;
     }
   });
+  if (placed) setTimeout(() => { if (aiNew === mine) { aiNew = new Map(); draw(); } }, 150 + (placed - 1) * AI_STAGGER + AI_DUR + 100);
 
   const wordBonus = checkCompletedWords();
   op += placed + wordBonus;
@@ -1755,7 +1829,7 @@ function aiTurn() {
 function endGame() {
   busy = 1;
   saveData.active = null;
-  if (me >= op) saveData.won[LN] = 1;
+  if (me >= op) saveData.won[LN] = { me, op, own: encodeOwn() };
   persist();
   draw();
 
@@ -1764,7 +1838,7 @@ function endGame() {
     $('ot').textContent = `Você ${me} – ${op} Oponente`;
     $('nw').textContent = me >= op && LN < TOTAL_LEVELS ? `Nível ${LN + 1}` : 'Tentar de novo';
     $('ov').hidden = false;
-  }, 750);
+  }, aiNew.size ? Math.max(750, 150 + (aiNew.size - 1) * AI_STAGGER + AI_DUR + 350) : 750);
 }
 
 // Ajusta o tamanho das casas ao ecrã: mede o espaço realmente ocupado pelos outros elementos
@@ -1801,7 +1875,7 @@ $('bk').onclick = showMenu;
 $('ov-m').onclick = showMenu;
 $('nw').onclick = () => {
   const next = (me >= op && LN < TOTAL_LEVELS) ? LN + 1 : LN;
-  startLevel(next);
+  startLevel(next, null, true);
 };
 
 $('mn').addEventListener('click', e => {
