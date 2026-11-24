@@ -1309,6 +1309,7 @@ function startLevel(n, resumeObj = null) {
     saveActiveGame();
   }
   draw();
+  fitGrid();
 }
 
 function showMenu() {
@@ -1765,6 +1766,36 @@ function endGame() {
     $('ov').hidden = false;
   }, 750);
 }
+
+// Ajusta o tamanho das casas ao ecrã: mede o espaço realmente ocupado pelos outros elementos
+// (em vez de assumir um valor fixo) e dá o resto à grelha. Se a altura for o limite (telemóveis
+// com barras do browser, como o iPhone), esconde o título para a grelha ficar maior.
+function fitGrid() {
+  if (document.body.classList.contains('m')) return;
+  const h1 = $('headline');
+  const outer = el => {
+    const s = getComputedStyle(el);
+    return el.offsetHeight + parseFloat(s.marginTop) + parseFloat(s.marginBottom);
+  };
+  const widthCs = Math.min((innerWidth - 20) / 8, 64);
+  const heightCs = () => {
+    const fixed = outer($('top')) + outer($('sc')) + outer($('ms')) + outer($('bar')) +
+                  (h1.style.display === 'none' ? 0 : outer(h1)) +
+                  4 +    // borda da grelha
+                  10;    // margens do conjunto de letras
+    return (document.body.clientHeight - fixed - 6) / (R + 0.92);   // 10 linhas + conjunto de letras (0,92 casa)
+  };
+  h1.style.display = '';
+  let cs = Math.min(widthCs, heightCs());
+  if (cs < widthCs) {            // limitado pela altura -> ganhar o espaço do título
+    h1.style.display = 'none';
+    cs = Math.min(widthCs, heightCs());
+  }
+  document.documentElement.style.setProperty('--cs', Math.max(18, Math.floor(cs * 10) / 10) + 'px');
+}
+addEventListener('resize', fitGrid);
+addEventListener('orientationchange', () => setTimeout(fitGrid, 200));
+if (window.visualViewport) visualViewport.addEventListener('resize', fitGrid);
 
 $('bk').onclick = showMenu;
 $('ov-m').onclick = showMenu;
