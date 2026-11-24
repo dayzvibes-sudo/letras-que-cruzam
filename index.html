@@ -59,7 +59,7 @@ h1{font-size:clamp(22px,6.5vw,30px);margin:2px 12px 8px;text-align:center;line-h
 .s{flex-direction:column;padding:0}
 .s div{
   flex:1;width:100%;display:flex;align-items:center;justify-content:center;
-  position:relative;font-size:calc(var(--cs)*.125);padding:0 6px 0 3px;
+  position:relative;font-size:calc(var(--cs)*.128);padding:0 6px 0 3px;
   box-sizing:border-box;line-height:1.02;overflow:hidden;
 }
 .s div:first-child{border-bottom:1px solid #aebfd9}
@@ -67,7 +67,7 @@ h1{font-size:clamp(22px,6.5vw,30px);margin:2px 12px 8px;text-align:center;line-h
 .s .b{bottom:-2px}
 
 .pc-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
-.pc-aff{font-size:calc(var(--cs)*.15);font-weight:800;text-transform:none;margin-bottom:1px}
+.pc-aff{font-size:calc(var(--cs)*.16);font-weight:800;text-transform:none;margin-bottom:1px}
 .pc{font-size:calc(var(--cs)*.42);text-transform:none;line-height:1}
 .s .pc{font-size:calc(var(--cs)*.23)}
 
@@ -194,6 +194,56 @@ M=(f=()=>null)=>Array.from({length:R},()=>Array.from({length:C},f)),
 shuf=a=>{for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
 
 const RAW_WORDS = `
+AR|Ar que se respira
+AS|Artigo plural
+OS|Artigo plural
+UM|Número um
+DE|De algo
+EM|Dentro de
+NO|Em + o
+NA|Em + a
+DO|De + o
+DA|De + a
+AO|A + o
+OU|Ou então
+SE|Caso, se
+EU|Eu mesmo
+TU|Tu mesmo
+JA|Agora mesmo
+LA|Nesse lugar
+CA|Neste lugar
+PE|Parte da perna
+PO|Poeira fina
+SO|Apenas
+MI|3.ª nota musical
+FA|4.ª nota musical
+SI|7.ª nota musical
+RE|2.ª nota musical
+IR|Ir a pé
+VI|Eu vi ontem
+VA|Vai agora
+VE|Ele vê bem
+RI|Ele ri muito
+LI|Eu li o livro
+FE|Crença na alma
+NU|Sem roupa
+EX|Antigo cargo
+OI|Olá informal
+AI|Grito de dor
+UI|Susto leve
+EI|Chamar alguém
+HA|Existe
+MA|Não é boa
+ME|A mim
+MO|Pedra de moinho
+PA|Pá de cavar
+PI|Valor 3,14
+SA|Mulher sã
+TA|Está (curto)
+TE|A ti
+TI|Para ti
+TO|Toma cá
+VO|Avó ou avô
 SOL|Astro-rei|☀️
 LUA|Satélite da Terra|🌙
 MAR|Água salgada|🌊
@@ -213,12 +263,19 @@ DOR|Dor no corpo
 VOZ|Som da fala
 LUZ|Brilho do Sol
 PAZ|Sem guerra|☮️
+GAS|Estado gasoso
+GIZ|Risca o quadro
 GOL|Ponto no jogo|⚽
 LAR|Onde se mora|🏠
 MAE|Dá à luz
 PAI|Chefe de família
+RIM|Órgão renal
 SOM|Onda sonora
 SUL|Ponto cardeal
+TIA|Irmã do pai
+TIO|Irmão da mãe
+VEZ|Ocasião
+ANO|Doze meses
 DIA|24 horas
 MES|Parte do ano
 FIM|Ponto final
@@ -234,6 +291,7 @@ QUE|O qual
 ELE|Pronome (m.)
 ELA|Pronome (f.)
 NOS|Todos juntos
+VOS|Vós todos
 ALI|Naquele sítio
 NAO|Negação
 SIM|Afirmação
@@ -244,6 +302,8 @@ TER|Possuir
 VER|Olhar bem
 DAR|Oferecer
 LER|Ler um texto
+OLE|Grito na arena
+EIS|Aqui está
 TAL|Semelhante
 SUA|Dela ou dele
 TEU|Pertence a ti
@@ -257,11 +317,13 @@ ASA|Membro de voo
 OCA|Casa indígena
 OLA|Saudação
 OSO|Urso (esp.)
+ATO|Cena da peça
 AVO|Pai do pai
 BAR|Café ou tasca
 BAU|Arca antiga
 BOM|De boa qualidade
 CAL|Pó branco
+CRU|Não cozido
 DEZ|Número 10
 DIZ|Ele fala
 DOM|Talento nato
@@ -276,13 +338,17 @@ IRA|Raiva forte
 MIL|Número 1000
 NOZ|Fruto seco
 NUA|Sem vestes
+NUM|Em + um
 OCO|Vazio dentro
 PAR|Grupo de dois
 PAU|Pedaço de lenha
 PIA|Lava-louças
 PIO|Som de ave
+PRO|A favor de
 RIR|Dar risada|😂
+ROA|Verbo roer
 SOU|Eu existo
+TAO|Tão grande
 TOM|Tonalidade
 VAI|Ele segue
 VAO|Eles seguem
@@ -496,7 +562,9 @@ MULA|Filho de égua
 NADA|Coisa nenhuma
 NATA|Creme do leite
 NETA|Neta de avós
+NIVE|Neve (poético)
 NORA|Nora de casa
+NUBE|Nuvem (poético)
 OBRA|Trabalho feito
 ORLA|Margem
 OSSO|Parte do corpo|🦴
@@ -527,6 +595,8 @@ AMES|Verbo amar
 SODA|Bebida com gás
 ARES|Ventos do céu
 AVOS|Pais dos pais
+NAS|Em + as
+USA|Ele utiliza
 GENTE|Pessoas
 PINTA|Mancha
 PISTA|Trilho
@@ -726,6 +796,7 @@ MORTO|Sem vida
 `;
 
 const BASE_DICT = [];
+const WORD_MAP = {};
 const seenBase = new Set();
 RAW_WORDS.trim().split('\n').forEach(line => {
   const parts = line.split('|');
@@ -733,11 +804,126 @@ RAW_WORDS.trim().split('\n').forEach(line => {
   const t = (parts[1] || '').trim();
   const e = (parts[2] || '').trim();
   const aff = (parts[3] || '').trim();
-  if (w.length >= 3 && w.length <= 5 && !seenBase.has(w)) {
+  if (w.length >= 2 && w.length <= 5 && !seenBase.has(w)) {
     seenBase.add(w);
-    BASE_DICT.push({ w, t, e, aff, f: 0 });
+    const obj = { w, t, e, aff, f: 0 };
+    BASE_DICT.push(obj);
+    WORD_MAP[w] = obj;
   }
 });
+
+const FILL_DICT = [];
+const seenFill = new Set(seenBase);
+BASE_DICT.forEach(b => {
+  if (b.w.length === 5) {
+    const sub2 = b.w.slice(1, 3);
+    const masked2 = b.w.slice(0, 1) + '__' + b.w.slice(3);
+    if (!seenFill.has(sub2)) {
+      seenFill.add(sub2);
+      FILL_DICT.push({ w: sub2, t: masked2, e: '', aff: '', f: 1 });
+    }
+  }
+});
+
+const ALL_WORDS = BASE_DICT.concat(FILL_DICT);
+const WORDS_BY_LEN = {};
+for (let l = 2; l <= 5; l++) WORDS_BY_LEN[l] = [];
+ALL_WORDS.forEach(item => WORDS_BY_LEN[item.w.length].push(item));
+
+// 6 modelos 100% validados (máx. 5 letras em qualquer linha ou coluna -> 24 formatos distintos)
+const BASE_TEMPLATES = [
+  // Modelo 1
+  [
+    [0,0,0,0,0,0,0,0],
+    [0,1,1,1,1,0,1,1],
+    [0,1,1,1,1,0,1,1],
+    [0,1,1,1,0,1,1,1],
+    [0,1,1,0,1,1,1,0],
+    [0,0,0,1,1,1,0,0],
+    [0,0,1,1,1,0,1,1],
+    [0,1,1,1,0,1,1,1],
+    [0,1,1,0,1,1,1,1],
+    [0,1,1,0,1,1,1,1]
+  ],
+  // Modelo 2
+  [
+    [0,0,0,0,0,0,0,0],
+    [0,1,1,0,1,1,1,1],
+    [0,1,1,1,1,0,1,1],
+    [0,1,1,1,0,1,1,1],
+    [0,1,0,1,1,1,0,0],
+    [0,0,1,0,0,1,1,1],
+    [0,1,1,1,0,1,1,1],
+    [0,1,1,1,1,0,1,1],
+    [0,0,0,1,1,1,1,0],
+    [0,1,1,1,0,1,1,1]
+  ],
+  // Modelo 3
+  [
+    [0,0,0,0,0,0,0,0],
+    [0,0,1,1,1,0,1,1],
+    [0,1,1,1,1,0,1,1],
+    [0,1,1,0,1,1,1,0],
+    [0,1,1,1,0,1,1,1],
+    [0,0,0,1,1,1,1,0],
+    [0,1,1,0,1,1,1,1],
+    [0,1,1,1,0,1,1,1],
+    [0,1,1,1,1,0,1,1],
+    [0,0,1,1,0,1,1,1]
+  ],
+  // Modelo 4
+  [
+    [0,0,0,0,0,0,0,0],
+    [0,1,1,1,0,1,1,1],
+    [0,1,1,0,1,1,1,0],
+    [0,1,1,1,1,0,1,1],
+    [0,0,1,1,1,1,0,1],
+    [0,1,1,0,0,1,1,1],
+    [0,1,0,1,1,1,0,1],
+    [0,1,1,1,0,1,1,0],
+    [0,1,1,0,1,1,1,1],
+    [0,0,1,1,1,0,1,1]
+  ],
+  // Modelo 5
+  [
+    [0,0,0,0,0,0,0,0],
+    [0,1,1,0,1,1,0,1],
+    [0,1,1,1,0,1,1,1],
+    [0,0,1,1,1,0,1,1],
+    [0,1,0,1,1,1,1,0],
+    [0,1,1,1,1,0,0,1],
+    [0,0,1,1,0,1,1,1],
+    [0,1,1,0,1,1,1,1],
+    [0,1,0,1,1,1,0,1],
+    [0,1,1,1,0,1,1,0]
+  ],
+  // Modelo 6
+  [
+    [0,0,0,0,0,0,0,0],
+    [0,0,1,1,1,1,0,0],
+    [0,1,1,0,1,1,1,1],
+    [0,1,1,1,0,1,1,1],
+    [0,1,0,1,1,1,0,1],
+    [0,0,1,1,1,0,1,1],
+    [0,1,1,0,1,1,1,0],
+    [0,1,1,1,0,1,1,1],
+    [0,1,1,1,1,0,1,1],
+    [0,0,0,1,1,1,1,0]
+  ]
+];
+
+const FALLBACK_GRID = [
+  [null,null,null,null,null,null,null,null],
+  [null,'C','A','S','A',null,'R','E'],
+  [null,'A','M','O','R',null,'E','M'],
+  [null,'R','E','D','E',null,'I','A'],
+  [null,'A','S','A','S',null,null,null],
+  [null,null,null,null,null,'L','U','A'],
+  [null,'M','A','R',null,'A','M','O'],
+  [null,'U','V','A',null,null,null,null],
+  [null,'D','O','R',null,'N','A','S'],
+  [null,'O','S','O',null,'U','S','A']
+];
 
 const rng = s => () => {
   s |= 0; s = s + 0x6D2B79F5 | 0;
@@ -750,22 +936,22 @@ function getClueFontStyle(txt, isSplit) {
   const words = txt.split(/\s+/);
   const maxW = words.reduce((m, w) => Math.max(m, w.length), 0);
   const len = txt.length;
-  let factor = isSplit ? 0.125 : 0.145;
+  let factor = isSplit ? 0.128 : 0.146;
 
-  if (maxW >= 10) factor = Math.min(factor, 0.104);
-  else if (maxW === 9) factor = Math.min(factor, 0.115);
-  else if (maxW === 8) factor = Math.min(factor, 0.126);
-  else if (maxW === 7) factor = Math.min(factor, 0.136);
+  if (maxW >= 10) factor = Math.min(factor, 0.105);
+  else if (maxW === 9) factor = Math.min(factor, 0.116);
+  else if (maxW === 8) factor = Math.min(factor, 0.128);
+  else if (maxW === 7) factor = Math.min(factor, 0.138);
 
-  if (len >= 18) factor = Math.min(factor, 0.11);
-  else if (len >= 15) factor = Math.min(factor, 0.122);
+  if (len >= 18) factor = Math.min(factor, 0.112);
+  else if (len >= 15) factor = Math.min(factor, 0.124);
 
   return `style="font-size:calc(var(--cs)*${factor.toFixed(3)})"`;
 }
 
 function renderClueContent(b, lvl, isSplit = false) {
-  const picChance = Math.max(0.25, 0.58 - (lvl * 0.003));
-  const usePic = b.e && (((b.w.charCodeAt(0) * 13 + b.w.length * 19 + lvl * 11) % 100) < picChance * 100);
+  const picChance = Math.max(0.28, 0.62 - (lvl * 0.003));
+  const usePic = b.e && (((b.w.charCodeAt(0) * 11 + b.w.length * 17 + lvl * 7) % 100) < picChance * 100);
   if (usePic) {
     return `<div class="pc-wrap">${b.aff ? `<span class="pc-aff">${b.aff}</span>` : ''}<span class="pc">${b.e}</span></div>`;
   }
@@ -782,146 +968,188 @@ function ck(q, r, c, lvl) {
   return `<div class="c k ${dirCls}" data-kr="${r}" data-kc="${c}">${renderClueContent(q.a || q.d, lvl, false)}<i class="${q.a ? 'r' : 'b'}">${q.a ? '▸' : '▾'}</i></div>`;
 }
 
-// Construtor limpo: coloca palavras reais encaixadas com cruzamentos válidos
-// e só atribui pistas às células azuis imediatamente adjacentes a cada palavra colocada.
-function generateBoard(lvl) {
-  const rn = rng(lvl * 104729 + 7919);
+function extractSlots(g) {
+  const slots = [];
+  for (let r = 1; r < R; r++) {
+    let c = 1;
+    while (c < C) {
+      if (g[r][c] === 1) {
+        const c0 = c;
+        while (c < C && g[r][c] === 1) c++;
+        const len = c - c0;
+        if (len >= 2) {
+          const cells = [];
+          for (let i = 0; i < len; i++) cells.push([r, c0 + i]);
+          slots.push({ id: slots.length, r, c: c0, d: 0, len, clueR: r, clueC: c0 - 1, word: null, cells, cross: [] });
+        }
+      } else c++;
+    }
+  }
+  for (let c = 1; c < C; c++) {
+    let r = 1;
+    while (r < R) {
+      if (g[r][c] === 1) {
+        const r0 = r;
+        while (r < R && g[r][c] === 1) r++;
+        const len = r - r0;
+        if (len >= 2) {
+          const cells = [];
+          for (let i = 0; i < len; i++) cells.push([r0 + i, c]);
+          slots.push({ id: slots.length, r: r0, c, d: 1, len, clueR: r0 - 1, clueC: c, word: null, cells, cross: [] });
+        }
+      } else r++;
+    }
+  }
+  for (let i = 0; i < slots.length; i++) {
+    for (let j = i + 1; j < slots.length; j++) {
+      if (slots[i].d === slots[j].d) continue;
+      const setA = new Set(slots[i].cells.map(([y, x]) => y + ',' + x));
+      if (slots[j].cells.some(([y, x]) => setA.has(y + ',' + x))) {
+        slots[i].cross.push(slots[j]);
+        slots[j].cross.push(slots[i]);
+      }
+    }
+  }
+  return slots;
+}
+
+function solveLayout(g, slots, rn, lvl, timeLimitMs = 60) {
+  if (!slots.length || slots.some(s => !WORDS_BY_LEN[s.len] || !WORDS_BY_LEN[s.len].length)) return null;
+
+  const t0 = performance.now();
   const grid = Array.from({ length: R }, () => Array(C).fill(null));
-  const usedWords = new Set();
-  const placedWords = [];
+  const used = new Set();
+  const allowFill = lvl >= 4;
+  const pools = {};
 
-  const byLen = { 3: [], 4: [], 5: [] };
-  BASE_DICT.forEach(item => {
-    if (byLen[item.w.length]) byLen[item.w.length].push(item);
-  });
-  Object.values(byLen).forEach(arr => {
-    arr.sort((a, b) => (a.f - b.f) + (rn() - 0.5) * 4);
-  });
-
-  function isLetterCell(r, c) {
-    return r >= 1 && r < R && c >= 1 && c < C && grid[r][c] !== null;
+  for (let l = 2; l <= 5; l++) {
+    const arr = WORDS_BY_LEN[l].filter(w => allowFill || !w.f).slice();
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = (rn() * (i + 1)) | 0;
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    pools[l] = arr;
   }
 
-  // Verifica se colocar wordStr em (r, c) na direção d (0=horiz, 1=vert) não cria palavras acidentais inválidas
-  function canPlaceClean(r, c, d, wordStr, requireCross) {
-    const len = wordStr.length;
-    if (d === 0) {
-      if (r < 1 || r >= R || c < 1 || c + len > C) return false;
-      // Casa antes e depois na mesma linha não pode ser letra (senão colava com outra palavra)
-      if (isLetterCell(r, c - 1)) return false;
-      if (c + len < C && isLetterCell(r, c + len)) return false;
+  function matches(item, s) {
+    if (used.has(item.w)) return false;
+    for (let i = 0; i < s.len; i++) {
+      const [y, x] = s.cells[i];
+      const ch = grid[y][x];
+      if (ch !== null && ch !== item.w[i]) return false;
+    }
+    return true;
+  }
 
-      let crosses = 0;
-      for (let i = 0; i < len; i++) {
-        const x = c + i;
-        const cur = grid[r][x];
-        if (cur !== null) {
-          if (cur !== wordStr[i]) return false;
-          crosses++;
-        } else {
-          // Evita colar paralelamente cima/baixo em células não-cruzamento
-          if (isLetterCell(r - 1, x) || isLetterCell(r + 1, x)) return false;
+  function getCandidates(s) {
+    const out = [];
+    const pool = pools[s.len];
+    for (let k = 0; k < pool.length; k++) {
+      if (matches(pool[k], s)) out.push(pool[k]);
+    }
+    return out;
+  }
+
+  function hasAnyCandidate(s) {
+    const pool = pools[s.len];
+    for (let k = 0; k < pool.length; k++) {
+      if (matches(pool[k], s)) return true;
+    }
+    return false;
+  }
+
+  let steps = 0;
+
+  function backtrack(assignedCount) {
+    if (assignedCount === slots.length) return true;
+    if ((++steps & 63) === 0 && (performance.now() - t0) > timeLimitMs) return false;
+
+    let bestSlot = null;
+    let bestCands = null;
+
+    for (let i = 0; i < slots.length; i++) {
+      const s = slots[i];
+      if (s.word !== null) continue;
+      const cands = getCandidates(s);
+      if (cands.length === 0) return false;
+      if (!bestCands || cands.length < bestCands.length) {
+        bestSlot = s;
+        bestCands = cands;
+        if (cands.length === 1) break;
+      }
+    }
+
+    const prevChars = bestSlot.cells.map(([y, x]) => grid[y][x]);
+
+    for (let i = 0; i < bestCands.length; i++) {
+      const cand = bestCands[i];
+      bestSlot.word = cand;
+      used.add(cand.w);
+
+      for (let cIdx = 0; cIdx < bestSlot.len; cIdx++) {
+        const [y, x] = bestSlot.cells[cIdx];
+        grid[y][x] = cand.w[cIdx];
+      }
+
+      let ok = true;
+      for (let c = 0; c < bestSlot.cross.length; c++) {
+        const other = bestSlot.cross[c];
+        if (other.word === null && !hasAnyCandidate(other)) {
+          ok = false;
+          break;
         }
       }
-      if (requireCross && crosses === 0) return false;
-      return true;
-    } else {
-      if (r < 1 || r + len > R || c < 1 || c >= C) return false;
-      if (isLetterCell(r - 1, c)) return false;
-      if (r + len < R && isLetterCell(r + len, c)) return false;
 
-      let crosses = 0;
-      for (let i = 0; i < len; i++) {
-        const y = r + i;
-        const cur = grid[y][c];
-        if (cur !== null) {
-          if (cur !== wordStr[i]) return false;
-          crosses++;
-        } else {
-          if (isLetterCell(y, c - 1) || isLetterCell(y, c + 1)) return false;
-        }
+      if (ok && backtrack(assignedCount + 1)) return true;
+
+      for (let cIdx = 0; cIdx < bestSlot.len; cIdx++) {
+        const [y, x] = bestSlot.cells[cIdx];
+        grid[y][x] = prevChars[cIdx];
       }
-      if (requireCross && crosses === 0) return false;
-      return true;
+      used.delete(cand.w);
+      bestSlot.word = null;
     }
+    return false;
   }
 
-  function commitWord(r, c, d, entry) {
-    const cells = [];
-    for (let i = 0; i < entry.w.length; i++) {
-      const y = d === 0 ? r : r + i;
-      const x = d === 0 ? c + i : c;
-      grid[y][x] = entry.w[i];
-      cells.push([y, x]);
-    }
-    usedWords.add(entry.w);
-    entry.f++;
-    placedWords.push({
-      id: placedWords.length,
-      r, c, d,
-      len: entry.w.length,
-      clueR: d === 0 ? r : r - 1,
-      clueC: d === 0 ? c - 1 : c,
-      word: entry,
-      cells
-    });
+  if (backtrack(0)) return { g, slots, grid };
+  return null;
+}
+
+function buildFallbackBoard() {
+  const g = FALLBACK_GRID.map(row => row.map(v => v ? 1 : 0));
+  const slots = extractSlots(g);
+  slots.forEach(s => {
+    const w = s.cells.map(([y, x]) => FALLBACK_GRID[y][x]).join('');
+    s.word = WORD_MAP[w] || { w, t: w, e: '', aff: '', f: 0 };
+  });
+  return { g, slots, grid: FALLBACK_GRID.map(r => r.slice()) };
+}
+
+function generateBoard(lvl) {
+  const rn = rng(lvl * 9973 + 31337);
+  const startTpl = (lvl - 1) % BASE_TEMPLATES.length;
+  const baseFlip = Math.floor((lvl - 1) / BASE_TEMPLATES.length) % 4;
+
+  for (let attempt = 0; attempt < 24; attempt++) {
+    const base = BASE_TEMPLATES[(startTpl + attempt) % BASE_TEMPLATES.length];
+    const flipMode = (baseFlip + Math.floor(attempt / BASE_TEMPLATES.length)) % 4;
+    const flipV = flipMode & 1;
+    const flipH = (flipMode >> 1) & 1;
+
+    const g = Array.from({ length: R }, (_, r) =>
+      Array.from({ length: C }, (_, c) => {
+        if (r === 0 || c === 0) return 0;
+        const sr = flipV ? (R - r) : r;
+        const sc = flipH ? (C - c) : c;
+        return base[sr][sc];
+      })
+    );
+    const slots = extractSlots(g);
+    const solved = solveLayout(g, slots, rn, lvl, 60);
+    if (solved) return solved;
   }
-
-  // 1) Palavra inicial bem posicionada (varia por nível)
-  const starts = [
-    [1, 1, 0, 4], [2, 2, 0, 4], [1, 3, 1, 4], [3, 1, 0, 4],
-    [2, 4, 1, 4], [4, 2, 0, 4], [1, 2, 1, 4], [3, 3, 0, 4]
-  ];
-  const [sr, sc, sd, slen] = starts[(lvl - 1) % starts.length];
-  for (const cand of byLen[slen]) {
-    if (!usedWords.has(cand.w) && canPlaceClean(sr, sc, sd, cand.w, false)) {
-      commitWord(sr, sc, sd, cand);
-      break;
-    }
-  }
-
-  // 2) Tenta encaixar palavras cruzadas espalhadas pelo mapa 10x8
-  const targetCount = 8 + (lvl % 4); // 8 a 11 palavras por nível
-  for (let attempt = 0; attempt < 260 && placedWords.length < targetCount; attempt++) {
-    const anchor = placedWords[Math.floor(rn() * placedWords.length)];
-    const charIdx = Math.floor(rn() * anchor.len);
-    const [ay, ax] = anchor.cells[charIdx];
-    const targetChar = grid[ay][ax];
-    const newD = anchor.d === 0 ? 1 : 0;
-
-    const len = [3, 4, 5][Math.floor(rn() * 3)];
-    const pool = byLen[len].filter(item => !usedWords.has(item.w) && item.w.includes(targetChar));
-    if (!pool.length) continue;
-
-    const cand = pool[Math.floor(rn() * pool.length)];
-    for (let pos = 0; pos < cand.w.length; pos++) {
-      if (cand.w[pos] !== targetChar) continue;
-      const startR = newD === 0 ? ay : ay - pos;
-      const startC = newD === 0 ? ax - pos : ax;
-      if (canPlaceClean(startR, startC, newD, cand.w, true)) {
-        commitWord(startR, startC, newD, cand);
-        break;
-      }
-    }
-  }
-
-  // 3) Garante sempre mínimo de 6 palavras válidas espalhadas
-  const fallbackCoords = [
-    [1, 1, 0, 4], [1, 1, 1, 4], [1, 5, 1, 4],
-    [5, 1, 0, 4], [7, 1, 0, 4], [3, 4, 0, 3], [6, 3, 0, 4]
-  ];
-  for (const [r, c, d, len] of fallbackCoords) {
-    if (placedWords.length >= 6) break;
-    for (const cand of byLen[len]) {
-      if (!usedWords.has(cand.w) && canPlaceClean(r, c, d, cand.w, false)) {
-        commitWord(r, c, d, cand);
-        break;
-      }
-    }
-  }
-
-  const g = grid.map(row => row.map(v => v ? 1 : 0));
-  return { g, slots: placedWords, grid };
+  return buildFallbackBoard();
 }
 
 let LN = 1, sol, clue, val, own, pend, W, W_INFO, rack, sel, me, op, hints, done, busy, hc, badges = [], hlCells = new Set(), hlClue = null;
@@ -934,17 +1162,17 @@ const HEADLINES = [
 
 let saveData = { won: {}, active: null };
 try {
-  const raw = JSON.parse(localStorage.getItem('pc_master_v15') || 'null');
+  const raw = JSON.parse(localStorage.getItem('pc_master_v9') || localStorage.getItem('pc_master_v8') || localStorage.getItem('pc_master_v7') || 'null');
   if (raw) {
     saveData = {
       won: raw.won || {},
-      active: raw.active || null
+      active: localStorage.getItem('pc_master_v9') ? (raw.active || null) : null
     };
   }
 } catch (e) {}
 
 function persist() {
-  try { localStorage.setItem('pc_master_v15', JSON.stringify(saveData)); } catch (e) {}
+  try { localStorage.setItem('pc_master_v9', JSON.stringify(saveData)); } catch (e) {}
 }
 
 function saveActiveGame() {
@@ -1039,7 +1267,7 @@ function showMenu() {
   let html = `
     <div class="m-head">
       <h1>Palavras Cruzadas</h1>
-      <p>Desafia o oponente • v15</p>
+      <p>Desafia o oponente • v9</p>
     </div>
     <div class="stats-card">
       <div><b>${wonCount}/${TOTAL_LEVELS}</b><span>Níveis Vencidos</span></div>
