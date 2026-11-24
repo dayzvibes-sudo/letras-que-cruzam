@@ -194,56 +194,6 @@ M=(f=()=>null)=>Array.from({length:R},()=>Array.from({length:C},f)),
 shuf=a=>{for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
 
 const RAW_WORDS = `
-AR|Ar que se respira
-AS|Artigo plural
-OS|Artigo plural
-UM|Número um
-DE|De algo
-EM|Dentro de
-NO|Em + o
-NA|Em + a
-DO|De + o
-DA|De + a
-AO|A + o
-OU|Ou então
-SE|Caso, se
-EU|Eu mesmo
-TU|Tu mesmo
-JA|Agora mesmo
-LA|Nesse lugar
-CA|Neste lugar
-PE|Parte da perna
-PO|Poeira fina
-SO|Apenas
-MI|3.ª nota musical
-FA|4.ª nota musical
-SI|7.ª nota musical
-RE|2.ª nota musical
-IR|Ir a pé
-VI|Eu vi ontem
-VA|Vai agora
-VE|Ele vê bem
-RI|Ele ri muito
-LI|Eu li o livro
-FE|Crença na alma
-NU|Sem roupa
-EX|Antigo cargo
-OI|Olá informal
-AI|Grito de dor
-UI|Susto leve
-EI|Chamar alguém
-HA|Existe
-MA|Não é boa
-ME|A mim
-MO|Pedra de moinho
-PA|Pá de cavar
-PI|Valor 3,14
-SA|Mulher sã
-TA|Está (curto)
-TE|A ti
-TI|Para ti
-TO|Toma cá
-VO|Avó ou avô
 SOL|Astro-rei|☀️
 LUA|Satélite da Terra|🌙
 MAR|Água salgada|🌊
@@ -263,19 +213,12 @@ DOR|Dor no corpo
 VOZ|Som da fala
 LUZ|Brilho do Sol
 PAZ|Sem guerra|☮️
-GAS|Estado gasoso
-GIZ|Risca o quadro
 GOL|Ponto no jogo|⚽
 LAR|Onde se mora|🏠
 MAE|Dá à luz
 PAI|Chefe de família
-RIM|Órgão renal
 SOM|Onda sonora
 SUL|Ponto cardeal
-TIA|Irmã do pai
-TIO|Irmão da mãe
-VEZ|Ocasião
-ANO|Doze meses
 DIA|24 horas
 MES|Parte do ano
 FIM|Ponto final
@@ -291,7 +234,6 @@ QUE|O qual
 ELE|Pronome (m.)
 ELA|Pronome (f.)
 NOS|Todos juntos
-VOS|Vós todos
 ALI|Naquele sítio
 NAO|Negação
 SIM|Afirmação
@@ -302,8 +244,6 @@ TER|Possuir
 VER|Olhar bem
 DAR|Oferecer
 LER|Ler um texto
-OLE|Grito na arena
-EIS|Aqui está
 TAL|Semelhante
 SUA|Dela ou dele
 TEU|Pertence a ti
@@ -317,13 +257,11 @@ ASA|Membro de voo
 OCA|Casa indígena
 OLA|Saudação
 OSO|Urso (esp.)
-ATO|Cena da peça
 AVO|Pai do pai
 BAR|Café ou tasca
 BAU|Arca antiga
 BOM|De boa qualidade
 CAL|Pó branco
-CRU|Não cozido
 DEZ|Número 10
 DIZ|Ele fala
 DOM|Talento nato
@@ -338,17 +276,13 @@ IRA|Raiva forte
 MIL|Número 1000
 NOZ|Fruto seco
 NUA|Sem vestes
-NUM|Em + um
 OCO|Vazio dentro
 PAR|Grupo de dois
 PAU|Pedaço de lenha
 PIA|Lava-louças
 PIO|Som de ave
-PRO|A favor de
 RIR|Dar risada|😂
-ROA|Verbo roer
 SOU|Eu existo
-TAO|Tão grande
 TOM|Tonalidade
 VAI|Ele segue
 VAO|Eles seguem
@@ -562,9 +496,7 @@ MULA|Filho de égua
 NADA|Coisa nenhuma
 NATA|Creme do leite
 NETA|Neta de avós
-NIVE|Neve (poético)
 NORA|Nora de casa
-NUBE|Nuvem (poético)
 OBRA|Trabalho feito
 ORLA|Margem
 OSSO|Parte do corpo|🦴
@@ -595,8 +527,6 @@ AMES|Verbo amar
 SODA|Bebida com gás
 ARES|Ventos do céu
 AVOS|Pais dos pais
-NAS|Em + as
-USA|Ele utiliza
 GENTE|Pessoas
 PINTA|Mancha
 PISTA|Trilho
@@ -796,7 +726,6 @@ MORTO|Sem vida
 `;
 
 const BASE_DICT = [];
-const WORD_MAP = {};
 const seenBase = new Set();
 RAW_WORDS.trim().split('\n').forEach(line => {
   const parts = line.split('|');
@@ -804,11 +733,9 @@ RAW_WORDS.trim().split('\n').forEach(line => {
   const t = (parts[1] || '').trim();
   const e = (parts[2] || '').trim();
   const aff = (parts[3] || '').trim();
-  if (w.length >= 2 && w.length <= 5 && !seenBase.has(w)) {
+  if (w.length >= 3 && w.length <= 5 && !seenBase.has(w)) {
     seenBase.add(w);
-    const obj = { w, t, e, aff, f: 0 };
-    BASE_DICT.push(obj);
-    WORD_MAP[w] = obj;
+    BASE_DICT.push({ w, t, e, aff, f: 0 });
   }
 });
 
@@ -855,57 +782,71 @@ function ck(q, r, c, lvl) {
   return `<div class="c k ${dirCls}" data-kr="${r}" data-kc="${c}">${renderClueContent(q.a || q.d, lvl, false)}<i class="${q.a ? 'r' : 'b'}">${q.a ? '▸' : '▾'}</i></div>`;
 }
 
-// Construtor rápido e determinístico por nível, sem backtracking infinito
+// Construtor limpo: coloca palavras reais encaixadas com cruzamentos válidos
+// e só atribui pistas às células azuis imediatamente adjacentes a cada palavra colocada.
 function generateBoard(lvl) {
   const rn = rng(lvl * 104729 + 7919);
   const grid = Array.from({ length: R }, () => Array(C).fill(null));
   const usedWords = new Set();
-  const slots = [];
+  const placedWords = [];
 
-  const byLen = { 2: [], 3: [], 4: [], 5: [] };
+  const byLen = { 3: [], 4: [], 5: [] };
   BASE_DICT.forEach(item => {
     if (byLen[item.w.length]) byLen[item.w.length].push(item);
   });
   Object.values(byLen).forEach(arr => {
-    arr.sort((a, b) => (a.f - b.f) + (rn() - 0.5) * 3);
+    arr.sort((a, b) => (a.f - b.f) + (rn() - 0.5) * 4);
   });
 
-  function pickWord(len, filterFn = null) {
-    const pool = byLen[len] || [];
-    for (const item of pool) {
-      if (usedWords.has(item.w)) continue;
-      if (filterFn && !filterFn(item.w)) continue;
-      usedWords.add(item.w);
-      item.f++;
-      return item;
-    }
-    return null;
+  function isLetterCell(r, c) {
+    return r >= 1 && r < R && c >= 1 && c < C && grid[r][c] !== null;
   }
 
-  function canPlaceWord(r, c, d, wordStr) {
+  // Verifica se colocar wordStr em (r, c) na direção d (0=horiz, 1=vert) não cria palavras acidentais inválidas
+  function canPlaceClean(r, c, d, wordStr, requireCross) {
     const len = wordStr.length;
     if (d === 0) {
-      if (c < 1 || c + len > C) return false;
-      if (grid[r][c - 1] !== null) return false; // precisa de pista à esquerda
-      if (c + len < C && grid[r][c + len] !== null) return false;
+      if (r < 1 || r >= R || c < 1 || c + len > C) return false;
+      // Casa antes e depois na mesma linha não pode ser letra (senão colava com outra palavra)
+      if (isLetterCell(r, c - 1)) return false;
+      if (c + len < C && isLetterCell(r, c + len)) return false;
+
+      let crosses = 0;
       for (let i = 0; i < len; i++) {
-        const ch = grid[r][c + i];
-        if (ch !== null && ch !== wordStr[i]) return false;
+        const x = c + i;
+        const cur = grid[r][x];
+        if (cur !== null) {
+          if (cur !== wordStr[i]) return false;
+          crosses++;
+        } else {
+          // Evita colar paralelamente cima/baixo em células não-cruzamento
+          if (isLetterCell(r - 1, x) || isLetterCell(r + 1, x)) return false;
+        }
       }
+      if (requireCross && crosses === 0) return false;
       return true;
     } else {
-      if (r < 1 || r + len > R) return false;
-      if (grid[r - 1][c] !== null) return false; // precisa de pista em cima
-      if (r + len < R && grid[r + len][c] !== null) return false;
+      if (r < 1 || r + len > R || c < 1 || c >= C) return false;
+      if (isLetterCell(r - 1, c)) return false;
+      if (r + len < R && isLetterCell(r + len, c)) return false;
+
+      let crosses = 0;
       for (let i = 0; i < len; i++) {
-        const ch = grid[r + i][c];
-        if (ch !== null && ch !== wordStr[i]) return false;
+        const y = r + i;
+        const cur = grid[y][c];
+        if (cur !== null) {
+          if (cur !== wordStr[i]) return false;
+          crosses++;
+        } else {
+          if (isLetterCell(y, c - 1) || isLetterCell(y, c + 1)) return false;
+        }
       }
+      if (requireCross && crosses === 0) return false;
       return true;
     }
   }
 
-  function placeWord(r, c, d, entry) {
+  function commitWord(r, c, d, entry) {
     const cells = [];
     for (let i = 0; i < entry.w.length; i++) {
       const y = d === 0 ? r : r + i;
@@ -913,8 +854,10 @@ function generateBoard(lvl) {
       grid[y][x] = entry.w[i];
       cells.push([y, x]);
     }
-    slots.push({
-      id: slots.length,
+    usedWords.add(entry.w);
+    entry.f++;
+    placedWords.push({
+      id: placedWords.length,
       r, c, d,
       len: entry.w.length,
       clueR: d === 0 ? r : r - 1,
@@ -924,81 +867,61 @@ function generateBoard(lvl) {
     });
   }
 
-  // 1) Palavras verticais na coluna 1 (pistas na coluna 0) espalhadas por nível
-  const col1Patterns = [
-    [[1, 4], [5, 4]],
-    [[1, 3], [4, 5]],
-    [[1, 5], [6, 3]],
-    [[2, 4], [6, 3]],
-    [[1, 3], [5, 4]],
-    [[2, 3], [5, 4]]
+  // 1) Palavra inicial bem posicionada (varia por nível)
+  const starts = [
+    [1, 1, 0, 4], [2, 2, 0, 4], [1, 3, 1, 4], [3, 1, 0, 4],
+    [2, 4, 1, 4], [4, 2, 0, 4], [1, 2, 1, 4], [3, 3, 0, 4]
   ];
-  const p1 = col1Patterns[(lvl - 1) % col1Patterns.length];
-  for (const [rStart, len] of p1) {
-    if (rStart + len <= R) {
-      const wObj = pickWord(len);
-      if (wObj && canPlaceWord(rStart, 1, 1, wObj.w)) {
-        placeWord(rStart, 1, 1, wObj);
+  const [sr, sc, sd, slen] = starts[(lvl - 1) % starts.length];
+  for (const cand of byLen[slen]) {
+    if (!usedWords.has(cand.w) && canPlaceClean(sr, sc, sd, cand.w, false)) {
+      commitWord(sr, sc, sd, cand);
+      break;
+    }
+  }
+
+  // 2) Tenta encaixar palavras cruzadas espalhadas pelo mapa 10x8
+  const targetCount = 8 + (lvl % 4); // 8 a 11 palavras por nível
+  for (let attempt = 0; attempt < 260 && placedWords.length < targetCount; attempt++) {
+    const anchor = placedWords[Math.floor(rn() * placedWords.length)];
+    const charIdx = Math.floor(rn() * anchor.len);
+    const [ay, ax] = anchor.cells[charIdx];
+    const targetChar = grid[ay][ax];
+    const newD = anchor.d === 0 ? 1 : 0;
+
+    const len = [3, 4, 5][Math.floor(rn() * 3)];
+    const pool = byLen[len].filter(item => !usedWords.has(item.w) && item.w.includes(targetChar));
+    if (!pool.length) continue;
+
+    const cand = pool[Math.floor(rn() * pool.length)];
+    for (let pos = 0; pos < cand.w.length; pos++) {
+      if (cand.w[pos] !== targetChar) continue;
+      const startR = newD === 0 ? ay : ay - pos;
+      const startC = newD === 0 ? ax - pos : ax;
+      if (canPlaceClean(startR, startC, newD, cand.w, true)) {
+        commitWord(startR, startC, newD, cand);
+        break;
       }
     }
   }
 
-  // 2) Palavras horizontais na linha 1 (pistas na linha 0)
-  const row1Cols = [
-    [[1, 4], [5, 3]],
-    [[1, 3], [4, 4]],
-    [[1, 4], [5, 3]],
-    [[1, 3], [4, 3]]
-  ][lvl % 4];
-  for (const [cStart, len] of row1Cols) {
-    if (cStart + len <= C) {
-      const wObj = pickWord(len, wStr => {
-        for (let i = 0; i < len; i++) {
-          const existing = grid[1][cStart + i];
-          if (existing && existing !== wStr[i]) return false;
-        }
-        return true;
-      });
-      if (wObj && canPlaceWord(1, cStart, 0, wObj.w)) {
-        placeWord(1, cStart, 0, wObj);
-      }
-    }
-  }
-
-  // 3) Palavras espalhadas pelo resto do mapa (linhas 2..9, colunas 2..7)
-  const extraSpots = [
-    [3, 2, 0, 4], [3, 5, 1, 4], [5, 3, 0, 4], [7, 2, 0, 3], [6, 6, 1, 3],
-    [2, 5, 1, 4], [4, 2, 0, 3], [6, 4, 0, 4], [8, 2, 0, 4], [5, 6, 1, 4],
-    [2, 3, 0, 4], [4, 5, 1, 4], [7, 3, 0, 4], [8, 4, 0, 3], [3, 6, 1, 4]
+  // 3) Garante sempre mínimo de 6 palavras válidas espalhadas
+  const fallbackCoords = [
+    [1, 1, 0, 4], [1, 1, 1, 4], [1, 5, 1, 4],
+    [5, 1, 0, 4], [7, 1, 0, 4], [3, 4, 0, 3], [6, 3, 0, 4]
   ];
-  const rotatedSpots = extraSpots.slice((lvl * 3) % extraSpots.length).concat(extraSpots.slice(0, (lvl * 3) % extraSpots.length));
-
-  for (const [r, c, d, len] of rotatedSpots) {
-    if (slots.length >= 13) break;
-    const wObj = pickWord(len, wStr => canPlaceWord(r, c, d, wStr));
-    if (wObj && canPlaceWord(r, c, d, wObj.w)) {
-      placeWord(r, c, d, wObj);
-    }
-  }
-
-  // Garante sempre pelo menos 5 palavras caso algum filtro seja restrito
-  if (slots.length < 5) {
-    const fallbackWords = ['CASA', 'SOL', 'LUA', 'MAR', 'RIO', 'GATO', 'FLOR'];
-    fallbackWords.forEach((fw, idx) => {
-      const r = 1 + idx;
-      const c = 1;
-      if (r < R && !usedWords.has(fw)) {
-        const entry = WORD_MAP[fw] || { w: fw, t: fw, e: '', aff: '', f: 0 };
-        if (canPlaceWord(r, c, 0, entry.w)) {
-          usedWords.add(entry.w);
-          placeWord(r, c, 0, entry);
-        }
+  for (const [r, c, d, len] of fallbackCoords) {
+    if (placedWords.length >= 6) break;
+    for (const cand of byLen[len]) {
+      if (!usedWords.has(cand.w) && canPlaceClean(r, c, d, cand.w, false)) {
+        commitWord(r, c, d, cand);
+        break;
       }
-    });
+    }
   }
 
   const g = grid.map(row => row.map(v => v ? 1 : 0));
-  return { g, slots, grid };
+  return { g, slots: placedWords, grid };
 }
 
 let LN = 1, sol, clue, val, own, pend, W, W_INFO, rack, sel, me, op, hints, done, busy, hc, badges = [], hlCells = new Set(), hlClue = null;
@@ -1011,7 +934,7 @@ const HEADLINES = [
 
 let saveData = { won: {}, active: null };
 try {
-  const raw = JSON.parse(localStorage.getItem('pc_master_v14') || 'null');
+  const raw = JSON.parse(localStorage.getItem('pc_master_v15') || 'null');
   if (raw) {
     saveData = {
       won: raw.won || {},
@@ -1021,7 +944,7 @@ try {
 } catch (e) {}
 
 function persist() {
-  try { localStorage.setItem('pc_master_v14', JSON.stringify(saveData)); } catch (e) {}
+  try { localStorage.setItem('pc_master_v15', JSON.stringify(saveData)); } catch (e) {}
 }
 
 function saveActiveGame() {
@@ -1116,7 +1039,7 @@ function showMenu() {
   let html = `
     <div class="m-head">
       <h1>Palavras Cruzadas</h1>
-      <p>Desafia o oponente • v14</p>
+      <p>Desafia o oponente • v15</p>
     </div>
     <div class="stats-card">
       <div><b>${wonCount}/${TOTAL_LEVELS}</b><span>Níveis Vencidos</span></div>
