@@ -812,168 +812,6 @@ RAW_WORDS.trim().split('\n').forEach(line => {
   }
 });
 
-// 12 mapas 10x8 com layouts espalhados e variados:
-// Linha 0 e Coluna 0 = pistas azuis (null no array).
-// No interior (r>=1, c>=1), 'X' = célula de pista interna, '.' = célula de letra (preenchida com palavras reais válidas).
-const LAYOUT_TEMPLATES = [
-  // 1: Espalhado com dois blocos internos separados
-  [
-    '........',
-    '.CCCC.CC',
-    '.C..C.CC',
-    '.C..C.CC',
-    '.C..C.CC',
-    '.C.X.CCC',
-    '.C.X.CCC',
-    '.C.X.CCC',
-    '.C.X.CCC',
-    '.C.X.CCC'
-  ],
-  // 2: Centro aberto com ilha de pistas no meio
-  [
-    '........',
-    '.CCC.CCC',
-    '.CCC.CCC',
-    '.CCCC.CC',
-    '.X.C.CCC',
-    '.CCC.CCC',
-    '.CCCC.CC',
-    '.CCC.CCC',
-    '.CCC.CCC',
-    '.CCC.CCC'
-  ],
-  // 3: Escada diagonal com secções soltas à direita
-  [
-    '........',
-    '.CCCCCCC',
-    '.CCCC.CC',
-    '.CCC.CCC',
-    '.CCCCCCC',
-    '.CCCC.CC',
-    '.CCC.CCC',
-    '.CCCCCCC',
-    '.CCC.CCC',
-    '.CCC.CCC'
-  ],
-  // 4: Duas colunas longas com faixas horizontais intercaladas
-  [
-    '........',
-    '.CCCC.CC',
-    '.CCC.CCC',
-    '.CCC.CCC',
-    '.CCC.CCC',
-    '.CCC.CCC',
-    '.CCC.CCC',
-    '.CCCCC.C',
-    '.CCC.CCC',
-    '.CCC.CCC'
-  ],
-  // 5: Espinha horizontal e vertical espalhada
-  [
-    '........',
-    '.CCCCCC.',
-    '.CCC.CCC',
-    '.CCC.CCC',
-    '.CCCCCCC',
-    '.CCCC.CC',
-    '.CCC.CCC',
-    '.CCC.CCC',
-    '.CCCCCC.',
-    '.CCC.CCC'
-  ],
-  // 6: Ziguezague amplo com blocos em posições diferentes
-  [
-    '........',
-    '.CCCC.CC',
-    '.CCCCCC.',
-    '.CCC.CCC',
-    '.CCCC.CC',
-    '.CCCCCC.',
-    '.CCC.CCC',
-    '.CCCCCC.',
-    '.CCC.CCC',
-    '.CCC.CCC'
-  ],
-  // 7: Topo largo, meio repartido e base espalhada
-  [
-    '........',
-    '.CCCCCCC',
-    '.CCC.CCC',
-    '.CCCC.CC',
-    '.CCCCCC.',
-    '.CCC.CCC',
-    '.CCCCCC.',
-    '.CCC.CCC',
-    '.CCC.CCC',
-    '.CCC.CCC'
-  ],
-  // 8: Coluna central forte com ramificações laterais
-  [
-    '........',
-    '.CCCC.CC',
-    '.CCCCCC.',
-    '.CCC.CCC',
-    '.CCCCCCC',
-    '.CCCC.CC',
-    '.CCC.CCC',
-    '.CCCCCC.',
-    '.CCC.CCC',
-    '.CCC.CCC'
-  ],
-  // 9: Blocos altos à esquerda e faixas abertas em baixo
-  [
-    '........',
-    '.CCCC.CC',
-    '.CCC.CCC',
-    '.CCCC.CC',
-    '.CCCC.CC',
-    '.CCCCCC.',
-    '.CCC.CCC',
-    '.CCC.CCC',
-    '.CCC.CCC',
-    '.CCC.CCC'
-  ],
-  // 10: Alternância de ilhas pelo mapa todo
-  [
-    '........',
-    '.CCCC.CC',
-    '.CCC.CCC',
-    '.CCCCCC.',
-    '.CCC.CCC',
-    '.CCCCCC.',
-    '.CCC.CCC',
-    '.CCCCCC.',
-    '.CCC.CCC',
-    '.CCC.CCC'
-  ],
-  // 11: Diagonal com blocos internos deslocados
-  [
-    '........',
-    '.CCCC.CC',
-    '.CCC.CCC',
-    '.CCCC.CC',
-    '.CCC.CCC',
-    '.CCCCCC.',
-    '.CCC.CCC',
-    '.CCC.CCC',
-    '.CCCCCC.',
-    '.CCC.CCC'
-  ],
-  // 12: Cruzeiro espalhado com vários pontos de cruzamento
-  [
-    '........',
-    '.CCCC.CC',
-    '.CCCCCC.',
-    '.CCC.CCC',
-    '.CCC.CCC',
-    '.CCCCCCC',
-    '.CCC.CCC',
-    '.CCCCCC.',
-    '.CCC.CCC',
-    '.CCC.CCC'
-  ]
-];
-
 const rng = s => () => {
   s |= 0; s = s + 0x6D2B79F5 | 0;
   let t = Math.imul(s ^ s >>> 15, 1 | s);
@@ -1017,112 +855,150 @@ function ck(q, r, c, lvl) {
   return `<div class="c k ${dirCls}" data-kr="${r}" data-kc="${c}">${renderClueContent(q.a || q.d, lvl, false)}<i class="${q.a ? 'r' : 'b'}">${q.a ? '▸' : '▾'}</i></div>`;
 }
 
-// Preenche o mapa com palavras reais do RAW_WORDS usando backtracking rápido
-function solveLayout(layoutRows, rn) {
-  const g = Array.from({ length: R }, (_, r) =>
-    Array.from({ length: C }, (_, c) => {
-      if (r === 0 || c === 0) return 0;
-      const ch = layoutRows[r][c];
-      return ch === 'C' ? 1 : 0;
-    })
-  );
-
-  const slots = [];
-  for (let r = 1; r < R; r++) {
-    let c = 1;
-    while (c < C) {
-      if (g[r][c] === 1) {
-        const c0 = c;
-        while (c < C && g[r][c] === 1) c++;
-        const len = c - c0;
-        if (len >= 2) {
-          const cells = [];
-          for (let i = 0; i < len; i++) cells.push([r, c0 + i]);
-          slots.push({ id: slots.length, r, c: c0, d: 0, len, clueR: r, clueC: c0 - 1, cells });
-        }
-      } else c++;
-    }
-  }
-  for (let c = 1; c < C; c++) {
-    let r = 1;
-    while (r < R) {
-      if (g[r][c] === 1) {
-        const r0 = r;
-        while (r < R && g[r][c] === 1) r++;
-        const len = r - r0;
-        if (len >= 2) {
-          const cells = [];
-          for (let i = 0; i < len; i++) cells.push([r0 + i, c]);
-          slots.push({ id: slots.length, r: r0, c, d: 1, len, clueR: r0 - 1, clueC: c, cells });
-        }
-      } else r++;
-    }
-  }
-
-  const byLen = {};
-  BASE_DICT.forEach(entry => {
-    const L = entry.w.length;
-    if (!byLen[L]) byLen[L] = [];
-    byLen[L].push(entry);
-  });
-  Object.keys(byLen).forEach(L => {
-    byLen[L].sort((a, b) => (a.f - b.f) + (rn() - 0.5) * 2.5);
-  });
-
-  const grid = Array.from({ length: R }, () => Array(C).fill(null));
-  const usedWords = new Set();
-
-  // Ordena slots por mais cruzamentos para resolver rápido
-  const order = slots.slice().sort((a, b) => b.len - a.len);
-
-  function matchPattern(cells, pat) {
-    for (let i = 0; i < cells.length; i++) {
-      const ch = grid[cells[i][0]][cells[i][1]];
-      if (ch && ch !== pat[i]) return false;
-    }
-    return true;
-  }
-
-  function bt(idx) {
-    if (idx === order.length) return true;
-    const s = order[idx];
-    const pool = byLen[s.len] || [];
-    for (let i = 0; i < pool.length; i++) {
-      const cand = pool[i];
-      if (usedWords.has(cand.w)) continue;
-      if (!matchPattern(s.cells, cand.w)) continue;
-
-      const prev = s.cells.map(([y, x]) => grid[y][x]);
-      for (let k = 0; k < s.len; k++) grid[s.cells[k][0]][s.cells[k][1]] = cand.w[k];
-      usedWords.add(cand.w);
-      s.word = cand;
-
-      if (bt(idx + 1)) return true;
-
-      usedWords.delete(cand.w);
-      for (let k = 0; k < s.len; k++) grid[s.cells[k][0]][s.cells[k][1]] = prev[k];
-      s.word = null;
-    }
-    return false;
-  }
-
-  if (!bt(0)) return null;
-  slots.forEach(s => { if (s.word) s.word.f++; });
-  return { g, slots, grid };
-}
-
+// Construtor rápido e determinístico por nível, sem backtracking infinito
 function generateBoard(lvl) {
   const rn = rng(lvl * 104729 + 7919);
-  const startIdx = ((lvl - 1) * 5) % LAYOUT_TEMPLATES.length;
+  const grid = Array.from({ length: R }, () => Array(C).fill(null));
+  const usedWords = new Set();
+  const slots = [];
 
-  for (let offset = 0; offset < LAYOUT_TEMPLATES.length; offset++) {
-    const tIdx = (startIdx + offset) % LAYOUT_TEMPLATES.length;
-    const solved = solveLayout(LAYOUT_TEMPLATES[tIdx], rn);
-    if (solved) return solved;
+  const byLen = { 2: [], 3: [], 4: [], 5: [] };
+  BASE_DICT.forEach(item => {
+    if (byLen[item.w.length]) byLen[item.w.length].push(item);
+  });
+  Object.values(byLen).forEach(arr => {
+    arr.sort((a, b) => (a.f - b.f) + (rn() - 0.5) * 3);
+  });
+
+  function pickWord(len, filterFn = null) {
+    const pool = byLen[len] || [];
+    for (const item of pool) {
+      if (usedWords.has(item.w)) continue;
+      if (filterFn && !filterFn(item.w)) continue;
+      usedWords.add(item.w);
+      item.f++;
+      return item;
+    }
+    return null;
   }
 
-  // Fallback seguro caso raro
-  return solveLayout(LAYOUT_TEMPLATES[0], rn);
+  function canPlaceWord(r, c, d, wordStr) {
+    const len = wordStr.length;
+    if (d === 0) {
+      if (c < 1 || c + len > C) return false;
+      if (grid[r][c - 1] !== null) return false; // precisa de pista à esquerda
+      if (c + len < C && grid[r][c + len] !== null) return false;
+      for (let i = 0; i < len; i++) {
+        const ch = grid[r][c + i];
+        if (ch !== null && ch !== wordStr[i]) return false;
+      }
+      return true;
+    } else {
+      if (r < 1 || r + len > R) return false;
+      if (grid[r - 1][c] !== null) return false; // precisa de pista em cima
+      if (r + len < R && grid[r + len][c] !== null) return false;
+      for (let i = 0; i < len; i++) {
+        const ch = grid[r + i][c];
+        if (ch !== null && ch !== wordStr[i]) return false;
+      }
+      return true;
+    }
+  }
+
+  function placeWord(r, c, d, entry) {
+    const cells = [];
+    for (let i = 0; i < entry.w.length; i++) {
+      const y = d === 0 ? r : r + i;
+      const x = d === 0 ? c + i : c;
+      grid[y][x] = entry.w[i];
+      cells.push([y, x]);
+    }
+    slots.push({
+      id: slots.length,
+      r, c, d,
+      len: entry.w.length,
+      clueR: d === 0 ? r : r - 1,
+      clueC: d === 0 ? c - 1 : c,
+      word: entry,
+      cells
+    });
+  }
+
+  // 1) Palavras verticais na coluna 1 (pistas na coluna 0) espalhadas por nível
+  const col1Patterns = [
+    [[1, 4], [5, 4]],
+    [[1, 3], [4, 5]],
+    [[1, 5], [6, 3]],
+    [[2, 4], [6, 3]],
+    [[1, 3], [5, 4]],
+    [[2, 3], [5, 4]]
+  ];
+  const p1 = col1Patterns[(lvl - 1) % col1Patterns.length];
+  for (const [rStart, len] of p1) {
+    if (rStart + len <= R) {
+      const wObj = pickWord(len);
+      if (wObj && canPlaceWord(rStart, 1, 1, wObj.w)) {
+        placeWord(rStart, 1, 1, wObj);
+      }
+    }
+  }
+
+  // 2) Palavras horizontais na linha 1 (pistas na linha 0)
+  const row1Cols = [
+    [[1, 4], [5, 3]],
+    [[1, 3], [4, 4]],
+    [[1, 4], [5, 3]],
+    [[1, 3], [4, 3]]
+  ][lvl % 4];
+  for (const [cStart, len] of row1Cols) {
+    if (cStart + len <= C) {
+      const wObj = pickWord(len, wStr => {
+        for (let i = 0; i < len; i++) {
+          const existing = grid[1][cStart + i];
+          if (existing && existing !== wStr[i]) return false;
+        }
+        return true;
+      });
+      if (wObj && canPlaceWord(1, cStart, 0, wObj.w)) {
+        placeWord(1, cStart, 0, wObj);
+      }
+    }
+  }
+
+  // 3) Palavras espalhadas pelo resto do mapa (linhas 2..9, colunas 2..7)
+  const extraSpots = [
+    [3, 2, 0, 4], [3, 5, 1, 4], [5, 3, 0, 4], [7, 2, 0, 3], [6, 6, 1, 3],
+    [2, 5, 1, 4], [4, 2, 0, 3], [6, 4, 0, 4], [8, 2, 0, 4], [5, 6, 1, 4],
+    [2, 3, 0, 4], [4, 5, 1, 4], [7, 3, 0, 4], [8, 4, 0, 3], [3, 6, 1, 4]
+  ];
+  const rotatedSpots = extraSpots.slice((lvl * 3) % extraSpots.length).concat(extraSpots.slice(0, (lvl * 3) % extraSpots.length));
+
+  for (const [r, c, d, len] of rotatedSpots) {
+    if (slots.length >= 13) break;
+    const wObj = pickWord(len, wStr => canPlaceWord(r, c, d, wStr));
+    if (wObj && canPlaceWord(r, c, d, wObj.w)) {
+      placeWord(r, c, d, wObj);
+    }
+  }
+
+  // Garante sempre pelo menos 5 palavras caso algum filtro seja restrito
+  if (slots.length < 5) {
+    const fallbackWords = ['CASA', 'SOL', 'LUA', 'MAR', 'RIO', 'GATO', 'FLOR'];
+    fallbackWords.forEach((fw, idx) => {
+      const r = 1 + idx;
+      const c = 1;
+      if (r < R && !usedWords.has(fw)) {
+        const entry = WORD_MAP[fw] || { w: fw, t: fw, e: '', aff: '', f: 0 };
+        if (canPlaceWord(r, c, 0, entry.w)) {
+          usedWords.add(entry.w);
+          placeWord(r, c, 0, entry);
+        }
+      }
+    });
+  }
+
+  const g = grid.map(row => row.map(v => v ? 1 : 0));
+  return { g, slots, grid };
 }
 
 let LN = 1, sol, clue, val, own, pend, W, W_INFO, rack, sel, me, op, hints, done, busy, hc, badges = [], hlCells = new Set(), hlClue = null;
@@ -1135,7 +1011,7 @@ const HEADLINES = [
 
 let saveData = { won: {}, active: null };
 try {
-  const raw = JSON.parse(localStorage.getItem('pc_master_v13') || 'null');
+  const raw = JSON.parse(localStorage.getItem('pc_master_v14') || 'null');
   if (raw) {
     saveData = {
       won: raw.won || {},
@@ -1145,7 +1021,7 @@ try {
 } catch (e) {}
 
 function persist() {
-  try { localStorage.setItem('pc_master_v13', JSON.stringify(saveData)); } catch (e) {}
+  try { localStorage.setItem('pc_master_v14', JSON.stringify(saveData)); } catch (e) {}
 }
 
 function saveActiveGame() {
@@ -1240,7 +1116,7 @@ function showMenu() {
   let html = `
     <div class="m-head">
       <h1>Palavras Cruzadas</h1>
-      <p>Desafia o oponente • v13</p>
+      <p>Desafia o oponente • v14</p>
     </div>
     <div class="stats-card">
       <div><b>${wonCount}/${TOTAL_LEVELS}</b><span>Níveis Vencidos</span></div>
