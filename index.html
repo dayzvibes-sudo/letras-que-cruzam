@@ -1013,21 +1013,50 @@ function extractSlots(g) {
   return slots;
 }
 
-function solveLayout(g, slots, rn, lvl, timeLimitMs = 60) {
+// ===== Rotação global de palavras: cada nível usa palavras diferentes =====
+// Cada palavra guarda quantas vezes já saiu e em que nível saiu pela última vez.
+// Ao gerar o nível N, as palavras menos usadas (e há mais tempo sem sair) ficam à frente
+// nas listas de candidatas, por isso o dicionário é percorrido por inteiro antes de qualquer
+// palavra voltar a aparecer. Os níveis são gerados por ordem e guardados em cache, e o
+// resultado é sempre o mesmo (sementes fixas e limite de passos em vez de limite de tempo).
+const WORD_USE = Object.create(null);   // palavra -> { n: vezes usada, last: último nível }
+const BOARD_CACHE = [];
+let BUILT_UPTO = 0;
+const DEMAND = { 2: 0, 3: 0, 4: 0, 5: 0 };   // quantas pistas de cada tamanho já foram geradas
+// Fases do solver, da mais exigente à mais permissiva (só se passa à seguinte se a anterior falhar):
+//  mul    = máximo de usos por palavra, em múltiplos da média esperada até este nível
+//  recent = fração do "ciclo" do dicionário durante a qual uma palavra não pode voltar a sair
+//  tries  = modelos de grelha a experimentar; steps = orçamento do solver por tentativa
+const STRICTNESS = [
+  { mul: 1.5, recent: 0.5, tries: 4,  steps: 250 },
+  { mul: 2,   recent: 0.3, tries: 4,  steps: 250 },
+  { mul: 99,  recent: 0,   tries: 24, steps: 1500 }
+];
+const wordN = x => (WORD_USE[x.w] ? WORD_USE[x.w].n : 0);
+const wordLast = x => (WORD_USE[x.w] ? WORD_USE[x.w].last : -1);
+
+function solveLayout(g, slots, rn, lvl, st, maxSteps) {
   if (!slots.length || slots.some(s => !WORDS_BY_LEN[s.len] || !WORDS_BY_LEN[s.len].length)) return null;
 
-  const t0 = performance.now();
   const grid = Array.from({ length: R }, () => Array(C).fill(null));
   const used = new Set();
   const allowFill = lvl >= 4;
   const pools = {};
 
+  const need = { 2: 0, 3: 0, 4: 0, 5: 0 };
+  slots.forEach(s => need[s.len]++);
+
   for (let l = 2; l <= 5; l++) {
-    const arr = WORDS_BY_LEN[l].filter(w => allowFill || !w.f).slice();
+    const all = WORDS_BY_LEN[l].filter(w => allowFill || !w.f);
+    const cap = Math.ceil(((DEMAND[l] + need[l]) / all.length) * st.mul) + 1;                  // usos máx. por palavra
+    const wait = Math.min(80, Math.floor(st.recent * all.length / Math.max(1, need[l])));  // níveis sem voltar a sair
+    const arr = all.filter(w => wordN(w) < cap && lvl - wordLast(w) > wait);
     for (let i = arr.length - 1; i > 0; i--) {
       const j = (rn() * (i + 1)) | 0;
       [arr[i], arr[j]] = [arr[j], arr[i]];
     }
+    // menos usadas primeiro; em empate, a que está há mais tempo sem sair (sort é estável)
+    arr.sort((a, b) => (wordN(a) - wordN(b)) || (wordLast(a) - wordLast(b)));
     pools[l] = arr;
   }
 
@@ -1059,10 +1088,11 @@ function solveLayout(g, slots, rn, lvl, timeLimitMs = 60) {
   }
 
   let steps = 0;
+  let aborted = false;
 
   function backtrack(assignedCount) {
     if (assignedCount === slots.length) return true;
-    if ((++steps & 63) === 0 && (performance.now() - t0) > timeLimitMs) return false;
+    if (++steps > maxSteps) { aborted = true; return false; }
 
     let bestSlot = null;
     let bestCands = null;
@@ -1108,6 +1138,7 @@ function solveLayout(g, slots, rn, lvl, timeLimitMs = 60) {
       }
       used.delete(cand.w);
       bestSlot.word = null;
+      if (aborted) return false;
     }
     return false;
   }
@@ -1123,33 +1154,51 @@ function buildFallbackBoard() {
     const w = s.cells.map(([y, x]) => FALLBACK_GRID[y][x]).join('');
     s.word = WORD_MAP[w] || { w, t: w, e: '', aff: '', f: 0 };
   });
-  return { g, slots, grid: FALLBACK_GRID.map(r => r.slice()) };
+  return { g, slots, grid: FALLBACK_GRID.map(r => r.slice()), fallback: true };
 }
 
-function generateBoard(lvl) {
+function buildBoard(lvl) {
   const rn = rng(lvl * 9973 + 31337);
   const startTpl = (lvl - 1) % BASE_TEMPLATES.length;
   const baseFlip = Math.floor((lvl - 1) / BASE_TEMPLATES.length) % 4;
 
-  for (let attempt = 0; attempt < 24; attempt++) {
-    const base = BASE_TEMPLATES[(startTpl + attempt) % BASE_TEMPLATES.length];
-    const flipMode = (baseFlip + Math.floor(attempt / BASE_TEMPLATES.length)) % 4;
-    const flipV = flipMode & 1;
-    const flipH = (flipMode >> 1) & 1;
+  for (const st of STRICTNESS) {
+    for (let attempt = 0; attempt < st.tries; attempt++) {
+      const base = BASE_TEMPLATES[(startTpl + attempt) % BASE_TEMPLATES.length];
+      const flipMode = (baseFlip + Math.floor(attempt / BASE_TEMPLATES.length)) % 4;
+      const flipV = flipMode & 1;
+      const flipH = (flipMode >> 1) & 1;
 
-    const g = Array.from({ length: R }, (_, r) =>
-      Array.from({ length: C }, (_, c) => {
-        if (r === 0 || c === 0) return 0;
-        const sr = flipV ? (R - r) : r;
-        const sc = flipH ? (C - c) : c;
-        return base[sr][sc];
-      })
-    );
-    const slots = extractSlots(g);
-    const solved = solveLayout(g, slots, rn, lvl, 60);
-    if (solved) return solved;
+      const g = Array.from({ length: R }, (_, r) =>
+        Array.from({ length: C }, (_, c) => {
+          if (r === 0 || c === 0) return 0;
+          const sr = flipV ? (R - r) : r;
+          const sc = flipH ? (C - c) : c;
+          return base[sr][sc];
+        })
+      );
+      const slots = extractSlots(g);
+      const solved = solveLayout(g, slots, rn, lvl, st, st.steps);
+      if (solved) return solved;
+    }
   }
   return buildFallbackBoard();
+}
+
+// Gera os níveis por ordem (1..lvl) para que o registo de palavras usadas seja sempre igual.
+function generateBoard(lvl) {
+  while (BUILT_UPTO < lvl) {
+    const n = ++BUILT_UPTO;
+    const b = buildBoard(n);
+    b.slots.forEach(s => {
+      DEMAND[s.len]++;
+      const u = WORD_USE[s.word.w] || (WORD_USE[s.word.w] = { n: 0, last: -1 });
+      u.n++;
+      u.last = n;
+    });
+    BOARD_CACHE[n] = b;
+  }
+  return BOARD_CACHE[lvl];
 }
 
 let LN = 1, sol, clue, val, own, pend, W, W_INFO, rack, sel, me, op, hints, done, busy, hc, badges = [], hlCells = new Set(), hlClue = null;
@@ -1710,9 +1759,21 @@ $('nw').onclick = () => {
 
 $('mn').addEventListener('click', e => {
   const btn = e.target.closest('.lv-btn');
-  if (btn) startLevel(+btn.dataset.n);
+  if (!btn) return;
+  const n = +btn.dataset.n;
+  if (n - BUILT_UPTO > 6) {            // salto grande: gerar os níveis em falta demora um pouco
+    btn.textContent = '…';
+    setTimeout(() => startLevel(n), 30);
+  } else startLevel(n);
 });
 
 showMenu();
+
+// Pré-gera os níveis em segundo plano (um de cada vez) para não haver espera ao abri-los.
+(function warmUp() {
+  if (BUILT_UPTO >= TOTAL_LEVELS) return;
+  generateBoard(BUILT_UPTO + 1);
+  setTimeout(warmUp, 40);
+})();
 </script>
 </body></html>
